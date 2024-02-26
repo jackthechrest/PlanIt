@@ -1,0 +1,3 @@
+type UserIdParam = {
+  targetUserId: string;
+};

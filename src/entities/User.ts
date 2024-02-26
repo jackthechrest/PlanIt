@@ -1,5 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, ManyToMany, Relation } from 'typeorm';
-
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+//, OneToMany, ManyToOne, ManyToMany, Relation
 
 @Entity()
 export class User {
@@ -8,13 +8,16 @@ export class User {
 
   @Column({ unique: true })
   username: string;
-/*
+
   @Column({ unique: true })
   passwordHash: string;
 
   @Column({ default: false })
-  isAdmin: boolean;
+  isPro: boolean;
 
+  @Column({ default: false })
+  isAdmin: boolean;
+/*
   @Column({default: ""})
   biography: string
 
@@ -30,9 +33,9 @@ export class User {
   // need to add profile picture functionality
   @Column()
   profilePic: string
-*/
-  // Relationships
 
+  // Relationships
+*/
 
 /*
   friends 		many-many
