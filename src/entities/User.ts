@@ -8,7 +8,7 @@ export class User {
 
   @Column({ unique: true })
   username: string;
-
+/*
   @Column({ unique: true })
   passwordHash: string;
 
@@ -30,7 +30,7 @@ export class User {
   // need to add profile picture functionality
   @Column()
   profilePic: string
-
+*/
   // Relationships
 
 
