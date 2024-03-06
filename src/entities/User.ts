@@ -1,4 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, ManyToMany, Relation } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, Relation,
+  OneToMany, ManyToOne, ManyToMany, OneToOne} from 'typeorm';
+
+import { Calendar} from "./Calendar ";
+import { Event } from "./Event";
+import { Comment } from "./Comment";
+import { Follow } from "./Follow";
 
 
 @Entity()
@@ -16,31 +22,44 @@ export class User {
   isAdmin: boolean;
 
   @Column({default: ""})
-  biography: string
+  biography: string;
 
   @Column({default: username})
-  displayName
+  displayName;
 
   @Column({unique: true})
-  email: string
+  email: string;
 
   @Column({default: false})
-  verifiedEmail: boolean
+  verifiedEmail: boolean;
 
   // need to add profile picture functionality
   @Column()
-  profilePic: string
+  profilePic: string;
 
   // Relationships
+  @ManyToMany(() => User)
+  @JoinTable()
+  friends: User[];
 
+  @OneToOne(() => Calendar)
+  personalCalendar: Calendar;
 
-/*
-  friends 		many-many
-personalCalendar	one-one
-joinedEvents		many-many
-ownedEvents		one-many
-Commenter		one-many
-targetedUser		one-many
-RequestingUser		one-many 
-*/
+  @ManyToMany(() => Event)
+  @JoinTable()
+  joinedEvents: Event[];
+
+  @OneToMany(() => Event, (Event) => Event.owner)
+  ownedEvents: Event[];
+
+  @OneToMany(() => Comment, (Comment) => Comment.Commenter)
+  Commenter: Comment[];
+
+  @OneToMany(() => Follow, (Follow) => Follow.targetedUser)
+  targetedUser: Follow[];
+
+  @OneToMany(() => Follow, (Follow) => Follow.RequestingUser)
+  requestingUser: Follow[];
 }
+
+export {User};
