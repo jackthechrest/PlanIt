@@ -1,10 +1,11 @@
 import { Request, Response } from 'express';
 import argon2 from 'argon2';
-import { addNewUser, getUserByUsername } from '../models/UserModel';
+import { addNewUser, getUserByEmail, getUserByUsername } from '../models/UserModel';
 import { parseDatabaseError } from '../utils/db-utils';
+import { sendEmail } from '../services/emailService';
 
 async function registerUser(req: Request, res: Response): Promise<void> {
-  const { username, password } = req.body as AuthRequest;
+  const { username, displayName, email, password } = req.body as RegisterRequest;
 
   const user = await getUserByUsername(username);
   if (user) {
@@ -15,9 +16,10 @@ async function registerUser(req: Request, res: Response): Promise<void> {
   const passwordHash = await argon2.hash(password);
 
   try {
-    await addNewUser(username, passwordHash);
-
-    // res.status(201).json(newUser);  Now we can redirect to login instead of sending raw data
+    await addNewUser(username, displayName, email, passwordHash);
+    await sendEmail(email, 'Welcome to PlanIt!', 
+      `Thank you for joining PlanIt!\nMake sure to read up on the rules and verify your email!
+      \n\nBest,\nPlanIt Administration`);
     res.redirect('/login');
   } catch (err) {
     console.error(err);
@@ -27,9 +29,9 @@ async function registerUser(req: Request, res: Response): Promise<void> {
 }
 
 async function logIn(req: Request, res: Response): Promise<void> {
-  const { username, password } = req.body as AuthRequest;
+  const { email, password } = req.body as LoginRequest;
 
-  const user = await getUserByUsername(username);
+  const user = await getUserByEmail(email);
   if (!user) {
     res.redirect('/login');
     return;
@@ -45,12 +47,10 @@ async function logIn(req: Request, res: Response): Promise<void> {
   req.session.authenticatedUser = {
     userId: user.userId,
     username: user.username,
-    isPro: user.isPro,
     isAdmin: user.isAdmin,
   };
   req.session.isLoggedIn = true;
 
-  // res.sendStatus(200); Now we can redirect to another page instead of using a generic status
   res.redirect('/loggedin');
 }
 

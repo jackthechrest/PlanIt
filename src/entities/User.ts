@@ -10,29 +10,25 @@ export class User {
   @Column({ unique: true })
   username: string;
 
-  @Column({ unique: true })
-  passwordHash: string;
-
-  @Column({ default: false })
-  isPro: boolean;
-
-  @Column({ default: false })
-  isAdmin: boolean;
-
-
-  /*
   @Column({default: ""})
-  biography: string
-
-  @Column({default: username})
-  displayName
+  displayName: string;
 
   @Column({unique: true})
   email: string
 
+  @Column({ unique: true })
+  passwordHash: string;
+
+  @Column({ default: false })
+  isAdmin: boolean;
+
+  @Column({default: ""})
+  biography: string
+
   @Column({default: false})
   verifiedEmail: boolean
 
+  /*
   // need to add profile picture functionality
   @Column()
   profilePic: string
