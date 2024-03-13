@@ -15,6 +15,12 @@ export class User {
   @Column({ unique: true })
   username: string;
 
+  @Column({default: ""})
+  displayName: string;
+
+  @Column({unique: true})
+  email: string
+
   @Column({ unique: true })
   passwordHash: string;
 
@@ -33,6 +39,7 @@ export class User {
   @Column({default: false})
   verifiedEmail: boolean;
 
+  
   // need to add profile picture functionality
   @Column()
   profilePic: string;
