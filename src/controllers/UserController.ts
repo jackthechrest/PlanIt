@@ -54,4 +54,33 @@ async function logIn(req: Request, res: Response): Promise<void> {
   res.redirect('/loggedin');
 }
 
-export { registerUser, logIn };
+async function deleteAccount(req: Request, res: Response): Promise<void> {
+  const { isLoggedIn, authenticatedUser } = req.session;
+  const { email, password } = req.body as LoginRequest;
+
+  if (!isLoggedIn) {
+    res.redirect('/login'); // not logged in
+    return;
+  }
+
+  const user = await getUserByEmail(email);
+  if (!user) {
+    res.redirect('/users/PreviewPage'); // 404 Not Found - email doesn't exist
+    return;
+  }
+
+  if (authenticatedUser.userId !== user.userId) {
+    res.redirect('/users/PreviewPage'); // trying to delete someone elses account
+    return;
+  }
+
+  const { passwordHash } = user;
+
+  if (!(await argon2.verify(passwordHash, password))) {
+    res.redirect('/users/PreviewPage'); // 404 not found - user w/ email/password doesn't exist
+  }
+
+  res.redirect('/index');
+}
+
+export { registerUser, logIn, deleteAccount};
