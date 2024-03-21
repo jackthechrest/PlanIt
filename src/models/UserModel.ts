@@ -4,7 +4,12 @@ import { User } from '../entities/User';
 const userRepository = AppDataSource.getRepository(User);
 
 async function getUserById(userId: string): Promise<User | null> {
-  const user = await userRepository.findOne({ where: { userId }});
+  const user = await userRepository.findOne({ where: { userId }, 
+    relations: [
+    'following',
+    'followers',
+    ],
+  });
   return user;
 }
 

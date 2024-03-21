@@ -8,5 +8,32 @@
     <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body>
+    <h1>MENU</h1>
+    <ul>
+        <li>
+          <p>- <a href="/logo">Logo</a></p>
+        </li>
+        <li>
+          <p>- <a href="/users/<%= user.userId %>/calendar">Calendar</a></p>
+        </li>
+        <li>
+          <p>- <a href="/search">Search</a></p>
+        </li>
+        <li>
+          <p>- <a href="/users/<%= user.userId %>/messages">Inbox</a></p>
+        </li>
+    </ul>
+
+    <h1 class="big-title">WIP</h1>
+
+    <ul>
+      <li>
+        <p><a href="/verify">Verify Email</a></p>
+      </li>
+      <li>
+        <p><a href="/delete">Delete Account</a></p>
+      </li>
+    </ul>
+    
   </body>
 </html>

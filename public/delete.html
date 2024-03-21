@@ -8,5 +8,33 @@
     <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body>
+    <h1>MENU</h1>
+    <ul>
+        <li>
+          <p>- <a href="/logo">Logo</a></p>
+        </li>
+        <li>
+            <p>- <a href="/users/<%= user.userId %>/calendar">Calendar</a></p>
+        </li>
+        <li>
+            <p>- <a href="/search">Search</a></p>
+        </li>
+        <li>
+            <p>- <a href="/users/<%= user.userId %>/messages">Inbox</a></p>
+        </li>
+    </ul>
+
+    <div class = "form">
+      <form method = "POST" action = "/users/delete">
+        <label for = "email"></label>
+        <input name = "email" id = "email" class = "email" placeholder = "Email" type = "email" required>
+
+        <label for = "password"></label>
+        <input name = "password" id = "password" class = "password" placeholder = "Password" type = "password" required>
+
+        <button class = "btn">Delete Account</button>
+      </form>
+    </div>
+
   </body>
 </html>
