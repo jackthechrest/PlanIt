@@ -130,9 +130,9 @@ async function verifyEmail(req: Request, res: Response): Promise<void> {
 
 async function renderCalendar(req: Request, res: Response): Promise<void> {
   const { isLoggedIn } = req.session;
-  const { targetUserId } = req.params as UserIdParam;
+  const { targetUserId } = req.params;
 
-  const user = getUserById(targetUserId);
+  const user = await getUserById(targetUserId);
 
   if (!isLoggedIn || !user) {
     res.redirect('/login');
@@ -144,9 +144,9 @@ async function renderCalendar(req: Request, res: Response): Promise<void> {
 
 async function renderSearch(req: Request, res: Response): Promise<void> {
   const { isLoggedIn } = req.session;
-  const { targetUserId } = req.params as UserIdParam;
+  const { targetUserId } = req.params;
 
-  const user = getUserById(targetUserId);
+  const user = await getUserById(targetUserId);
 
   if (!isLoggedIn || !user) {
     res.redirect('/login');
@@ -160,7 +160,7 @@ async function renderMessages(req: Request, res: Response): Promise<void> {
   const { isLoggedIn } = req.session;
   const { targetUserId } = req.params as UserIdParam;
 
-  const user = getUserById(targetUserId);
+  const user = await getUserById(targetUserId);
 
   if (!isLoggedIn || !user) {
     res.redirect('/login');
@@ -174,7 +174,7 @@ async function renderNotifications(req: Request, res: Response): Promise<void> {
   const { isLoggedIn } = req.session;
   const { targetUserId } = req.params as UserIdParam;
 
-  const user = getUserById(targetUserId);
+  const user = await getUserById(targetUserId);
 
   if (!isLoggedIn || !user) {
     res.redirect('/login');
