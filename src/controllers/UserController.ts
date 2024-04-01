@@ -19,7 +19,7 @@ async function registerUser(req: Request, res: Response): Promise<void> {
   try {
     await addNewUser(username, displayName, email, passwordHash);
     await sendEmail(email, 'Welcome to PlanIt!', 
-      `Thank you for joining PlanIt,` + displayName + ` (` + username + `)` + `!
+      `Thank you for joining PlanIt, ` + username + `!
       \nMake sure to read up on the rules and verify your email!
       \n\nBest,\nPlanIt Administration`);
     res.redirect('/login');
@@ -53,12 +53,12 @@ async function logIn(req: Request, res: Response): Promise<void> {
   };
   req.session.isLoggedIn = true;
 
-  res.redirect('/users/' + user.userId);
+  res.redirect(`/users/${user.userId}`);
 }
 
 async function getUserProfileData(req: Request, res: Response): Promise<void> {
   const { targetUserId } = req.params as UserIdParam;
-
+  
   // Get the user account
   let user = await getUserById(targetUserId);
 
@@ -120,12 +120,32 @@ async function logoRedirect(req: Request, res: Response): Promise<void> {
   res.redirect('/index');
 }
 
-async function sendVerification(req: Request, res: Response): Promise<void> {
-  res.sendStatus(201);
+async function renderSettings(req: Request, res: Response): Promise<void> {
+  const { isLoggedIn } = req.session;
+  const { targetUserId } = req.params;
+
+  const user = await getUserById(targetUserId);
+
+  if (!isLoggedIn || !user) {
+    res.redirect('/login');
+    return;
+  }
+
+  res.render('settings', { user });
 }
 
-async function verifyEmail(req: Request, res: Response): Promise<void> {
-  res.sendStatus(201);
+async function renderDelete(req: Request, res: Response): Promise<void> {
+  const { isLoggedIn } = req.session;
+  const { targetUserId } = req.params;
+
+  const user = await getUserById(targetUserId);
+
+  if (!isLoggedIn || !user) {
+    res.redirect('/login');
+    return;
+  }
+
+  res.render('delete', { user });
 }
 
 async function renderCalendar(req: Request, res: Response): Promise<void> {
@@ -139,7 +159,7 @@ async function renderCalendar(req: Request, res: Response): Promise<void> {
     return;
   }
 
-  res.render('calendar', { user });
+  res.redirect('/calendar');
 }
 
 async function renderSearch(req: Request, res: Response): Promise<void> {
@@ -202,5 +222,5 @@ async function renderReports(req: Request, res: Response): Promise<void> {
   res.render('reports', { user } );
 }
 
-export { registerUser, logIn, getUserProfileData, deleteAccount, logoRedirect, sendVerification, verifyEmail, 
-        renderCalendar, renderSearch, renderMessages, renderNotifications, renderReports};
+export { registerUser, logIn, getUserProfileData, deleteAccount, logoRedirect, 
+         renderSettings, renderDelete, renderCalendar, renderSearch, renderMessages, renderNotifications, renderReports};

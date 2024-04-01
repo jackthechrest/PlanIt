@@ -5,8 +5,9 @@ import express, { Express } from 'express';
 
 import session from 'express-session';
 import connectSqlite3 from 'connect-sqlite3';
-import { registerUser, logIn, getUserProfileData, logoRedirect, sendVerification, verifyEmail, deleteAccount, renderCalendar, renderSearch, renderMessages, renderNotifications, renderReports } from './controllers/UserController';
+import { registerUser, logIn, getUserProfileData, logoRedirect, deleteAccount, renderCalendar, renderSearch, renderMessages, renderNotifications, renderReports, renderSettings, renderDelete } from './controllers/UserController';
 import { followUser, renderFollowersPage, renderFollowingPage, unfollowUser } from './controllers/FollowController';
+import { sendVerification, verifyEmail } from './controllers/VerifyCodeController';
 
 const app: Express = express();
 const { PORT, COOKIE_SECRET } = process.env;
@@ -32,10 +33,12 @@ app.post('/api/users', registerUser); // Create an account
 app.post('/api/login', logIn); // Log in to an account
 app.get('/users/:targetUserId', getUserProfileData);
 app.get('/verify', sendVerification);
-app.post('/users/verify', verifyEmail);
-app.post('/users/delete', deleteAccount);
+app.post('/api/verify', verifyEmail);
+app.post('/api/delete', deleteAccount);
 
 app.get('/logo', logoRedirect);
+app.get('/settings', renderSettings);
+app.get('/delete', renderDelete);
 app.get('/users/:targetUserId/calendar', renderCalendar);
 app.get('/search', renderSearch);
 app.get('/users/:targetUserId/messages', renderMessages);

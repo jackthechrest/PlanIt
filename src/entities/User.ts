@@ -1,6 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Relation, OneToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Relation, OneToOne, ManyToMany, JoinColumn } from 'typeorm';
 import { Follow } from './Follow';
 import { VerifyCode } from './VerifyCode';
+import { FriendList } from './FriendList';
+import { Notifications } from './Notifications';
+import { Message } from './Message';
 
 @Entity()
 export class User {
@@ -42,13 +45,29 @@ export class User {
   @OneToMany(() => Follow, (follow) => follow.targetedUser, { cascade: ['insert', 'update'] })
   followers: Relation<Follow>[];
 
+  // Friends
+  @OneToOne(() => FriendList, (friendList) => friendList.owner, { cascade: ['insert', 'update'] })
+  @JoinColumn()
+  selfFriendList: Relation<FriendList>;
+
+  @ManyToMany(() => FriendList, (friendList) => friendList.friends, { cascade: ['insert', 'update'] })
+  otherFriendLists: Relation<FriendList>[];
+
+  @ManyToMany(() => FriendList, (friendList) => friendList.pendingFriends, { cascade: ['insert', 'update'] })
+  unconfirmedFriendLists: Relation<FriendList>[];
+
   // Email Verification
-  @OneToOne(() => VerifyCode, (code) => code.user, { cascade: ['insert', 'update'] })
+  @OneToOne(() => VerifyCode, (verifyCode) => verifyCode.user, { cascade: ['insert', 'update'] })
+  @JoinColumn()
   code: Relation<VerifyCode>;
 
+  // Notifications
+  @OneToMany(() => Notifications, (notifications) => notifications.forUser, { cascade: ['insert', 'update'] } )
+  notifications: Relation<User>[];
 
+  @OneToMany(() => Message, (message) => message.sender, { cascade: ['insert', 'update'] } )
+  sentMessages: Relation<Message>[];
 /*
-  friends 		many-many
 personalCalendar	one-one
 joinedEvents		many-many
 ownedEvents		one-many
