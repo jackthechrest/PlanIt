@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Log | PlanIt </title>
+</head>
+<body>
+    <h1>MENU</h1>
+    <ul>
+        <li>
+            <p>- <a href="/logo">Logo</a></p>
+        </li>
+        <li>
+            <p>- <a href="/users/<%= user.userId %>/calendar">Calendar</a></p>
+        </li>
+        <li>
+            <p>- <a href="/search">Search</a></p>
+        </li>
+        <li>
+            <p>- <a href="/users/<%= user.userId %>/messages">Inbox</a></p>
+        </li>
+    </ul>
+
+    <h1>INBOX MENU</h1>
+    <ul>
+        <li>
+            <p>- <a href="/users/<%= user.userId %>/messages">Messages</a></p>
+        </li>
+        <li>
+            <p>- <a href="/users/<%= user.userId %>/other">Other Notifications</a></p>
+        </li>
+        <% if (user.isAdmin) { %>
+            <li>
+                <p>- <a href="/reports">Reports</a></p>
+            </li>
+        <% } %>
+    </ul>
+    
+    <h1 class="big-title">WIP</h1>
+</body>
+</html>
