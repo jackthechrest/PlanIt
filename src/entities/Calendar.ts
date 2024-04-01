@@ -1,11 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, Relation,
+import { Entity, PrimaryGeneratedColumn, Column, Relation, JoinTable,
     OneToMany, ManyToOne, ManyToMany, OneToOne} from 'typeorm';
 
-import { Calendar} from "./Calendar ";
+import { User} from "./User";
 import { Event } from "./Event";
-import { Comment } from "./Comment";
-import { Follow } from "./Follow";
-
 
 @Entity()
 export class Calendar{
@@ -16,6 +13,8 @@ export class Calendar{
     @OneToOne(() => "User")
     @JoinTable()
     personalCalendar: User[];
-}
 
-export { Calendar }
+    @ManyToMany(() => "Event")
+    @JoinTable()
+    scheduledEvent: Event[];    
+}

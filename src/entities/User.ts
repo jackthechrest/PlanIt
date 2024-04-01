@@ -1,7 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, Relation,
+import { Entity, PrimaryGeneratedColumn, Column, Relation, JoinTable,
   OneToMany, ManyToOne, ManyToMany, OneToOne} from 'typeorm';
 
-import { Calendar} from "./Calendar ";
+import { Calendar} from "./Calendar";
 import { Event } from "./Event";
 import { Comment } from "./Comment";
 import { Follow } from "./Follow";
@@ -30,15 +30,8 @@ export class User {
   @Column({default: ""})
   biography: string;
 
-  @Column({default: username})
-  displayName;
-
-  @Column({unique: true})
-  email: string;
-
   @Column({default: false})
   verifiedEmail: boolean;
-
   
   // need to add profile picture functionality
   @Column()
@@ -68,5 +61,3 @@ export class User {
   @OneToMany(() => Follow, (Follow) => Follow.RequestingUser)
   requestingUser: Follow[];
 }
-
-export {User};
