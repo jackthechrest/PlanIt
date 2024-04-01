@@ -9,3 +9,11 @@ type LoginRequest = {
   email: string;
   password: string;
 };
+
+type UserIdParam = {
+  targetUserId: string;
+};
+
+type VerifyRequest = {
+  verifyCode: string;
+};

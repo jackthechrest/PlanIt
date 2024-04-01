@@ -8,6 +8,7 @@ async function getUserById(userId: string): Promise<User | null> {
     relations: [
     'following',
     'followers',
+    'code',
     ],
   });
   return user;
@@ -54,5 +55,19 @@ async function deleteUserById(userId: string): Promise<void> {
     .execute();
 }
 
+async function setVerifiedByUserId(userId: string): Promise<User | null> {
+  const updatedUser = await getUserById(userId);
+  updatedUser.verifiedEmail = true;
 
-export { getUserById, getUserByUsername, getUserByEmail, addNewUser, deleteUserById };
+  await userRepository
+    .createQueryBuilder()
+    .update(User)
+    .set({ verifiedEmail: true })
+    .where({ userId: userId })
+    .execute();
+
+  return updatedUser;
+}
+
+
+export { getUserById, getUserByUsername, getUserByEmail, addNewUser, deleteUserById, setVerifiedByUserId };

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { Entity, PrimaryGeneratedColumn, Column, Relation, JoinTable,
   OneToMany, ManyToOne, ManyToMany, OneToOne} from 'typeorm';
 
@@ -6,6 +7,14 @@ import { Event } from "./Event";
 import { Comment } from "./Comment";
 import { Follow } from "./Follow";
 
+=======
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Relation, OneToOne, ManyToMany, JoinColumn } from 'typeorm';
+import { Follow } from './Follow';
+import { VerifyCode } from './VerifyCode';
+import { FriendList } from './FriendList';
+import { Notifications } from './Notifications';
+import { Message } from './Message';
+>>>>>>> 8692aa91050c54491383e8a9a7634d45f6f4cb16
 
 @Entity()
 export class User {
@@ -45,19 +54,34 @@ export class User {
   @OneToOne(() => Calendar)
   personalCalendar: Calendar;
 
-  @ManyToMany(() => Event)
-  @JoinTable()
-  joinedEvents: Event[];
+  // Friends
+  @OneToOne(() => FriendList, (friendList) => friendList.owner, { cascade: ['insert', 'update'] })
+  @JoinColumn()
+  selfFriendList: Relation<FriendList>;
 
-  @OneToMany(() => Event, (Event) => Event.owner)
-  ownedEvents: Event[];
+  @ManyToMany(() => FriendList, (friendList) => friendList.friends, { cascade: ['insert', 'update'] })
+  otherFriendLists: Relation<FriendList>[];
 
-  @OneToMany(() => Comment, (Comment) => Comment.Commenter)
-  Commenter: Comment[];
+  @ManyToMany(() => FriendList, (friendList) => friendList.pendingFriends, { cascade: ['insert', 'update'] })
+  unconfirmedFriendLists: Relation<FriendList>[];
 
-  @OneToMany(() => Follow, (Follow) => Follow.targetedUser)
-  targetedUser: Follow[];
+  // Email Verification
+  @OneToOne(() => VerifyCode, (verifyCode) => verifyCode.user, { cascade: ['insert', 'update'] })
+  @JoinColumn()
+  code: Relation<VerifyCode>;
 
-  @OneToMany(() => Follow, (Follow) => Follow.RequestingUser)
-  requestingUser: Follow[];
+  // Notifications
+  @OneToMany(() => Notifications, (notifications) => notifications.forUser, { cascade: ['insert', 'update'] } )
+  notifications: Relation<User>[];
+
+  @OneToMany(() => Message, (message) => message.sender, { cascade: ['insert', 'update'] } )
+  sentMessages: Relation<Message>[];
+/*
+personalCalendar	one-one
+joinedEvents		many-many
+ownedEvents		one-many
+Commenter		one-many
+targetedUser		one-many
+RequestingUser		one-many 
+*/
 }

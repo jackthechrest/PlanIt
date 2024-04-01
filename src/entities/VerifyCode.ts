@@ -3,6 +3,7 @@ import { User } from './User';
 
 @Entity()
 export class VerifyCode {
+  // codeId = 'VC<+>'userId
   @PrimaryColumn()
   codeId: string;
 
@@ -10,7 +11,7 @@ export class VerifyCode {
   codeHash: string;
 
   @Column({ nullable: true })
-  timeSent: string;
+  timeSent: Date;
 
   @OneToOne(() => User, (user) => user.code, { cascade: ['insert', 'update', 'remove'] })
   user: Relation<User>;
