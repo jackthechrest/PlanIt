@@ -28,9 +28,12 @@ export class Event{
     visibility_level: string;
 
     // relationships
-    /*
-    OwnedEvents: One-Many w/ User
-    JoinedEvents: Many-Many w/ user
-    ScheduledEvents: Many-Many w/ Calendar
-    */
+    @ManyToOne(() => User )
+    OwnedEvent: Relation<User>
+
+    @ManyToMany(() => User)
+    JoinedEvent: Relation<User>[]
+
+    @ManyToMany(() => Calendar)
+    ScheduledEvents: Relation<Calendar>[]
 }

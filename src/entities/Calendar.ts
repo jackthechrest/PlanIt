@@ -16,5 +16,5 @@ export class Calendar{
 
     @ManyToMany(() => "Event")
     @JoinTable()
-    scheduledEvent: Event[];    
+    scheduledEvent: Relation<Event>[]; 
 }

@@ -1,20 +1,10 @@
-<<<<<<< HEAD
-import { Entity, PrimaryGeneratedColumn, Column, Relation, JoinTable,
-  OneToMany, ManyToOne, ManyToMany, OneToOne} from 'typeorm';
-
-import { Calendar} from "./Calendar";
-import { Event } from "./Event";
-import { Comment } from "./Comment";
-import { Follow } from "./Follow";
-
-=======
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Relation, OneToOne, ManyToMany, JoinColumn } from 'typeorm';
 import { Follow } from './Follow';
 import { VerifyCode } from './VerifyCode';
 import { FriendList } from './FriendList';
 import { Notifications } from './Notifications';
 import { Message } from './Message';
->>>>>>> 8692aa91050c54491383e8a9a7634d45f6f4cb16
+import { Calendar } from './Calendar';
 
 @Entity()
 export class User {
@@ -76,12 +66,17 @@ export class User {
 
   @OneToMany(() => Message, (message) => message.sender, { cascade: ['insert', 'update'] } )
   sentMessages: Relation<Message>[];
+
+  // Event Related
+  @ManyToMany(() => Event)
+  @JoinColumn()
+  JoinedEvents: Relation<Event>[];
+
+  @OneToMany(() => Event)
+  @JoinColumn()
+  OwnedEvents: Relation<Event>[];
+
 /*
-personalCalendar	one-one
-joinedEvents		many-many
-ownedEvents		one-many
-Commenter		one-many
-targetedUser		one-many
-RequestingUser		one-many 
+Commenter		one-many 
 */
 }
