@@ -13,6 +13,6 @@ export class VerifyCode {
   @Column({ nullable: true })
   timeSent: Date;
 
-  @OneToOne(() => User, (user) => user.code, { cascade: ['insert', 'update', 'remove'] })
+  @OneToOne(() => User, (user) => user.code, { cascade: ['insert', 'update'], onDelete: "CASCADE", })
   user: Relation<User>;
 }

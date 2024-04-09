@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
 import argon2 from 'argon2';
-import { addNewUser, getUserByEmail, getUserById, getUserByUsername } from '../models/UserModel';
+import { addNewUser, deleteUserById, getUserByEmail, getUserById, getUserByUsername } from '../models/UserModel';
 import { parseDatabaseError } from '../utils/db-utils';
 import { sendEmail } from '../services/emailService';
 import { getFollowById } from '../models/FollowModel';
+import { getFriendStatus } from '../models/FriendListModel';
 
 async function registerUser(req: Request, res: Response): Promise<void> {
   const { username, displayName, email, password } = req.body as RegisterRequest;
@@ -58,24 +59,26 @@ async function logIn(req: Request, res: Response): Promise<void> {
 
 async function getUserProfileData(req: Request, res: Response): Promise<void> {
   const { targetUserId } = req.params as UserIdParam;
+  const { isLoggedIn, authenticatedUser } = req.session;
   
   // Get the user account
   let user = await getUserById(targetUserId);
 
-  if (!user) {
-    res.redirect('/login'); // 404 Not Found
+  if (!isLoggedIn || !user) {
+    res.redirect('/login');
     return;
   }
 
-  const { isLoggedIn, authenticatedUser } = req.session;
   const viewingUser = await getUserById(authenticatedUser.userId);
   const targetFollow = await getFollowById(user.userId + viewingUser.userId);
+  const friendStatus = await getFriendStatus(viewingUser.userId, user.userId);
 
   res.render('profilePage', {
     user,
-    authenticatedId: viewingUser.userId,
+    viewingUser: viewingUser,
     loggedIn: isLoggedIn,
     following: targetFollow,
+    friendStatus: friendStatus,
   });
 }
 
@@ -105,6 +108,8 @@ async function deleteAccount(req: Request, res: Response): Promise<void> {
     res.redirect('/users/' + authenticatedUser.userId); // 404 not found - user w/ email/password doesn't exist
   }
 
+  await deleteUserById(authenticatedUser.userId);
+
   res.redirect('/index');
 }
 
@@ -114,7 +119,7 @@ async function logoRedirect(req: Request, res: Response): Promise<void> {
   // clicking on logo should take user to their profile if they're logged in
   // and to the index page otherwise
   if (isLoggedIn) {
-    res.redirect('/users/' + authenticatedUser.userId);
+    res.redirect(`/users/${authenticatedUser.userId}`);
     return;
   }
   res.redirect('/index');
@@ -190,37 +195,5 @@ async function renderMessages(req: Request, res: Response): Promise<void> {
   res.render('messages', { user });
 }
 
-async function renderNotifications(req: Request, res: Response): Promise<void> {
-  const { isLoggedIn } = req.session;
-  const { targetUserId } = req.params as UserIdParam;
-
-  const user = await getUserById(targetUserId);
-
-  if (!isLoggedIn || !user) {
-    res.redirect('/login');
-    return;
-  }
-
-  res.render('notifications', { user });
-}
-
-async function renderReports(req: Request, res: Response): Promise<void> {
-  const { isLoggedIn, authenticatedUser } = req.session;
-
-  const user = getUserById(authenticatedUser.userId);
-
-  if (!isLoggedIn || !user) {
-    res.redirect('/login');
-    return;
-  }
-
-  if (!authenticatedUser.isAdmin) {
-    res.redirect('/users/' + authenticatedUser.userId);
-    return;
-  }
-
-  res.render('reports', { user } );
-}
-
 export { registerUser, logIn, getUserProfileData, deleteAccount, logoRedirect, 
-         renderSettings, renderDelete, renderCalendar, renderSearch, renderMessages, renderNotifications, renderReports};
+         renderSettings, renderDelete, renderCalendar, renderSearch, renderMessages };

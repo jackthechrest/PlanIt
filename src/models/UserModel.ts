@@ -1,5 +1,7 @@
 import { AppDataSource } from '../dataSource';
+import { FriendList } from '../entities/FriendList';
 import { User } from '../entities/User';
+import { VerifyCode } from '../entities/VerifyCode';
 
 const userRepository = AppDataSource.getRepository(User);
 
@@ -8,6 +10,11 @@ async function getUserById(userId: string): Promise<User | null> {
     relations: [
     'following',
     'followers',
+    'receivedNotifications',
+    'sentNotifications',
+    'selfFriendList',
+    'otherFriendLists',
+    'unconfirmedFriendLists',
     'code',
     ],
   });
@@ -15,8 +22,6 @@ async function getUserById(userId: string): Promise<User | null> {
 }
 
 async function getUserByUsername(username: string): Promise<User | null> {
-  console.log({ username });
-
   const user = await userRepository
     .createQueryBuilder('user')
     .where('username = :username', { username })
@@ -25,8 +30,6 @@ async function getUserByUsername(username: string): Promise<User | null> {
 }
 
 async function getUserByEmail(email: string): Promise<User | null> {
-  console.log({ email });
-
   const user = await userRepository
     .createQueryBuilder('user')
     .where('email = :email', { email })
@@ -34,7 +37,7 @@ async function getUserByEmail(email: string): Promise<User | null> {
   return user;
 }
 
-async function addNewUser(username: string, displayName: string, email: string, passwordHash: string): Promise<User | null> {
+async function addNewUser(username: string, displayName: string, email: string, passwordHash: string): Promise<User | null> { 
   // Create the new user object
   let newUser = new User();
   newUser.username = username;
@@ -42,6 +45,21 @@ async function addNewUser(username: string, displayName: string, email: string, 
   newUser.email = email;
   newUser.passwordHash = passwordHash;
 
+  if (username === 'JackTheChrest' || username === 'Quinn' || username === 'Matthew') {
+    newUser.isAdmin = true;
+  }
+  newUser = await userRepository.save(newUser);
+
+  const friendList = new FriendList();
+  friendList.friendListId = `FL<+>${newUser.userId}`;
+
+  newUser.selfFriendList = friendList;
+
+  const verifyCode = new VerifyCode();
+  verifyCode.codeId = `VC<+>${newUser.userId}`;
+
+  newUser.code = verifyCode;
+  
   newUser = await userRepository.save(newUser);
 
   return newUser;
@@ -60,14 +78,22 @@ async function setVerifiedByUserId(userId: string): Promise<User | null> {
   updatedUser.verifiedEmail = true;
 
   await userRepository
-    .createQueryBuilder()
+    .createQueryBuilder('user')
     .update(User)
     .set({ verifiedEmail: true })
-    .where({ userId: userId })
+    .where('userId = :userId', { userId })
     .execute();
 
   return updatedUser;
 }
 
+async function incrementWarningCountForUser(userId: string): Promise<User | null> {
+  let updatedUser = await getUserById(userId);
+  updatedUser.warningCount += 1;
 
-export { getUserById, getUserByUsername, getUserByEmail, addNewUser, deleteUserById, setVerifiedByUserId };
+  updatedUser = await userRepository.save(updatedUser);
+
+  return updatedUser;
+}
+
+export { getUserById, getUserByUsername, getUserByEmail, addNewUser, deleteUserById, setVerifiedByUserId, incrementWarningCountForUser };

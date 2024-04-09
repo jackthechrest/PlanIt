@@ -3,7 +3,6 @@ import { Follow } from './Follow';
 import { VerifyCode } from './VerifyCode';
 import { FriendList } from './FriendList';
 import { Notifications } from './Notifications';
-import { Message } from './Message';
 
 @Entity()
 export class User {
@@ -17,7 +16,7 @@ export class User {
   displayName: string;
 
   @Column({unique: true})
-  email: string
+  email: string;
 
   @Column({ unique: true })
   passwordHash: string;
@@ -25,11 +24,14 @@ export class User {
   @Column({ default: false })
   isAdmin: boolean;
 
-  @Column({default: ""})
-  biography: string
+  @Column({ default: "" })
+  biography: string;
 
-  @Column({default: false})
-  verifiedEmail: boolean
+  @Column({ default: false })
+  verifiedEmail: boolean;
+
+  @Column({ default: 0 })
+  warningCount: number;
 
   /*
   // need to add profile picture functionality
@@ -62,11 +64,11 @@ export class User {
   code: Relation<VerifyCode>;
 
   // Notifications
-  @OneToMany(() => Notifications, (notifications) => notifications.forUser, { cascade: ['insert', 'update'] } )
-  notifications: Relation<User>[];
+  @OneToMany(() => Notifications, (notifications) => notifications.receivingUser, { cascade: ['insert', 'update'] } )
+  receivedNotifications: Relation<User>[];
 
-  @OneToMany(() => Message, (message) => message.sender, { cascade: ['insert', 'update'] } )
-  sentMessages: Relation<Message>[];
+  @OneToMany(() => Notifications, (notifications) => notifications.sendingUser, { cascade: ['insert', 'update'] } )
+  sentNotifications: Relation<User>[];
 /*
 personalCalendar	one-one
 joinedEvents		many-many

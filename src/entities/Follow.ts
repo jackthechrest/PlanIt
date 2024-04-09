@@ -7,21 +7,21 @@ export class Follow {
   @PrimaryColumn()
   followId: string;
 
-  @Column({ default: 'NONE' })
-  targetUserId: string;
+  @Column()
+  targetedUserId: string;
 
-  @Column({ default: 'NONE' })
-  targetUsername: string;
+  @Column()
+  targetedUsername: string;
 
-  @ManyToOne(() => User, (user) => user.followers, { cascade: ['insert', 'update', 'remove'] })
+  @ManyToOne(() => User, (user) => user.followers, { cascade: ['insert', 'update'], onDelete: "CASCADE", })
   targetedUser: Relation<User>;
 
-  @Column({ default: 'NONE' })
-  requestUserId: string;
+  @Column()
+  requestingUserId: string;
 
-  @Column({ default: 'NONE' })
-  requestUsername: string;
+  @Column()
+  requestingUsername: string;
 
-  @ManyToOne(() => User, (user) => user.following, { cascade: ['insert', 'update', 'remove'] })
+  @ManyToOne(() => User, (user) => user.following, { cascade: ['insert', 'update'], onDelete: "CASCADE", })
   requestingUser: Relation<User>;
 }

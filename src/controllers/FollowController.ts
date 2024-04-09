@@ -53,14 +53,15 @@ async function renderFollowingPage(req: Request, res: Response): Promise<void> {
   const { isLoggedIn, authenticatedUser } = req.session;
   const { targetUserId } = req.params;
 
+  if (!isLoggedIn) {
+    res.redirect(`/index`);
+    return;
+  }
+
   const targetUser = await getUserById(targetUserId);
 
   if (!targetUser) {
-    if (!isLoggedIn) {
-      res.redirect(`/index`);
-    } else {
-      res.redirect(`/users/${authenticatedUser.userId}`);
-    }
+    res.redirect(`/users/${authenticatedUser.userId}`);
   }
 
   res.render('following', { user: targetUser });
@@ -70,14 +71,15 @@ async function renderFollowersPage(req: Request, res: Response): Promise<void> {
   const { isLoggedIn, authenticatedUser } = req.session;
   const { targetUserId } = req.params;
 
+  if (!isLoggedIn) {
+    res.redirect(`/index`);
+    return;
+  }
+
   const targetUser = await getUserById(targetUserId);
 
   if (!targetUser) {
-    if (!isLoggedIn) {
-      res.redirect(`/index`);
-    } else {
-      res.redirect(`/users/${authenticatedUser.userId}`);
-    }
+    res.redirect(`/users/${authenticatedUser.userId}`);
   }
 
   res.render('followers', { user: targetUser });

@@ -33,7 +33,7 @@
     <ul>
         <% for (const follower of user.followers) { %>
         <li>
-            <p>- <a href="/users/<%= follower.requestUserId %>"><%= follower.requestUsername %></a></p>
+            <p>- <a href="/users/<%= follower.requestingUserId %>"><%= follower.requestingUsername %></a></p>
         </li>
         <% } %>
     </ul>

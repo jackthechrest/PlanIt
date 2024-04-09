@@ -23,5 +23,29 @@
     </ul>
 
     <h1 class="big-title">WIP</h1>
+
+    <% if (friends.length === 0) { %>
+        <p>No Friends</p>
+        <% } else { %>
+        <ul>
+            <% for (const friend of friends) { %>
+            <li>
+                <p>- <a href="/users/<%= friend.userId %>"><%= friend.username %></a></p>
+            </li>
+            <% } %>
+        </ul>
+        <% } %>
+    
+        <% if (pendingFriends.length === 0) { %>
+            <p>No Pending Friends</p>
+            <% } else { %>
+            <ul>
+                <% for (const friend of pendingFriends) { %>
+                <li>
+                    <p>- <a href="/users/<%= friend.userId %>"><%= friend.username %></a></p>
+                </li>
+                <% } %>
+            </ul>
+            <% } %>        
 </body>
 </html>

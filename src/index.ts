@@ -5,9 +5,12 @@ import express, { Express } from 'express';
 
 import session from 'express-session';
 import connectSqlite3 from 'connect-sqlite3';
-import { registerUser, logIn, getUserProfileData, logoRedirect, deleteAccount, renderCalendar, renderSearch, renderMessages, renderNotifications, renderReports, renderSettings, renderDelete } from './controllers/UserController';
+import { registerUser, logIn, getUserProfileData, logoRedirect, deleteAccount, renderCalendar, renderSearch, renderMessages, renderSettings, renderDelete } from './controllers/UserController';
 import { followUser, renderFollowersPage, renderFollowingPage, unfollowUser } from './controllers/FollowController';
 import { sendVerification, verifyEmail } from './controllers/VerifyCodeController';
+import { friendRequestUser, renderFriendsPage, respondFriendRequest } from './controllers/FriendListController';
+import { renderNotifications } from './controllers/NotifcationsController';
+import { renderReports } from './controllers/ReportController';
 
 const app: Express = express();
 const { PORT, COOKIE_SECRET } = process.env;
@@ -45,11 +48,14 @@ app.get('/users/:targetUserId/messages', renderMessages);
 app.get('/users/:targetUserId/other', renderNotifications);
 app.get('/reports', renderReports);
 
-// Following/Followers
+// Following/Followers/Friends
 app.get('/users/follow/:targetUserId', followUser);
 app.get('/users/unfollow/:targetUserId', unfollowUser);
+app.get('/users/friend/:targetUserId', friendRequestUser);
+app.get('/api/friend/:targetUserId/:action', respondFriendRequest);
 app.get('/users/:targetUserId/following', renderFollowingPage);
 app.get('/users/:targetUserId/followers', renderFollowersPage);
+app.get('/users/:targetUserId/friends', renderFriendsPage);
 
 app.listen(PORT, () => {
   console.log(`Listening at http://localhost:${PORT}`);
