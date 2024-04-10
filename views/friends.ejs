@@ -34,18 +34,6 @@
             </li>
             <% } %>
         </ul>
-        <% } %>
-    
-        <% if (pendingFriends.length === 0) { %>
-            <p>No Pending Friends</p>
-            <% } else { %>
-            <ul>
-                <% for (const friend of pendingFriends) { %>
-                <li>
-                    <p>- <a href="/users/<%= friend.userId %>"><%= friend.username %></a></p>
-                </li>
-                <% } %>
-            </ul>
-            <% } %>        
+        <% } %>       
 </body>
 </html>

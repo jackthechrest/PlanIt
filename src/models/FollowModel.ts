@@ -30,7 +30,7 @@ async function addFollow(requestingUserId: string, targetedUserId: string): Prom
   newFollow = await followRepository.save(newFollow);
 
   // send notification to targeted user
-  await createNewNotification(targetedUser, requestingUser, "FOLLOW", `/users/${targetedUserId}`);
+  await createNewNotification(targetedUserId, requestingUserId, "FOLLOW", `/users/${requestingUserId}`);
   
   return newFollow;
 }

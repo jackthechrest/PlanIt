@@ -45,7 +45,7 @@
                 <% for (const notification of user.receivedNotifications) { %>
                     <% if (notification.type === "FRIEND REQUEST SENT") { %>
                     <li>
-                        <p>[<%=notification.dateString%>]  <%=notification.sendingUsername%> sent you a friend request!</p>
+                        <p>[<%=notification.dateString%>]  <a href="<%=notification.link%>"><%=notification.sendingUsername%> sent you a friend request!</a></p>
                         <% if (!notification.respondedTo) { %>
                             <button><a href="/api/friend/<%=notification.sendingUserId%>/ACCEPT">Accept</a></button>
                             <button><a href="/api/friend/<%=notification.sendingUserId%>/DECLINE">Decline</a></button>
@@ -53,11 +53,11 @@
                     </li>
                     <% } else if (notification.type === "FRIEND REQUEST ACCEPTED") { %>
                         <li>
-                            <p>[<%=notification.dateString%>]  <%=notification.sendingUsername%> accepted your friend request!</p>
+                            <p>[<%=notification.dateString%>]  <a href="<%=notification.link%>"><%=notification.sendingUsername%> accepted your friend request!</a></p>
                         </li>
                     <% } else if (notification.type === "FOLLOW") { %>
                     <li>
-                        <p>[<%=notification.dateString%>]  <%=notification.sendingUsername%> followed you!</p>
+                        <p>[<%=notification.dateString%>]  <a href="<%=notification.link%>"><%=notification.sendingUsername%> followed you!</a></p>
                     </li>
                     <% } else if (notification.type === "WARNING") { %>
                         <% if (notification.sendingUsername === "JackTheChrest") { %>
@@ -75,7 +75,7 @@
                         <% } %>
                     <% } else if (notification.type === "EVENT CREATED" || notification.type === "EVENT EDITED" || notification.type === "EVENT CANCELLED") { %>
                     <li>
-                        <p>[<%=notification.dateString%>]  Event</p>
+                        <p>[<%=notification.dateString%>]  <a href="<%=notification.link%>">Event</a></p>
                     </li>
                     <% } %>
                 <% } %>

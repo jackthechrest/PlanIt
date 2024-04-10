@@ -46,19 +46,19 @@
         <% for (const report of pendingReports) { %>
             <% if (report.offendingContentId.charAt(0) === "P") {  %>
                 <li>
-                    <p>[<%=report.dateString%>]  Reported Profile</p>
+                    <p>[<%=report.dateString%>]  <a href="<%=report.link%>">Reported Profile</a></p>
                 </li>
             <% } else if (report.offendingContentId.charAt(0) === "E") { %>
                 <li>
-                    <p>[<%=report.dateString%>]  Reported Event</p>
+                    <p>[<%=report.dateString%>]  <a href="<%=report.link%>">Reported Event</a></p>
                 </li>
             <% } else if (report.offendingContentId.charAt(0) === "W") { %>
                 <li>
-                    <p>[<%=report.dateString%>]  Reported Wall Post</p>
+                    <p>[<%=report.dateString%>]  <a href="<%=report.link%>">Reported Wall Post</a></p>
                 </li>
             <% } else if (report.offendingContentId.charAt(0) === "C") { %>
                 <li>
-                    <p>[<%=report.dateString%>]  Reported Comment</p>
+                    <p>[<%=report.dateString%>]  <a href="<%=report.link%>">Reported Comment</a></p>
                 </li>
             <% } %>
         <% } %>

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { getUserById } from '../models/UserModel';
-import { getFriendListById, replyFriendRequest, sendFriendRequest } from '../models/FriendListModel';
+import { getFriendListById, removeFriend, replyFriendRequest, sendFriendRequest } from '../models/FriendListModel';
 import { setResponded } from '../models/NotificationsModel';
 
 async function friendRequestUser(req: Request, res: Response): Promise<void> {
@@ -44,7 +44,7 @@ async function respondFriendRequest(req: Request, res: Response): Promise<void> 
     await replyFriendRequest(authenticatedUser.userId, targetUserId, action);
   }
   
-  await setResponded(targetUserId, authenticatedUser.userId);
+  await setResponded(authenticatedUser.userId, targetUserId);
 
   res.redirect(`/users/${authenticatedUser.userId}/other`);
 }
@@ -53,12 +53,12 @@ async function renderFriendsPage(req: Request, res: Response): Promise<void> {
   const { isLoggedIn, authenticatedUser } = req.session;
   const { targetUserId } = req.params;
   
-  const targetUser = await getUserById(targetUserId);
-  
   if (!isLoggedIn) {
     res.redirect(`/login`);
     return;
   }
+
+  const targetUser = await getUserById(targetUserId);
 
   if (!targetUser) {
     res.redirect(`/users/${authenticatedUser.userId}`);
@@ -72,4 +72,24 @@ async function renderFriendsPage(req: Request, res: Response): Promise<void> {
   res.render('friends', { user: targetUser, friends, pendingFriends });
 }
 
-export { friendRequestUser, respondFriendRequest, renderFriendsPage } 
+async function unfriendUser(req: Request, res: Response): Promise<void> {
+  const { isLoggedIn, authenticatedUser } = req.session;
+  const { targetUserId } = req.params;
+  
+  if (!isLoggedIn) {
+    res.redirect(`/login`);
+    return;
+  }
+
+  const targetUser = await getUserById(targetUserId);
+
+  if (!targetUser) {
+    res.redirect(`/users/${authenticatedUser.userId}`);
+    return;
+  }
+
+  await removeFriend(authenticatedUser.userId, targetUserId);
+  res.redirect(`/users/${targetUserId}`);
+}
+
+export { friendRequestUser, respondFriendRequest, renderFriendsPage, unfriendUser } 

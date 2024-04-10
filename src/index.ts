@@ -8,7 +8,7 @@ import connectSqlite3 from 'connect-sqlite3';
 import { registerUser, logIn, getUserProfileData, logoRedirect, deleteAccount, renderCalendar, renderSearch, renderMessages, renderSettings, renderDelete } from './controllers/UserController';
 import { followUser, renderFollowersPage, renderFollowingPage, unfollowUser } from './controllers/FollowController';
 import { sendVerification, verifyEmail } from './controllers/VerifyCodeController';
-import { friendRequestUser, renderFriendsPage, respondFriendRequest } from './controllers/FriendListController';
+import { friendRequestUser, renderFriendsPage, respondFriendRequest, unfriendUser } from './controllers/FriendListController';
 import { renderNotifications } from './controllers/NotifcationsController';
 import { renderReports } from './controllers/ReportController';
 
@@ -53,6 +53,7 @@ app.get('/users/follow/:targetUserId', followUser);
 app.get('/users/unfollow/:targetUserId', unfollowUser);
 app.get('/users/friend/:targetUserId', friendRequestUser);
 app.get('/api/friend/:targetUserId/:action', respondFriendRequest);
+app.get('/api/unfriend/:targetUserId', unfriendUser);
 app.get('/users/:targetUserId/following', renderFollowingPage);
 app.get('/users/:targetUserId/followers', renderFollowersPage);
 app.get('/users/:targetUserId/friends', renderFriendsPage);

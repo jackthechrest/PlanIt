@@ -43,6 +43,8 @@
       <% } %>
       <% if (friendStatus === "NOT FRIEND") { %>
         <button class="btn-large"><a href = '/users/friend/<%= user.userId %>'>Send Friend Request</a></button>
+      <% } else if (friendStatus === "FRIEND") { %>
+        <button class="btn-large"><a href = '/api/unfriend/<%= user.userId %>'>Unfriend</a></button>
       <% } %>
     <% } %>
 

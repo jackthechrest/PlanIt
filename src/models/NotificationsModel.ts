@@ -1,9 +1,9 @@
 import { AppDataSource } from '../dataSource';
 import { Notifications } from '../entities/Notifications';
-import { User } from '../entities/User';
+import { getUserById } from './UserModel';
 
 const notificationsRepository = AppDataSource.getRepository(Notifications);
-
+notificationsRepository.insert
 // get all the notifications that aren't messages or reports, update opened/read status
 async function getAllOtherNotificationsForUserId(userId: string): Promise<Notifications[]> {
   await notificationsRepository
@@ -39,7 +39,10 @@ async function getAllOtherNotificationsForUserId(userId: string): Promise<Notifi
   return notifications;
 }
 
-async function createNewNotification(receiver: User, sender: User, type: NotificationType, link: null | string): Promise<Notifications | null> {
+async function createNewNotification(receivingUserId: string, sendingUserId: string, type: NotificationType, link: null | string): Promise<Notifications | null> {
+  const receiver = await getUserById(receivingUserId);
+  const sender = await getUserById(sendingUserId);
+
   let newNotification = new Notifications();
   newNotification.type = type;
   newNotification.dateSent = new Date();

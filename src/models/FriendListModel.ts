@@ -38,33 +38,37 @@ async function getFriendStatus(requestingUserId: string, targetedUserId: string)
 
 async function sendFriendRequest(requestingUserId: string, targetedUserId: string): Promise<void> {
     // get targeted user's friend list
+    const requestingFriendList = await getFriendListById(`FL<+>${requestingUserId}`);
+    requestingFriendList.pendingFriends.push(await getUserById(targetedUserId));
+
+    // save updated pending friendlist
+    await friendListRepository.save(requestingFriendList);
+
+    // get targeted user's friend list
     const targetedFriendList = await getFriendListById(`FL<+>${targetedUserId}`);
     targetedFriendList.pendingFriends.push(await getUserById(requestingUserId));
 
     // save updated pending friendlist
     await friendListRepository.save(targetedFriendList);
 
-    // get users, send notification to targeted user
-    const targetedUser = await getUserById(targetedUserId);
-    const requestingUser = await getUserById(requestingUserId);
+    await createNewNotification(targetedUserId, requestingUserId, "FRIEND REQUEST SENT", `/users/${requestingUserId}`)
 
-    await createNewNotification(targetedUser, requestingUser, "FRIEND REQUEST SENT", `/users/${targetedUserId}`)
 }
 
 async function replyFriendRequest(requestingUserId: string, targetedUserId: string, action: FriendRequestAction): Promise<void> {
     const requestingFriendList = await getFriendListById(`FL<+>${requestingUserId}`);
 
-    let pendingIndex = 0;
+    let pendingIndex = -1;
+    let indexValue = -1;
 
     for (const entry of requestingFriendList.pendingFriends) {
+        ++indexValue;
         if (entry.userId === targetedUserId) {
+            pendingIndex = indexValue;
             break;
-        } else {
-            pendingIndex++;
         }
     }
 
-    const requestingUser = await getUserById(requestingUserId);
     const targetedUser = await getUserById(targetedUserId);
 
     if (pendingIndex !== -1) {
@@ -73,15 +77,83 @@ async function replyFriendRequest(requestingUserId: string, targetedUserId: stri
         if (action === "ACCEPT") {
             requestingFriendList.friends.push(targetedUser)
         }
-        requestingFriendList.friends.splice(pendingIndex, 1)
+
         // save updated pending friendlist
         await friendListRepository.save(requestingFriendList);
 
-        // send notification to requestingUser if accepted
         if (action === "ACCEPT") {
-            await createNewNotification(targetedUser, requestingUser, "FRIEND REQUEST ACCEPTED", `/users/${targetedUserId}`);
+            await createNewNotification(targetedUserId, requestingUserId, "FRIEND REQUEST ACCEPTED", `/users/${requestingUserId}`);
         }
+    }
+
+    const targetedFriendList = await getFriendListById(`FL<+>${targetedUserId}`);
+
+    pendingIndex = -1;
+    indexValue = -1;
+
+    for (const entry of targetedFriendList.pendingFriends) {
+        ++indexValue;
+        if (entry.userId === requestingUserId) {
+            pendingIndex = indexValue;
+            break;
+        }
+    }
+
+    const requestingUser = await getUserById(requestingUserId);
+
+    if (pendingIndex !== -1) {
+        targetedFriendList.pendingFriends.splice(pendingIndex, 1)
+
+        if (action === "ACCEPT") {
+            targetedFriendList.friends.push(requestingUser)
+        }
+
+        // save updated pending friendlist
+        await friendListRepository.save(targetedFriendList);
     }
 }
 
-export { getFriendListById, getFriendStatus, sendFriendRequest, replyFriendRequest };
+async function removeFriend(requestingUserId: string, targetedUserId: string): Promise<void> {
+    const targetedFriendList = await getFriendListById(`FL<+>${targetedUserId}`);
+
+    let pendingIndex = -1;
+    let indexValue = -1;
+
+    for (const entry of targetedFriendList.friends) {
+        ++indexValue;
+        if (entry.userId === requestingUserId) {
+            pendingIndex = indexValue;
+            break;
+        }
+    }
+
+    if (pendingIndex !== -1) {
+        targetedFriendList.friends.splice(pendingIndex, 1)
+
+        // save updated pending friendlist
+        await friendListRepository.save(targetedFriendList);
+    }
+
+    const requestingFriendList = await getFriendListById(`FL<+>${requestingUserId}`);
+
+    pendingIndex = -1;
+    indexValue = -1;
+
+    for (const entry of requestingFriendList.friends) {
+        ++indexValue;
+        if (entry.userId === targetedUserId) {
+            pendingIndex = indexValue;
+            break;
+        }
+    }
+
+    if (pendingIndex !== -1) {
+        requestingFriendList.friends.splice(pendingIndex, 1)
+
+        // save updated pending friendlist
+        await friendListRepository.save(requestingFriendList);
+    }
+}
+
+
+export { getFriendListById, getFriendStatus, sendFriendRequest, replyFriendRequest, removeFriend };
