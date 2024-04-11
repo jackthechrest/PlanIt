@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Relation, OneToOne, ManyToMany, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Relation, OneToOne, ManyToMany, JoinColumn, JoinTable } from 'typeorm';
 import { Follow } from './Follow';
 import { VerifyCode } from './VerifyCode';
 import { FriendList } from './FriendList';
