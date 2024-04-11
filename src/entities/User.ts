@@ -18,7 +18,7 @@ export class User {
   displayName: string;
 
   @Column({unique: true})
-  email: string
+  email: string;
 
   @Column({ unique: true })
   passwordHash: string;
@@ -26,11 +26,15 @@ export class User {
   @Column({ default: false })
   isAdmin: boolean;
 
-  @Column({default: ""})
+  @Column({ default: "" })
   biography: string;
 
-  @Column({default: false})
+  @Column({ default: false })
   verifiedEmail: boolean;
+
+  @Column({ default: 0 })
+  warningCount: number;
+
   
   // need to add profile picture functionality
   @Column()
@@ -61,8 +65,8 @@ export class User {
   code: Relation<VerifyCode>;
 
   // Notifications
-  @OneToMany(() => Notifications, (notifications) => notifications.forUser, { cascade: ['insert', 'update'] } )
-  notifications: Relation<User>[];
+  @OneToMany(() => Notifications, (notifications) => notifications.receivingUser, { cascade: ['insert', 'update'] } )
+  receivedNotifications: Relation<User>[];
 
   @OneToMany(() => Message, (message) => message.sender, { cascade: ['insert', 'update'] } )
   sentMessages: Relation<Message>[];
@@ -75,6 +79,9 @@ export class User {
   @OneToMany(() => Event)
   @JoinColumn()
   OwnedEvents: Relation<Event>[];
+
+  @OneToMany(() => Notifications, (notifications) => notifications.sendingUser, { cascade: ['insert', 'update'] } )
+  sentNotifications: Relation<User>[];
 
 /*
 Commenter		one-many 

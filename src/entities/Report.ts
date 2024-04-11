@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, Relation, JoinTable, default,
+import { Entity, PrimaryGeneratedColumn, Column, Relation, JoinTable,
     OneToMany, ManyToOne, ManyToMany, OneToOne} from 'typeorm';
 
 import { Event} from "./Event";
@@ -11,7 +11,12 @@ export class Report{
 
     @Column({default: "false"})
     isReported: Boolean;
-    isValid: Boolean;
+
+    @Column({ default: false })
+    hasBeenAddressed: boolean;
+  
+    @Column({ })
+    isValid: boolean;
 
     // relationships
     /*

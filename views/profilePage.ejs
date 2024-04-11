@@ -14,13 +14,13 @@
           <p>- <a href ="/logo">Logo</a></p>
         </li>
         <li>
-            <p>- <a href="/users/<%= user.userId %>/calendar">Calendar</a></p>
+            <p>- <a href="/users/<%= viewingUser.userId %>/calendar">Calendar</a></p>
         </li>
         <li>
             <p>- <a href="/search">Search</a></p>
         </li>
         <li>
-            <p>- <a href="/users/<%= user.userId %>/messages">Inbox</a></p>
+            <p>- <a href="/users/<%= viewingUser.userId %>/messages">Inbox</a></p>
         </li>
     </ul>
     
@@ -28,7 +28,7 @@
 
     <h1 class = "space"></h1>
 
-    <% if (loggedIn && user.userId === authenticatedId) { %>
+    <% if (loggedIn && user.userId === viewingUser.userId) { %>
       <h1 class="big-text">Welcome to your profile page!</h1>
 
     <% } else if (loggedIn) { %>
@@ -41,6 +41,11 @@
           <button class="btn-large"><a href = '/users/follow/<%= user.userId %>'>Follow</a></button>
         </div>
       <% } %>
+      <% if (friendStatus === "NOT FRIEND") { %>
+        <button class="btn-large"><a href = '/users/friend/<%= user.userId %>'>Send Friend Request</a></button>
+      <% } else if (friendStatus === "FRIEND") { %>
+        <button class="btn-large"><a href = '/api/unfriend/<%= user.userId %>'>Unfriend</a></button>
+      <% } %>
     <% } %>
 
     <h1 class = "space"></h1>
@@ -49,6 +54,9 @@
     </div>
     <div class="center-btn">
       <button class="btn-large"><a href = '/users/<%= user.userId %>/followers'>Followers: <%= user.followers.length %> Users</a></button>
+    </div>
+    <div class="center-btn">
+      <button class="btn-large"><a href = '/users/<%= user.userId %>/friends'>Friends: <%= user.otherFriendLists.length %> Users</a></button>
     </div>
 
     <h1 class = "space"></h1>

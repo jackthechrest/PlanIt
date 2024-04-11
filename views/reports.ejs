@@ -37,6 +37,32 @@
         <% } %>
     </ul>
     
-    <h1 class="big-title">WIP</h1>
+    <h1>Report Log:</h1>
+
+    <% if (pendingReports.length === 0) { %>
+        <p>No Reports</p>
+    <% } else { %>
+    <ul>
+        <% for (const report of pendingReports) { %>
+            <% if (report.offendingContentId.charAt(0) === "P") {  %>
+                <li>
+                    <p>[<%=report.dateString%>]  <a href="<%=report.link%>">Reported Profile</a></p>
+                </li>
+            <% } else if (report.offendingContentId.charAt(0) === "E") { %>
+                <li>
+                    <p>[<%=report.dateString%>]  <a href="<%=report.link%>">Reported Event</a></p>
+                </li>
+            <% } else if (report.offendingContentId.charAt(0) === "W") { %>
+                <li>
+                    <p>[<%=report.dateString%>]  <a href="<%=report.link%>">Reported Wall Post</a></p>
+                </li>
+            <% } else if (report.offendingContentId.charAt(0) === "C") { %>
+                <li>
+                    <p>[<%=report.dateString%>]  <a href="<%=report.link%>">Reported Comment</a></p>
+                </li>
+            <% } %>
+        <% } %>
+    </ul>
+    <% } %>
 </body>
 </html>

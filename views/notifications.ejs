@@ -36,7 +36,50 @@
             </li>
         <% } %>
     </ul>
-    
-    <h1 class="big-title">WIP</h1>
+
+    <h1>Other Notifications</h1>
+        <% if (user.receivedNotifications.length === 0) { %>
+            <p>No Notifications</p>
+        <% } else { %>
+            <ul>
+                <% for (const notification of user.receivedNotifications) { %>
+                    <% if (notification.type === "FRIEND REQUEST SENT") { %>
+                    <li>
+                        <p>[<%=notification.dateString%>]  <a href="<%=notification.link%>"><%=notification.sendingUsername%> sent you a friend request!</a></p>
+                        <% if (!notification.respondedTo) { %>
+                            <button><a href="/api/friend/<%=notification.sendingUserId%>/ACCEPT">Accept</a></button>
+                            <button><a href="/api/friend/<%=notification.sendingUserId%>/DECLINE">Decline</a></button>
+                        <% } %>
+                    </li>
+                    <% } else if (notification.type === "FRIEND REQUEST ACCEPTED") { %>
+                        <li>
+                            <p>[<%=notification.dateString%>]  <a href="<%=notification.link%>"><%=notification.sendingUsername%> accepted your friend request!</a></p>
+                        </li>
+                    <% } else if (notification.type === "FOLLOW") { %>
+                    <li>
+                        <p>[<%=notification.dateString%>]  <a href="<%=notification.link%>"><%=notification.sendingUsername%> followed you!</a></p>
+                    </li>
+                    <% } else if (notification.type === "WARNING") { %>
+                        <% if (notification.sendingUsername === "JackTheChrest") { %>
+                        <li>
+                            <p>[<%=notification.dateString%>] Your profile features offensive content and has been modified.  Don't do it again.</p>
+                        </li>   
+                        <% } else if (notification.sendingUsername === "Quinn") { %>
+                        <li>
+                            <p>[<%=notification.dateString%>]  Your event features offensive content and has been modified.  Don't do it again.</p>
+                        </li>   
+                        <% } else if (notification.sendingUsername === "Matthew") { %>
+                        <li>
+                            <p>[<%=notification.dateString%>]  You posted an offensive wall post/comment, which has been removed.  Don't do it again.</p>
+                        </li>   
+                        <% } %>
+                    <% } else if (notification.type === "EVENT CREATED" || notification.type === "EVENT EDITED" || notification.type === "EVENT CANCELLED") { %>
+                    <li>
+                        <p>[<%=notification.dateString%>]  <a href="<%=notification.link%>">Event</a></p>
+                    </li>
+                    <% } %>
+                <% } %>
+            </ul>
+            <% } %>
 </body>
 </html>

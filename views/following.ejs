@@ -32,7 +32,7 @@
     <ul>
         <% for (const followed of user.following) { %>
         <li>
-            <p>- <a href="/users/<%= followed.targetUserId %>"><%= followed.targetUsername %></a></p>
+            <p>- <a href="/users/<%= followed.targetedUserId %>"><%= followed.targetedUsername %></a></p>
         </li>
         <% } %>
     </ul>
