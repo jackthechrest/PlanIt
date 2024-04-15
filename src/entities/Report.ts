@@ -1,5 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, Relation, JoinTable,
-    OneToMany, ManyToOne, ManyToMany, OneToOne} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, Relation, JoinColumn, } from 'typeorm';
 
 import { Event} from "./Event";
 import { Comment } from "./Comment";
@@ -9,18 +8,21 @@ export class Report{
     @PrimaryGeneratedColumn('uuid')
     reportID: string;
 
-    @Column({default: "false"})
+    @Column({ default: false })
     isReported: Boolean;
 
     @Column({ default: false })
     hasBeenAddressed: boolean;
   
-    @Column({ })
+    @Column()
     isValid: boolean;
 
     // relationships
-    /*
-    ReportedEvent: One-One w/ Event
-    ReportedComment: One-One w/ Comments
-    */
+    @OneToOne(() => Event)
+    @JoinColumn()
+    reportedEvent: Relation<Event>;
+
+    @OneToOne(() => Comment)
+    @JoinColumn()
+    reportedComment: Relation<Comment>;
 }

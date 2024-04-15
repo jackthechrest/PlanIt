@@ -1,5 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, Relation, JoinTable,
-    OneToMany, ManyToOne, ManyToMany, OneToOne} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, Relation, JoinTable, ManyToOne, ManyToMany, OneToMany} from 'typeorm';
 
 import { Calendar} from "./Calendar";
 import { User } from "./User";
@@ -28,12 +27,16 @@ export class Event{
     visibility_level: string;
 
     // relationships
-    @ManyToOne(() => User )
-    OwnedEvent: Relation<User>
+    @ManyToOne(() => User, (user) => user.ownedEvents)
+    ownedEvents: Relation<User>;
 
-    @ManyToMany(() => User)
-    JoinedEvent: Relation<User>[]
+    @ManyToMany(() => User, (user) => user.joinedEvents)
+    @JoinTable()
+    joinedEvents: Relation<User>[];
 
     @ManyToMany(() => Calendar)
-    ScheduledEvents: Relation<Calendar>[]
+    ScheduledEvents: Relation<Calendar>[];
+
+    @OneToMany(() => Comment, (comment) => comment.commentUnder)
+    commentUnder: Relation<Comment>[];
 }

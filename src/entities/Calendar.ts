@@ -1,5 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, Relation, JoinTable,
-    OneToMany, ManyToOne, ManyToMany, OneToOne} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Relation, JoinTable, ManyToMany, OneToOne, JoinColumn} from 'typeorm';
 
 import { User} from "./User";
 import { Event } from "./Event";
@@ -10,11 +9,11 @@ export class Calendar{
     calendarId: string;
     
     // relationships
-    @OneToOne(() => "User")
-    @JoinTable()
+    @OneToOne(() => User, (User) => User.personalCalendar)
+    @JoinColumn()
     personalCalendar: User[];
 
-    @ManyToMany(() => "Event")
+    @ManyToMany(() => Event, (Event) => Event.ScheduledEvents)
     @JoinTable()
     scheduledEvent: Relation<Event>[]; 
 }

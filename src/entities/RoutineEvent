@@ -1,0 +1,9 @@
+import { ChildEntity, Column, IntegerType } from "typeorm";
+
+import { Event } from "./Event";
+
+@ChildEntity()
+export class RoutineEvent extends Event{
+    @Column()
+    frequency: IntegerType;
+}

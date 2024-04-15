@@ -1,19 +1,22 @@
-import { Entity, PrimaryGeneratedColumn, Column, Relation, JoinTable,
-    OneToMany, ManyToOne, ManyToMany, OneToOne} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, Relation} from 'typeorm';
+import {User} from "./User";
 
-import { Calendar} from "./Calendar";
-import { User } from "./User";
-import { Event } from "./Event";
-import { Follow } from "./Follow";
 
 @Entity()
 export class Comment{
-    @Column
+    @PrimaryGeneratedColumn('uuid')
+    commentId: string;
+
+    @Column()
     commentText: string;
 
+    @Column()
+    commentTime: Date;
+
     //relationships
-    /*
-    CommentUnder: Many-One w/ Event
-    Commenter: Many-One w/ User
-    */
+    @ManyToOne(() => User, (user) => user.commenter)
+    commenter: Relation<User>;
+
+    @ManyToOne(() => Event, (event) => event.commentUnder)
+    commentUnder: Relation<Event>;
 }

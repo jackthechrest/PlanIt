@@ -1,5 +1,4 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Relation, OneToOne, ManyToMany, JoinColumn, JoinTable } from 'typeorm';
-import { Follow } from './Follow';
 import { VerifyCode } from './VerifyCode';
 import { FriendList } from './FriendList';
 import { Notifications } from './Notifications';
@@ -45,7 +44,7 @@ export class User {
   @JoinTable()
   friends: User[];
 
-  @OneToOne(() => Calendar)
+  @OneToOne(() => Calendar, (Calendar) => Calendar.personalCalendar)
   personalCalendar: Calendar;
 
   // Friends
@@ -68,21 +67,22 @@ export class User {
   @OneToMany(() => Notifications, (notifications) => notifications.receivingUser, { cascade: ['insert', 'update'] } )
   receivedNotifications: Relation<User>[];
 
+  @OneToMany(() => Notifications, (notifications) => notifications.sendingUser, { cascade: ['insert', 'update'] } )
+  sentNotifications: Relation<User>[];
+
   @OneToMany(() => Message, (message) => message.sender, { cascade: ['insert', 'update'] } )
   sentMessages: Relation<Message>[];
 
   // Event Related
-  @ManyToMany(() => Event)
-  @JoinColumn()
-  JoinedEvents: Relation<Event>[];
+  @OneToMany(() => Event, (event) => event.ownedEvents)
+  ownedEvents: Relation<Event>[];
 
-  @OneToMany(() => Event)
-  @JoinColumn()
-  OwnedEvents: Relation<Event>[];
+  @ManyToMany(() => Event, (event) => event.joinedEvents)
+  joinedEvents: Relation<Event>[];
 
-  @OneToMany(() => Notifications, (notifications) => notifications.sendingUser, { cascade: ['insert', 'update'] } )
-  sentNotifications: Relation<User>[];
-
+  //Comments
+  @OneToMany(() => Comment, (comment) => comment.commenter)
+  commenter: Relation<Comment>[];
 /*
 Commenter		one-many 
 */
