@@ -86,13 +86,4 @@ export class User {
   //Comments
   @OneToMany(() => Comment, (comment) => comment.commenter)
   commenter: Relation<Comment>[];
-/*
-<<<<<<< HEAD
-Commenter		one-many 
-=======
-joinedEvents		many-many
-ownedEvents		one-many
-Commenter		one-many
->>>>>>> e7b7825aaec3bad42e28c453ac840ad4e8280b80
-*/
 }
