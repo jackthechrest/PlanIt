@@ -1,6 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, Relation, JoinTable, ManyToOne, ManyToMany, OneToMany} from 'typeorm';
 
-import { Calendar} from "./Calendar";
 import { User } from "./User";
 
 @Entity()
@@ -14,8 +13,6 @@ export class Event{
     @Column()
     stopDate: Date;
 
-    @Column()
-    picture: string;
 
     @Column()
     description: string;
@@ -33,9 +30,6 @@ export class Event{
     @ManyToMany(() => User, (user) => user.joinedEvents)
     @JoinTable()
     joinedEvents: Relation<User>[];
-
-    @ManyToMany(() => Calendar)
-    ScheduledEvents: Relation<Calendar>[];
 
     @OneToMany(() => Comment, (comment) => comment.commentUnder)
     commentUnder: Relation<Comment>[];

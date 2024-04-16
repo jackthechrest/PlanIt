@@ -3,7 +3,6 @@ import { VerifyCode } from './VerifyCode';
 import { FriendList } from './FriendList';
 import { Notifications } from './Notifications';
 import { Message } from './Message';
-import { Calendar } from './Calendar';
 
 @Entity()
 export class User {
@@ -43,9 +42,6 @@ export class User {
   @ManyToMany(() => User)
   @JoinTable()
   friends: User[];
-
-  @OneToOne(() => Calendar, (Calendar) => Calendar.personalCalendar)
-  personalCalendar: Calendar;
 
   // Friends
   @OneToOne(() => FriendList, (friendList) => friendList.owner, { cascade: ['insert', 'update'] })
