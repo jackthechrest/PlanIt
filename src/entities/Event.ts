@@ -13,7 +13,6 @@ export class Event{
     @Column()
     stopDate: Date;
 
-
     @Column()
     description: string;
 
