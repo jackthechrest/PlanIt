@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="/css/style.css" /> 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Messages with <%= otherUser.username %> | PlanIt </title>
+    <title> Start New Message Thread | PlanIt </title>
 </head>
 <body>
   <div class="navbar">
@@ -14,27 +13,18 @@
     <a href="/calendar" class="menu"><img src="/imgs/calendar_icon.png" alt="Calendar"></a>
   </div>
     
-    <h1 class="big-title" id ="navbarEnd">Messages with <%=otherUser.username%></h1>
-
-    <ul>
-    <% for (const message of messages) { %>
-        <li>
-            <h3><a href="<%=message.link%>"><%=message.sendingUsername%></a></h3>
-            <p><%=message.body%></p>
-            <p>Sent: <%=message.dateString%></p>
-        </li>
-    <% } %>
-    </ul>
+    <h1 class="big-title" id="navbarEnd">Start a New Message Thread</h1>
+    <h2>Sender: <%=user.username%></h2>
 
     <div class = "form">
         <form method = "POST" action = "/api/send">
-          <input 
-            type="hidden"
-            value="<%=otherUser.username%>"
-            id="username"
-            name="username"
-          />
-          
+          <label for="username">Receiver</label>
+            <select id="username" name="username">
+              <% for (const friend of friends) { %>
+                <option value="<%=friend.username%>"><%=friend.username%></option>
+              <% } %>  
+            </select>
+
           <label for="body">Message</label>
             <input
               id="body"

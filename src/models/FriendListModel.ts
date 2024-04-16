@@ -1,7 +1,8 @@
 import { getUserById } from './UserModel';
 import { AppDataSource } from '../dataSource';
 import { FriendList } from '../entities/FriendList';
-import { createNewNotification } from './NotificationsModel';
+import { createNewNotification, setResponded } from './NotificationsModel';
+import { removeFollow } from './FollowModel';
 
 const friendListRepository = AppDataSource.getRepository(FriendList);
 
@@ -11,6 +12,7 @@ async function getFriendListById(friendListId: string): Promise<FriendList | nul
         'owner',
         'friends',
         'pendingFriends',
+        'blockedUsers',
         ],
     });
 
@@ -20,6 +22,18 @@ async function getFriendListById(friendListId: string): Promise<FriendList | nul
 async function getFriendStatus(requestingUserId: string, targetedUserId: string): Promise<FriendStatus> {
     const requestingUser = await getUserById(requestingUserId);
     const targetedUser = await getUserById(targetedUserId);
+
+    for (const blockedFriendList of requestingUser.blockedFriendLists) {
+        if (blockedFriendList.friendListId === targetedUser.selfFriendList.friendListId) {
+            return "THEY BLOCKED";
+        }
+    }
+
+    for (const blockedFriendList of targetedUser.blockedFriendLists) {
+        if (blockedFriendList.friendListId === requestingUser.selfFriendList.friendListId) {
+            return "I BLOCKED";
+        }
+    }
 
     for (const unconfirmedFriendList of requestingUser.unconfirmedFriendLists) {
         if (unconfirmedFriendList.friendListId === targetedUser.selfFriendList.friendListId) {
@@ -37,14 +51,23 @@ async function getFriendStatus(requestingUserId: string, targetedUserId: string)
 }
 
 async function sendFriendRequest(requestingUserId: string, targetedUserId: string): Promise<void> {
-    // get targeted user's friend list
+    // get requesting user's friend list
     const requestingFriendList = await getFriendListById(`FL<+>${requestingUserId}`);
+
+    // check that friend request hasn't already been sent
+    for (const entry of requestingFriendList.pendingFriends) {
+        if (entry.userId === targetedUserId) {
+            return;
+        }
+    }
+
+    // add targeted user to requesting user pending friend list
     requestingFriendList.pendingFriends.push(await getUserById(targetedUserId));
 
     // save updated pending friendlist
     await friendListRepository.save(requestingFriendList);
 
-    // get targeted user's friend list
+    // get targeted user's friend list and add requested user to it
     const targetedFriendList = await getFriendListById(`FL<+>${targetedUserId}`);
     targetedFriendList.pendingFriends.push(await getUserById(requestingUserId));
 
@@ -111,6 +134,10 @@ async function replyFriendRequest(requestingUserId: string, targetedUserId: stri
         // save updated pending friendlist
         await friendListRepository.save(targetedFriendList);
     }
+
+    // mark friend requests as responded to
+    await setResponded(requestingUserId, targetedUserId);
+    await setResponded(targetedUserId, requestingUserId);
 }
 
 async function removeFriend(requestingUserId: string, targetedUserId: string): Promise<void> {
@@ -130,7 +157,7 @@ async function removeFriend(requestingUserId: string, targetedUserId: string): P
     if (pendingIndex !== -1) {
         targetedFriendList.friends.splice(pendingIndex, 1)
 
-        // save updated pending friendlist
+        // save updated friendlist
         await friendListRepository.save(targetedFriendList);
     }
 
@@ -150,10 +177,52 @@ async function removeFriend(requestingUserId: string, targetedUserId: string): P
     if (pendingIndex !== -1) {
         requestingFriendList.friends.splice(pendingIndex, 1)
 
-        // save updated pending friendlist
+        // save updated friendlist
         await friendListRepository.save(requestingFriendList);
     }
 }
 
+async function blockUserById(requestingUserId: string, targetedUserId: string): Promise<void> {
+    // remove all connections (follows, friends, pending friends)
+    await removeFollow(requestingUserId, targetedUserId);
+    await removeFollow(targetedUserId, requestingUserId);
+    await removeFriend(requestingUserId, targetedUserId);
+    await replyFriendRequest(requestingUserId, targetedUserId, "DECLINE");
 
-export { getFriendListById, getFriendStatus, sendFriendRequest, replyFriendRequest, removeFriend };
+    // add targeted user to requesting user's block list
+    const requestingFriendList = await getFriendListById(`FL<+>${requestingUserId}`);
+    const targetedUser = await getUserById(targetedUserId);
+
+    for (const entry of requestingFriendList.blockedUsers) {
+        if (entry.userId === targetedUserId) {
+            return;
+        }
+    }
+
+    requestingFriendList.blockedUsers.push(targetedUser);
+    await friendListRepository.save(requestingFriendList);
+}
+
+async function unblockUserById(requestingUserId: string, targetedUserId: string): Promise<void> {
+    const requestingFriendList = await getFriendListById(`FL<+>${requestingUserId}`);
+
+    let pendingIndex = -1;
+    let indexValue = -1;
+
+    for (const entry of requestingFriendList.blockedUsers) {
+        ++indexValue;
+        if (entry.userId === targetedUserId) {
+            pendingIndex = indexValue;
+            break;
+        }
+    }
+
+    if (pendingIndex !== -1) {
+        requestingFriendList.blockedUsers.splice(pendingIndex, 1)
+
+        // save updated list of blocked users
+        await friendListRepository.save(requestingFriendList);
+    }
+}
+
+export { getFriendListById, getFriendStatus, sendFriendRequest, replyFriendRequest, removeFriend, blockUserById, unblockUserById };

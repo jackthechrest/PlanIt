@@ -9,9 +9,16 @@ import { getFriendStatus } from '../models/FriendListModel';
 async function registerUser(req: Request, res: Response): Promise<void> {
   const { username, displayName, email, password } = req.body as RegisterRequest;
 
-  const user = await getUserByUsername(username);
+  // don't let account be made if username or email is already taken
+  let user = await getUserByUsername(username);
   if (user) {
-    res.sendStatus(409);
+    res.redirect('/register');
+    return;
+  }
+
+  user = await getUserByEmail(email);
+  if (user) {
+    res.redirect('/register');
     return;
   }
 
@@ -60,12 +67,17 @@ async function logIn(req: Request, res: Response): Promise<void> {
 async function getUserProfileData(req: Request, res: Response): Promise<void> {
   const { targetUserId } = req.params as UserIdParam;
   const { isLoggedIn, authenticatedUser } = req.session;
-  
+
+  if (!isLoggedIn) {
+    res.redirect('/login'); // not logged in
+    return;
+  }
+ 
   // Get the user account
   let user = await getUserById(targetUserId);
 
-  if (!isLoggedIn || !user) {
-    res.redirect('/login');
+  if (!user) {
+    res.redirect(`/users/${authenticatedUser.userId}`); // user not found
     return;
   }
 
@@ -75,10 +87,9 @@ async function getUserProfileData(req: Request, res: Response): Promise<void> {
 
   res.render('profilePage', {
     user,
-    viewingUser: viewingUser,
-    loggedIn: isLoggedIn,
+    viewingUser,
     following: targetFollow,
-    friendStatus: friendStatus,
+    friendStatus,
   });
 }
 
@@ -92,20 +103,15 @@ async function deleteAccount(req: Request, res: Response): Promise<void> {
   }
 
   const user = await getUserByEmail(email);
-  if (!user) {
-    res.redirect('/users/' + authenticatedUser.userId); // 404 Not Found - email doesn't exist
-    return;
-  }
-
-  if (authenticatedUser.userId !== user.userId) {
-    res.redirect('/users/' + authenticatedUser.userId); // trying to delete someone elses account
+  if (!user || authenticatedUser.userId !== user.userId) {
+    res.redirect(`/users/${authenticatedUser.userId}`); // user not found or it is not the user's account
     return;
   }
 
   const { passwordHash } = user;
 
   if (!(await argon2.verify(passwordHash, password))) {
-    res.redirect('/users/' + authenticatedUser.userId); // 404 not found - user w/ email/password doesn't exist
+    res.redirect(`/users/${authenticatedUser.userId}`); // Wrong password
   }
 
   await deleteUserById(authenticatedUser.userId);
@@ -126,41 +132,36 @@ async function logoRedirect(req: Request, res: Response): Promise<void> {
 }
 
 async function renderSettings(req: Request, res: Response): Promise<void> {
-  const { isLoggedIn } = req.session;
-  const { targetUserId } = req.params;
+  const { isLoggedIn, authenticatedUser } = req.session;
 
-  const user = await getUserById(targetUserId);
-
-  if (!isLoggedIn || !user) {
-    res.redirect('/login');
+  if (!isLoggedIn) {
+    res.redirect('/login'); // not logged in
     return;
   }
+
+  const user = await getUserById(authenticatedUser.userId);
 
   res.render('settings', { user });
 }
 
 async function renderDelete(req: Request, res: Response): Promise<void> {
-  const { isLoggedIn } = req.session;
-  const { targetUserId } = req.params;
+  const { isLoggedIn, authenticatedUser } = req.session;
 
-  const user = await getUserById(targetUserId);
-
-  if (!isLoggedIn || !user) {
-    res.redirect('/login');
+  if (!isLoggedIn) {
+    res.redirect('/login'); // not logged in
     return;
   }
+
+  const user = await getUserById(authenticatedUser.userId);
 
   res.render('delete', { user });
 }
 
 async function renderCalendar(req: Request, res: Response): Promise<void> {
   const { isLoggedIn } = req.session;
-  const { targetUserId } = req.params;
 
-  const user = await getUserById(targetUserId);
-
-  if (!isLoggedIn || !user) {
-    res.redirect('/login');
+  if (!isLoggedIn) {
+    res.redirect('/login'); // not logged in
     return;
   }
 
@@ -168,32 +169,17 @@ async function renderCalendar(req: Request, res: Response): Promise<void> {
 }
 
 async function renderSearch(req: Request, res: Response): Promise<void> {
-  const { isLoggedIn } = req.session;
-  const { targetUserId } = req.params;
+  const { isLoggedIn, authenticatedUser } = req.session;
 
-  const user = await getUserById(targetUserId);
-
-  if (!isLoggedIn || !user) {
-    res.redirect('/login');
+  if (!isLoggedIn) {
+    res.redirect('/login'); // not logged in
     return;
   }
+
+  const user = await getUserById(authenticatedUser.userId);
 
   res.render('search', { user });
 }
 
-async function renderMessages(req: Request, res: Response): Promise<void> {
-  const { isLoggedIn } = req.session;
-  const { targetUserId } = req.params as UserIdParam;
-
-  const user = await getUserById(targetUserId);
-
-  if (!isLoggedIn || !user) {
-    res.redirect('/login');
-    return;
-  }
-
-  res.render('messages', { user });
-}
-
-export { registerUser, logIn, getUserProfileData, deleteAccount, logoRedirect, 
-         renderSettings, renderDelete, renderCalendar, renderSearch, renderMessages };
+export { registerUser, logIn, getUserProfileData, deleteAccount, logoRedirect,
+         renderSettings, renderDelete, renderCalendar, renderSearch, };

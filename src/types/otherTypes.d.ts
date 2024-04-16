@@ -6,4 +6,4 @@ type ReportType = "PROFILE" | "EVENT" | "WALL POST" | "COMMENT"
 
 type EventVisibility = "PUBLIC" | "INVITE ONLY" | "FRIENDS ONLY"
 
-type FriendStatus = "FRIEND" | "NOT FRIEND" | "PENDING"
+type FriendStatus = "FRIEND" | "NOT FRIEND" | "PENDING" | "I BLOCKED" | "THEY BLOCKED"

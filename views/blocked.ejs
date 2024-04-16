@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= user.username %>'s Followers | PlanIt</title>
+  <title><%= user.username %> Blocked Users | PlanIt</title>
 </head>
 <body>
     <div class="navbar">
@@ -15,15 +15,15 @@
         <a href="/calendar" class="menu"><img src="/imgs/calendar_icon.png" alt="Calendar"></a>
     </div>
 
-    <h1 class = "follow-header" id ="navbarEnd"><%= user.username %>'s Followers:</h1>
+    <h1 class = "follow-header" id="navbarEnd"><%= user.username %> Blocked Users:</h1>
 
-    <% if (user.followers.length === 0) { %>
-    <p>No Followers</p>
+    <% if (blockedUsers.length === 0) { %>
+    <p>No Blocked Users</p>
     <% } else { %>
     <ul>
-        <% for (const follower of user.followers) { %>
+        <% for (const blocked of blockedUsers) { %>
         <li>
-            <p>- <a href="/users/<%= follower.requestingUserId %>"><%= follower.requestingUsername %></a></p>
+            <p>- <a href="/users/<%= blocked.userId %>"><%= blocked.username %></a></p>
         </li>
         <% } %>
     </ul>

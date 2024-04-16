@@ -6,12 +6,8 @@ import { getMessageThreadById } from './MessageThreadModel';
 const messageRepository = AppDataSource.getRepository(Message);
 
 async function getAllMessagesByThreadId(messageThreadId: string): Promise<Message[]> {
-  const messageThread = await getMessageThreadById(messageThreadId);
 
-  const messages = await messageRepository
-    .createQueryBuilder('message')
-    .where('thread = :messageThread', {messageThread})
-    .getMany();
+  const messages = await messageRepository.find();
 
   return messages;
 }
@@ -21,11 +17,18 @@ async function createNewMessage(messageThreadId: string, sender: User, receiver:
 
   let newMessage = new Message();
   newMessage.type = 'MESSAGE';
+  newMessage.link = `/users/${sender.userId}`
   newMessage.dateSent = new Date();
+  newMessage.dateString = newMessage.dateSent.toLocaleString('en-us', {month:'short', day:'numeric', year:'numeric', hour12:true, hour:'numeric', minute:'2-digit'});
+  newMessage.secondsSinceEnoch = newMessage.dateSent.getTime() / 1000;
   newMessage.thread = messageThread;
   newMessage.sendingUser = sender;
+  newMessage.sendingUserId = sender.userId;
+  newMessage.sendingUsername = sender.username;
   newMessage.receivingUser = receiver;
-  newMessage.body = body;
+  newMessage.receivingUserId = receiver.userId;
+  newMessage.receivingUsername = receiver.username;
+  newMessage.body = body.substring(0, 100);
 
   newMessage = await messageRepository.save(newMessage);
 

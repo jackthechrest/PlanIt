@@ -4,7 +4,7 @@ import { MessageThread } from './MessageThread';
 
 @Entity()
 export class Message extends Notifications {
-    @Column()
+    @Column({length: 100})
     body: string;
         
     @ManyToOne(() => MessageThread, (messageThread) => messageThread.messages, { cascade: ['insert', 'update'], onDelete: "CASCADE", })

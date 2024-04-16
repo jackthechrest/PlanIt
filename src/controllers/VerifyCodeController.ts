@@ -23,12 +23,12 @@ async function sendVerification(req: Request, res: Response): Promise<void> {
 
         if (!user.verifiedEmail && verifyCode) {
             await sendEmail(user.email, 'PlanIt: Verify Your Email', 
-            `Hello, ` + user.username + `.
-            \nWe have received a request to verify this email.  Here is the code:
-            \n\n` + verifyCode + 
-            `\n\nIf you did not request this, your account may be compromised.
-            \nPlease reply to this email if this is the case.
-            \n\nBest,\nPlanIt Administration`);
+            `Hello, ${user.username}.\n
+            We have received a request to verify this email.  Here is the code:\n\n
+            ${verifyCode}\n\n 
+            If you did not request this, your account may be compromised.\n
+            Please reply to this email if this is the case.\n\n
+            Best,\nPlanIt Administration`);
         }
 
         res.render('verify', { user });
@@ -62,13 +62,13 @@ async function sendVerification(req: Request, res: Response): Promise<void> {
 
     await setVerifiedByUserId(user.userId);
     await sendEmail(user.email, 'PlanIt: Your Email is Verified!', 
-            `Hello, ` + user.username + `.
-            \nThe verification code was entered, so this email has been verified!
-            \nIf you did not request this, your account may be compromised.
-            \nPlease reply to this email if this is the case.
-            \n\nBest,\nPlanIt Administration`);
+            `Hello, user.username.\n
+            The verification code was entered, so this email has been verified!\n
+            If you did not request this, your account may be compromised.\n
+            Please reply to this email if this is the case.\n\n
+            Best,\nPlanIt Administration`);
   
-    res.redirect('/users/' + user.userId);
+    res.redirect(`/users/${user.userId}`);
   }
 
 export { sendVerification, verifyEmail }

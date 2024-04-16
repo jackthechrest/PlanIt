@@ -10,14 +10,15 @@ async function getUserById(userId: string): Promise<User | null> {
     relations: [
     'following',
     'followers',
-    'receivedNotifications',
-    'sentNotifications',
+    'receivedNotifications', 
     'selfFriendList',
     'otherFriendLists',
     'unconfirmedFriendLists',
+    'blockedFriendLists',
     'code',
     ],
   });
+
   return user;
 }
 
@@ -40,8 +41,8 @@ async function getUserByEmail(email: string): Promise<User | null> {
 async function addNewUser(username: string, displayName: string, email: string, passwordHash: string): Promise<User | null> { 
   // Create the new user object
   let newUser = new User();
-  newUser.username = username;
-  newUser.displayName = displayName;
+  newUser.username = username.substring(0, 100);;
+  newUser.displayName = displayName.substring(0, 100);;
   newUser.email = email;
   newUser.passwordHash = passwordHash;
 

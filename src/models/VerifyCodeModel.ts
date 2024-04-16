@@ -20,6 +20,7 @@ async function generateVerifyCode(userId: string): Promise<string | null> {
     var code;
     var codeValue = null;
     
+    // only try to generate code if the user's email is not verified
     if (!user.verifiedEmail) {
         // if they already have a code and it hasn't been too long
         // since last code was generated, don't generate new one

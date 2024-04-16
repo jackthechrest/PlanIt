@@ -4,24 +4,18 @@ import { getUserById } from '../models/UserModel';
 
 async function renderNotifications(req: Request, res: Response): Promise<void> {
     const { authenticatedUser, isLoggedIn } = req.session;
-    const { targetUserId } = req.params;
+
+    if (!isLoggedIn) {
+        res.redirect('/login'); // not logged in
+        return;
+    }
 
     // Get the user account
-    let user = await getUserById(targetUserId);
+    let user = await getUserById(authenticatedUser.userId);
 
-    if (!isLoggedIn || !user) {
-        res.redirect('/login');
-        return;
-    }
-
-    if (authenticatedUser.userId !== user.userId) {
-        res.redirect(`/users/${authenticatedUser.userId}`);
-        return;
-    }
-
-    const notifications = await getAllOtherNotificationsForUserId(targetUserId);
+    const notifications = await getAllOtherNotificationsForUserId(authenticatedUser.userId);
     
-    res.render('notifications', {user, notifications})
+    res.render('notifications', {user, notifications: notifications})
 }
 
 export { renderNotifications };
