@@ -8,29 +8,20 @@
     <title>Messages | PlanIt </title>
 </head>
 <body>
-    <h1>MENU</h1>
-    <ul>
-        <li>
-            <p>- <a href="/logo">Logo</a></p>
-        </li>
-        <li>
-            <p>- <a href="/users/<%= user.userId %>/calendar">Calendar</a></p>
-        </li>
-        <li>
-            <p>- <a href="/search">Search</a></p>
-        </li>
-        <li>
-            <p>- <a href="/users/<%= user.userId %>/messages">Inbox</a></p>
-        </li>
-    </ul>
+    <div class="navbar">
+        <a href="/logo" class="logo"><img src="/imgs/logo.png" alt="PlanIt Logo"></a>
+        <a href="/messages" class="menu"><img src="/imgs/inbox_icon.png" alt="Inbox (No Notifications)"></a>
+        <a href="/search" class="menu"><img src="/imgs/search_icon.png" alt="Search"></a>
+        <a href="/calendar" class="menu"><img src="/imgs/calendar_icon.png" alt="Calendar"></a>
+      </div>
 
-    <h1>INBOX MENU</h1>
+    <h1 id = "navbarEnd">INBOX MENU</h1>
     <ul>
         <li>
-            <p>- <a href="/users/<%= user.userId %>/messages">Messages</a></p>
+            <p>- <a href="/messages">Messages</a></p>
         </li>
         <li>
-            <p>- <a href="/users/<%= user.userId %>/other">Other Notifications</a></p>
+            <p>- <a href="/notifications">Other Notifications</a></p>
         </li>
         <% if (user.isAdmin) { %>
             <li>
@@ -39,6 +30,23 @@
         <% } %>
     </ul>
     
-    <h1 class="big-title">WIP</h1>
+    <button class="btn-large"><a href="/send">Start New Message Thread</a></button>
+
+    <h1>Message Threads</h1>
+
+    <ul>
+    <% for (const messageThread of messageThreads) { %>
+        <% if (messageThread.user1Id !== user.userId) { %>
+        <li>
+            <p>[<%=messageThread.lastDateString%>] <a href="/messages/<%=messageThread.messageThreadId%>"><%=messageThread.user1Username%></a></p>
+        </li>
+        <% } else { %>
+        <li>
+            <p>[<%=messageThread.lastDateString%>] <a href="/messages/<%=messageThread.messageThreadId%>"><%=messageThread.user2Username%></a></p>
+        </li> 
+        <% } %>
+    <% } %>
+    </ul>
+
 </body>
 </html>

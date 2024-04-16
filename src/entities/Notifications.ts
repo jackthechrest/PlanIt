@@ -17,6 +17,9 @@ export class Notifications {
   dateSent: Date;
 
   @Column()
+  secondsSinceEnoch: number;
+
+  @Column()
   dateString: string;
 
   // utilized for all notifications

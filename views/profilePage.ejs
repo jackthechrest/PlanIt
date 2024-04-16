@@ -8,30 +8,20 @@
     <title><%= user.username %>'s Profile Page | PlanIt </title>
   </head>
   <body>
-    <h1>MENU</h1>
-    <ul>
-        <li>
-          <p>- <a href ="/logo">Logo</a></p>
-        </li>
-        <li>
-            <p>- <a href="/users/<%= viewingUser.userId %>/calendar">Calendar</a></p>
-        </li>
-        <li>
-            <p>- <a href="/search">Search</a></p>
-        </li>
-        <li>
-            <p>- <a href="/users/<%= viewingUser.userId %>/messages">Inbox</a></p>
-        </li>
-    </ul>
-    
-    <h1 class="big-title"><%= user.username %>'s Profile Page</h1>
+    <div class="navbar">
+      <a href="/logo" class="logo"><img src="/imgs/logo.png" alt="PlanIt Logo"></a>
+      <a href="/messages" class="menu"><img src="/imgs/inbox_icon.png" alt="Inbox (No Notifications)"></a>
+      <a href="/search" class="menu"><img src="/imgs/search_icon.png" alt="Search"></a>
+      <a href="/calendar" class="menu"><img src="/imgs/calendar_icon.png" alt="Calendar"></a>
+    </div>
+
+    <h1 class="big-title" id="navbarEnd"><%= user.username %>'s Profile Page</h1>
 
     <h1 class = "space"></h1>
 
-    <% if (loggedIn && user.userId === viewingUser.userId) { %>
+    <% if (user.userId === viewingUser.userId) { %>
       <h1 class="big-text">Welcome to your profile page!</h1>
-
-    <% } else if (loggedIn) { %>
+    <% } else if (friendStatus !== "I BLOCKED" && friendStatus !== "THEY BLOCKED") { %>
       <% if (following) { %>
         <div class="center-btn">
           <button class="btn-large"><a href = '/users/unfollow/<%= user.userId %>'>Unfollow</a></button>
@@ -46,6 +36,9 @@
       <% } else if (friendStatus === "FRIEND") { %>
         <button class="btn-large"><a href = '/api/unfriend/<%= user.userId %>'>Unfriend</a></button>
       <% } %>
+      <button class="btn-large"><a href = '/users/block/<%=user.userId%>'>Block</a></button>
+    <% } else if (friendStatus !== "THEY BLOCKED") { %>
+        <button class="btn-large"><a href = '/users/unblock/<%=user.userId%>'>Unblock</a></button>
     <% } %>
 
     <h1 class = "space"></h1>

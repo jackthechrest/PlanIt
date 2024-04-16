@@ -8,22 +8,13 @@
     <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body>
-    <h1>MENU</h1>
-    <ul>
-        <li>
-            <p>- <a href="/logo">Logo</a></p>
-        </li>
-        <li>
-            <p>- <a href="/users/<%= user.userId %>/calendar">Calendar</a></p>
-        </li>
-        <li>
-            <p>- <a href="/search">Search</a></p>
-        </li>
-        <li>
-            <p>- <a href="/users/<%= user.userId %>/messages">Inbox</a></p>
-        </li>
-    </ul>
+    <div class="navbar">
+      <a href="/logo" class="logo"><img src="/imgs/logo.png" alt="PlanIt Logo"></a>
+      <a href="/messages" class="menu"><img src="/imgs/inbox_icon.png" alt="Inbox (No Notifications)"></a>
+      <a href="/search" class="menu"><img src="/imgs/search_icon.png" alt="Search"></a>
+      <a href="/calendar" class="menu"><img src="/imgs/calendar_icon.png" alt="Calendar"></a>
+    </div>
 
-    <h1>WIP</h1>
+    <h1 id = "navbarEnd">WIP</h1>
   </body>
 </html>

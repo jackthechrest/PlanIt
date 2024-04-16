@@ -17,4 +17,8 @@ export class FriendList {
   @ManyToMany(() => User, (user) => user.unconfirmedFriendLists, { cascade: ['insert', 'update'], onDelete: "CASCADE", })
   @JoinTable()
   pendingFriends: Relation<User>[];
+
+  @ManyToMany(() => User, (user) => user.blockedFriendLists, { cascade: ['insert', 'update'], onDelete: "CASCADE", })
+  @JoinTable()
+  blockedUsers: Relation<User>[];
 }

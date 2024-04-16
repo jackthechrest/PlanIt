@@ -92,7 +92,7 @@ body {
   font-family: 'Archivo Black', sans-serif;
   min-height: 100vh;
   max-height: 100vh;
-  background-image: url('/imgs/background.jpg');
+  background-image: url('/imgs/background_plain.jpg');
   background-size: cover;
 }
 
@@ -180,4 +180,32 @@ td:nth-child(odd) {
 th,
 td {
   padding: 0.5rem 1.25rem 0.5rem 1.25rem;
+}
+
+/* Style the navbar */
+.navbar {
+  overflow: visible;
+  position: relative;
+  align-items: center;
+  padding: 14px;
+  background-image: linear-gradient(to bottom right, rgb(255, 0, 225), rgb(255, 128, 0));
+}
+
+/* Navbar links */
+.navbar .menu {
+  position: relative;
+  padding: 1%;
+}
+
+.logo {
+  position: absolute;
+  right: -45px;
+  top: -45px;
+  z-index: 10;
+  transform: scale(0.65);
+}
+
+#navbarEnd {
+  position: relative;
+  margin-top: 3%;
 }

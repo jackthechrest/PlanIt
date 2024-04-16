@@ -11,7 +11,7 @@ async function getReportById(offendingContentId: string): Promise<Report | null>
 }
 
 async function getAllPendingReports(): Promise<Report[]> {
-    const reports = await reportRepository.find({ where: { hasBeenAddressed: false } });
+    const reports = await reportRepository.find({ where: { hasBeenAddressed: false }, order: {secondsSinceEnoch: "ASC"} });
 
     return reports;
 }
@@ -44,11 +44,11 @@ async function createReport(reportType: ReportType, contentId: string): Promise<
         // reportedUser = await getUserByCommentId(contentId);
     }
 
-
     let newReport = new Report();
     newReport.offendingContentId = offendingContentId;
     newReport.dateSent = new Date();
     newReport.dateString = newReport.dateSent.toLocaleString('en-us', {month:'short', day:'numeric', year:'numeric', hour12:true, hour:'numeric', minute:'2-digit'});
+    newReport.secondsSinceEnoch = newReport.dateSent.getTime() / 1000;
     newReport.type = "REPORT";
     newReport.receivingUser = admin;
     newReport.sendingUser = reportedUser;
@@ -69,7 +69,6 @@ async function respondToReport(offendingContentId: string, isValid: boolean): Pr
         .where({ offendingContentId: offendingContentId })
         .execute();
 
-    
     return updatedReport;
 }
 

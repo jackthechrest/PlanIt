@@ -10,10 +10,10 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   userId: string;
 
-  @Column({ unique: true })
+  @Column({ unique: true, length: 100 })
   username: string;
 
-  @Column({default: ""})
+  @Column({default: "", length: 100 })
   displayName: string;
 
   @Column({unique: true})
@@ -25,7 +25,7 @@ export class User {
   @Column({ default: false })
   isAdmin: boolean;
 
-  @Column({ default: "" })
+  @Column({ default: "", length: 100 })
   biography: string;
 
   @Column({ default: false })
@@ -58,6 +58,9 @@ export class User {
   @ManyToMany(() => FriendList, (friendList) => friendList.pendingFriends, { cascade: ['insert', 'update'] })
   unconfirmedFriendLists: Relation<FriendList>[];
 
+  @ManyToMany(() => FriendList, (friendList) => friendList.blockedUsers, { cascade: ['insert', 'update'] })
+  blockedFriendLists: Relation<FriendList>[];
+
   // Email Verification
   @OneToOne(() => VerifyCode, (verifyCode) => verifyCode.user, { cascade: ['insert', 'update'] })
   @JoinColumn()
@@ -84,6 +87,12 @@ export class User {
   @OneToMany(() => Comment, (comment) => comment.commenter)
   commenter: Relation<Comment>[];
 /*
+<<<<<<< HEAD
 Commenter		one-many 
+=======
+joinedEvents		many-many
+ownedEvents		one-many
+Commenter		one-many
+>>>>>>> e7b7825aaec3bad42e28c453ac840ad4e8280b80
 */
 }
