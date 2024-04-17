@@ -1,9 +1,10 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, Relation} from 'typeorm';
 import {User} from "./User";
+import {Event} from "./Event"
 
 
 @Entity()
-export class Comment{
+export class Comment {
     @PrimaryGeneratedColumn('uuid')
     commentId: string;
 
@@ -14,9 +15,9 @@ export class Comment{
     commentTime: Date;
 
     //relationships
-    @ManyToOne(() => User, (user) => user.commenter)
+    @ManyToOne(() => User, (user) => user.commenter, {cascade: ['insert', 'update'], onDelete: "CASCADE",})
     commenter: Relation<User>;
 
-    @ManyToOne(() => Event, (event) => event.commentUnder)
+    @ManyToOne(() => Event, (event) => event.comments, {cascade: ['insert', 'update'], onDelete: "CASCADE",})
     commentUnder: Relation<Event>;
 }

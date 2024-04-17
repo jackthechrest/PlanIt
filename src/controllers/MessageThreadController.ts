@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import { getUserById } from '../models/UserModel';
-import { getAllMessagesThreadsForUserId, getMessageThreadById } from '../models/MessageThreadModel'; 
+import { getAllMessagesThreadsForUserId, getMessageThreadById, setThreadRead } from '../models/MessageThreadModel'; 
+import { getAllMessagesByThreadId } from '../models/MessageModel';
+import { hasUnreadNotifications } from '../models/NotificationsModel';
 
 async function renderAllMessageThreads(req: Request, res: Response): Promise<void> {
     const { isLoggedIn, authenticatedUser } = req.session;
@@ -12,8 +14,9 @@ async function renderAllMessageThreads(req: Request, res: Response): Promise<voi
 
     const user = await getUserById(authenticatedUser.userId)
     const messageThreads = await getAllMessagesThreadsForUserId(authenticatedUser.userId);
+    const hasUnread = await hasUnreadNotifications(authenticatedUser.userId);
 
-    res.render('messages', { user, messageThreads });
+    res.render('messages', { user, messageThreads, hasUnread, });
 }
 
 async function renderSingleMessageThread(req: Request, res: Response): Promise<void> {
@@ -54,9 +57,12 @@ async function renderSingleMessageThread(req: Request, res: Response): Promise<v
         return;
     }
 
-    const messages = messageThread.messages;
+    await setThreadRead(messageThreadId, authenticatedUser.userId);
 
-    res.render('messageThread', { user, otherUser, messageThread, messages });
+    const messages = await getAllMessagesByThreadId(messageThreadId, authenticatedUser.userId);
+    const hasUnread = await hasUnreadNotifications(authenticatedUser.userId);
+
+    res.render('messageThread', { user, otherUser, messageThread, messages, hasUnread });
 }
 
 export { renderAllMessageThreads, renderSingleMessageThread }

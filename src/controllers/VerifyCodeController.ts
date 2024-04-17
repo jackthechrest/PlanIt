@@ -4,6 +4,7 @@ import { parseDatabaseError } from '../utils/db-utils';
 import { sendEmail } from '../services/emailService';
 import { getUserById, setVerifiedByUserId } from '../models/UserModel';
 import { generateVerifyCode } from '../models/VerifyCodeModel';
+import { hasUnreadNotifications } from '../models/NotificationsModel';
 
 async function sendVerification(req: Request, res: Response): Promise<void> {
     const { isLoggedIn, authenticatedUser } = req.session;
@@ -31,7 +32,9 @@ async function sendVerification(req: Request, res: Response): Promise<void> {
             Best,\nPlanIt Administration`);
         }
 
-        res.render('verify', { user });
+        const hasUnread = await hasUnreadNotifications(authenticatedUser.userId);
+
+        res.render('verify', { user, hasUnread, });
     } catch (err) {
         console.error(err);
         const databaseErrorMessage = parseDatabaseError(err);

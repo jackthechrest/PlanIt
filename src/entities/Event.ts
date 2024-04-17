@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, Relation, JoinTable, ManyToOne, ManyToMany, OneToMany} from 'typeorm';
 
 import { User } from "./User";
+import { Comment } from "./Comment"
 
 @Entity()
 export class Event{
@@ -23,13 +24,13 @@ export class Event{
     visibility_level: string;
 
     // relationships
-    @ManyToOne(() => User, (user) => user.ownedEvents)
+    @ManyToOne(() => User, (user) => user.ownedEvents, { cascade: ['insert', 'update'], onDelete: "CASCADE",})
     ownedEvents: Relation<User>;
 
-    @ManyToMany(() => User, (user) => user.joinedEvents)
+    @ManyToMany(() => User, (user) => user.joinedEvents, { cascade: ['insert', 'update'] } )
     @JoinTable()
     joinedEvents: Relation<User>[];
 
-    @OneToMany(() => Comment, (comment) => comment.commentUnder)
-    commentUnder: Relation<Comment>[];
+    @OneToMany(() => Comment, (comment) => comment.commentUnder, { cascade: ['insert', 'update'] } )
+    comments: Relation<Comment>[];
 }

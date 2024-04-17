@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { getUserById } from '../models/UserModel';
 import { blockUserById, getFriendListById, removeFriend, replyFriendRequest, sendFriendRequest, unblockUserById } from '../models/FriendListModel';
+import { hasUnreadNotifications } from '../models/NotificationsModel';
 
 async function friendRequestUser(req: Request, res: Response): Promise<void> {
   const { isLoggedIn, authenticatedUser } = req.session;
@@ -65,8 +66,9 @@ async function renderFriendsPage(req: Request, res: Response): Promise<void> {
 
   // get friend list data
   const friendList = await getFriendListById(`FL<+>${targetUserId}`);
+  const hasUnread = await hasUnreadNotifications(authenticatedUser.userId);
   
-  res.render('friends', { user: targetUser, friends: friendList.friends });
+  res.render('friends', { user: targetUser, friends: friendList.friends, hasUnread });
 }
 
 async function unfriendUser(req: Request, res: Response): Promise<void> {
@@ -164,8 +166,9 @@ async function renderBlockedPage(req: Request, res: Response): Promise<void> {
 
   // get block list data
   const friendList = await getFriendListById(`FL<+>${targetUserId}`);
+  const hasUnread = await hasUnreadNotifications(authenticatedUser.userId);
   
-  res.render('blocked', { user: targetUser, blockedUsers: friendList.blockedUsers });
+  res.render('blocked', { user: targetUser, blockedUsers: friendList.blockedUsers, hasUnread, });
 }
 
 export { friendRequestUser, respondFriendRequest, renderFriendsPage, unfriendUser, blockUser, unblockUser, renderBlockedPage } 

@@ -2,6 +2,7 @@ import { Like, Or } from 'typeorm';
 import { AppDataSource } from '../dataSource';
 import { MessageThread } from '../entities/MessageThread';
 import { User } from '../entities/User';
+import { hasUnreadMessages } from './MessageModel';
 
 const messageThreadRepository = AppDataSource.getRepository(MessageThread);
 
@@ -36,15 +37,49 @@ async function createMessageThread(user1: User, user2: User): Promise<MessageThr
   return newMessageThread;
 }
 
-async function updateMessageThread(messageThreadId: string, updatedDate: Date): Promise<MessageThread> {
+async function updateMessageThread(messageThreadId: string, updatedDate: Date, userId: string): Promise<MessageThread> {
   let updatedMessageThread = await getMessageThreadById(messageThreadId);
   updatedMessageThread.lastDateSent = updatedDate;
   updatedMessageThread.lastDateString = updatedDate.toLocaleString('en-us', {month:'short', day:'numeric', year:'numeric', hour12:true, hour:'numeric', minute:'2-digit'});
   updatedMessageThread.lastSecondsSinceEnoch = updatedDate.getTime() / 1000;
+
+  if (userId === updatedMessageThread.user1Id) {
+    updatedMessageThread.user1BeenRead = false;
+  } else if (userId === updatedMessageThread.user2Id) {
+    updatedMessageThread.user2BeenRead = false;
+  }
 
   updatedMessageThread = await messageThreadRepository.save(updatedMessageThread);
 
   return updatedMessageThread;
 }
 
-export { getAllMessagesThreadsForUserId, getMessageThreadById, createMessageThread, updateMessageThread }
+async function setThreadRead(messageThreadId: string, userId: string): Promise<void> {
+  let updatedMessageThread = await getMessageThreadById(messageThreadId);
+
+  if (userId === updatedMessageThread.user1Id) {
+    updatedMessageThread.user1BeenRead = true;
+  } else if (userId === updatedMessageThread.user2Id) {
+    updatedMessageThread.user2BeenRead = true;
+  }
+
+  await messageThreadRepository.save(updatedMessageThread);
+}
+
+async function hasUnreadMessageThreads(userId: string): Promise<boolean> {
+  const messageThreads = await messageThreadRepository.findBy({ messageThreadId: Or(Like(`${userId}%`), Like(`%${userId}`))
+  });
+
+  let unreadMessage = false;
+
+  for (const thread of messageThreads) {
+    unreadMessage = await hasUnreadMessages(thread.messageThreadId, userId);
+    if (unreadMessage === true) {
+      return true;
+    } 
+  }
+
+  return unreadMessage;
+}
+
+export { getAllMessagesThreadsForUserId, getMessageThreadById, createMessageThread, updateMessageThread, setThreadRead, hasUnreadMessageThreads }

@@ -23,10 +23,19 @@ async function getUserById(userId: string): Promise<User | null> {
 }
 
 async function getUserByUsername(username: string): Promise<User | null> {
-  const user = await userRepository
-    .createQueryBuilder('user')
-    .where('username = :username', { username })
-    .getOne();
+  const user = await userRepository.findOne({ where: { username }, 
+    relations: [
+    'following',
+    'followers',
+    'receivedNotifications', 
+    'selfFriendList',
+    'otherFriendLists',
+    'unconfirmedFriendLists',
+    'blockedFriendLists',
+    'code',
+    ],
+  });
+
   return user;
 }
 

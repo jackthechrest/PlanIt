@@ -2,6 +2,8 @@ import { Not } from 'typeorm';
 import { AppDataSource } from '../dataSource';
 import { Notifications } from '../entities/Notifications';
 import { getUserById } from './UserModel';
+import { hasUnreadReports } from './ReportModel';
+import { hasUnreadMessageThreads } from './MessageThreadModel';
 
 const notificationsRepository = AppDataSource.getRepository(Notifications);
 
@@ -82,4 +84,29 @@ async function setResponded(receivingUserId: string, sendingUserId: string): Pro
     .execute();
 }
 
-export { getAllOtherNotificationsForUserId, createNewNotification, setResponded };
+async function hasUnreadNotifications(userId: string): Promise<boolean> {
+  const notifications = await notificationsRepository.find({ where: { receivingUserId: userId, beenOpened: false, type: Not('MESSAGE' || 'REPORT'),}});
+
+  if (notifications.length !== 0) {
+    return true;
+  }
+
+  const hasMessages = await hasUnreadMessageThreads(userId);
+
+  if (hasMessages) {
+    return true;
+  }
+
+  const user = await getUserById(userId)
+
+  if (user && user.isAdmin) {
+    const hasReports = await hasUnreadReports();
+    if (hasReports) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+export { getAllOtherNotificationsForUserId, createNewNotification, setResponded, hasUnreadNotifications };

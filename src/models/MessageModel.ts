@@ -1,13 +1,38 @@
 import { AppDataSource } from '../dataSource';
 import { Message } from '../entities/Message';
 import { User } from '../entities/User';
-import { getMessageThreadById } from './MessageThreadModel';
+import { getMessageThreadById, updateMessageThread } from './MessageThreadModel';
 
 const messageRepository = AppDataSource.getRepository(Message);
 
-async function getAllMessagesByThreadId(messageThreadId: string): Promise<Message[]> {
+async function getAllMessagesByThreadId(messageThreadId: string, receivingUserId: string): Promise<Message[]> {
+  await messageRepository
+    .createQueryBuilder('message')
+    .leftJoinAndSelect('message.thread', 'thread')
+    .update(Message)
+    .set({ beenRead: true })
+    .where({ beenOpened: true })
+    .andWhere('thread.messageThreadId = :messageThreadId', {messageThreadId})
+    .andWhere({receivingUserId})
+    .andWhere('type = \'MESSAGE\'')
+    .execute();
 
-  const messages = await messageRepository.find();
+  await messageRepository
+    .createQueryBuilder('message')
+    .leftJoinAndSelect('message.thread', 'thread')
+    .update(Message)
+    .set({ beenOpened: true })
+    .where({ beenOpened: false })
+    .andWhere('thread.messageThreadId = :messageThreadId', {messageThreadId})
+    .andWhere('type = \'MESSAGE\'')
+    .andWhere({receivingUserId})
+    .execute();
+
+  const messages = await messageRepository.createQueryBuilder('message')
+    .leftJoinAndSelect('message.thread', 'thread')
+    .where('thread.messageThreadId = :messageThreadId', {messageThreadId})
+    .andWhere('type = \'MESSAGE\'')
+    .getMany();
 
   return messages;
 }
@@ -32,7 +57,25 @@ async function createNewMessage(messageThreadId: string, sender: User, receiver:
 
   newMessage = await messageRepository.save(newMessage);
 
+  await updateMessageThread(messageThreadId, newMessage.dateSent, receiver.userId);
+
   return newMessage;
 }
 
-export { getAllMessagesByThreadId, createNewMessage }
+async function hasUnreadMessages(messageThreadId: string, receivingUserId: string): Promise<boolean> {
+  const messages = await messageRepository.createQueryBuilder('message')
+  .leftJoinAndSelect('message.thread', 'thread')
+  .where('thread.messageThreadId = :messageThreadId', {messageThreadId})
+  .andWhere('type = \'MESSAGE\'')
+  .andWhere({receivingUserId})
+  .andWhere({beenOpened: false})
+  .getMany();
+
+  if (messages.length !== 0) {
+    return true;
+  }
+
+  return false;
+}
+
+export { getAllMessagesByThreadId, createNewMessage, hasUnreadMessages }

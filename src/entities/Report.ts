@@ -1,28 +1,15 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, Relation, JoinColumn, } from 'typeorm';
-
-import { Event} from "./Event";
-import { Comment } from "./Comment";
+import { Column, Entity } from 'typeorm';
+import { Notifications } from './Notifications';
 
 @Entity()
-export class Report{
-    @PrimaryGeneratedColumn('uuid')
-    reportID: string;
+export class Report extends Notifications{
+  // offendingContentId = U(user)/E(event)/W(wall post)/C(comment) + the content's id
+  @Column()
+  offendingContentId: string;
 
-    @Column({ default: false })
-    isReported: Boolean;
+  @Column({ default: false })
+  hasBeenAddressed: boolean;
 
-    @Column({ default: false })
-    hasBeenAddressed: boolean;
-  
-    @Column()
-    isValid: boolean;
-
-    // relationships
-    @OneToOne(() => Event)
-    @JoinColumn()
-    reportedEvent: Relation<Event>;
-
-    @OneToOne(() => Comment)
-    @JoinColumn()
-    reportedComment: Relation<Comment>;
+  @Column({ default: false })
+  isValid: boolean;
 }

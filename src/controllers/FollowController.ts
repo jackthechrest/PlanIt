@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { getUserById } from '../models/UserModel';
 import { getFollowById, addFollow, removeFollow } from '../models/FollowModel';
 import { parseDatabaseError } from '../utils/db-utils';
+import { hasUnreadNotifications } from '../models/NotificationsModel';
 
 async function followUser(req: Request, res: Response): Promise<void> {
   const { isLoggedIn, authenticatedUser } = req.session;
@@ -82,7 +83,9 @@ async function renderFollowingPage(req: Request, res: Response): Promise<void> {
     res.redirect(`/users/${authenticatedUser.userId}`); // target user doesn't exist
   }
 
-  res.render('following', { user: targetUser });
+  const hasUnread = await hasUnreadNotifications(authenticatedUser.userId);
+
+  res.render('following', { user: targetUser, hasUnread, });
 }
 
 async function renderFollowersPage(req: Request, res: Response): Promise<void> {
@@ -100,7 +103,9 @@ async function renderFollowersPage(req: Request, res: Response): Promise<void> {
     res.redirect(`/users/${authenticatedUser.userId}`); // target user does not exist
   }
 
-  res.render('followers', { user: targetUser });
+  const hasUnread = await hasUnreadNotifications(authenticatedUser.userId);
+
+  res.render('followers', { user: targetUser, hasUnread });
 }
 
 export { followUser, unfollowUser, renderFollowingPage, renderFollowersPage };

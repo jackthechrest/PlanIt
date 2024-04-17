@@ -13,11 +13,17 @@ export class MessageThread {
   @Column()
   user1Username: string;
 
+  @Column({default: true})
+  user1BeenRead: boolean;
+
   @Column()
   user2Id: string;
 
   @Column()
   user2Username: string;
+
+  @Column({default: true})
+  user2BeenRead: boolean;
 
   @Column()
   lastDateSent: Date;

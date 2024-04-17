@@ -72,4 +72,14 @@ async function respondToReport(offendingContentId: string, isValid: boolean): Pr
     return updatedReport;
 }
 
-export { getReportById, getAllPendingReports, createReport, respondToReport }
+async function hasUnreadReports(): Promise<Boolean> {
+    const reports = await reportRepository.find({ where: { respondedTo: false }});
+
+    if (reports.length !== 0) {
+        return true;
+    }
+
+    return false;
+}
+
+export { getReportById, getAllPendingReports, createReport, respondToReport, hasUnreadReports }

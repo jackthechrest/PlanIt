@@ -4,6 +4,7 @@ import { createNewMessage } from '../models/MessageModel';
 import { createMessageThread, getMessageThreadById, updateMessageThread } from '../models/MessageThreadModel';
 import { parseDatabaseError } from '../utils/db-utils';
 import { getFriendListById } from '../models/FriendListModel';
+import { hasUnreadNotifications } from '../models/NotificationsModel';
 
 async function sendMessage(req: Request, res: Response): Promise<void> {
     const { isLoggedIn, authenticatedUser } = req.session;
@@ -59,7 +60,7 @@ async function sendMessage(req: Request, res: Response): Promise<void> {
 
     try {
         const newMessage = await createNewMessage(messageThread.messageThreadId, sender, receiver, body);
-        await updateMessageThread(messageThread.messageThreadId, newMessage.dateSent);
+        await updateMessageThread(messageThread.messageThreadId, newMessage.dateSent, receiver.userId);
         res.redirect(`/messages/${messageThread.messageThreadId}`);
     } catch (err) {
         console.error(err);
@@ -79,9 +80,9 @@ async function renderCreateMessageThread(req: Request, res: Response): Promise<v
     const user = await getUserById(authenticatedUser.userId);
     const friendList = await getFriendListById(`FL<+>${authenticatedUser.userId}`);
 
+    const hasUnread = await hasUnreadNotifications(authenticatedUser.userId);
 
-
-    res.render('send', { user, friends: friendList.friends });
+    res.render('send', { user, friends: friendList.friends, hasUnread, });
 }
 
 export { sendMessage, renderCreateMessageThread }

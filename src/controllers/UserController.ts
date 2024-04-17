@@ -5,6 +5,7 @@ import { parseDatabaseError } from '../utils/db-utils';
 import { sendEmail } from '../services/emailService';
 import { getFollowById } from '../models/FollowModel';
 import { getFriendStatus } from '../models/FriendListModel';
+import { hasUnreadNotifications } from '../models/NotificationsModel';
 
 async function registerUser(req: Request, res: Response): Promise<void> {
   const { username, displayName, email, password } = req.body as RegisterRequest;
@@ -84,12 +85,14 @@ async function getUserProfileData(req: Request, res: Response): Promise<void> {
   const viewingUser = await getUserById(authenticatedUser.userId);
   const targetFollow = await getFollowById(user.userId + viewingUser.userId);
   const friendStatus = await getFriendStatus(viewingUser.userId, user.userId);
+  const hasUnread = await hasUnreadNotifications(authenticatedUser.userId);
 
   res.render('profilePage', {
     user,
     viewingUser,
     following: targetFollow,
     friendStatus,
+    hasUnread,
   });
 }
 
@@ -140,8 +143,9 @@ async function renderSettings(req: Request, res: Response): Promise<void> {
   }
 
   const user = await getUserById(authenticatedUser.userId);
+  const hasUnread = await hasUnreadNotifications(authenticatedUser.userId);
 
-  res.render('settings', { user });
+  res.render('settings', { user, hasUnread, });
 }
 
 async function renderDelete(req: Request, res: Response): Promise<void> {
@@ -153,8 +157,9 @@ async function renderDelete(req: Request, res: Response): Promise<void> {
   }
 
   const user = await getUserById(authenticatedUser.userId);
+  const hasUnread = await hasUnreadNotifications(authenticatedUser.userId);
 
-  res.render('delete', { user });
+  res.render('delete', { user, hasUnread });
 }
 
 async function renderCalendar(req: Request, res: Response): Promise<void> {
@@ -177,8 +182,9 @@ async function renderSearch(req: Request, res: Response): Promise<void> {
   }
 
   const user = await getUserById(authenticatedUser.userId);
+  const hasUnread = await hasUnreadNotifications(authenticatedUser.userId);
 
-  res.render('search', { user });
+  res.render('search', { user, hasUnread, });
 }
 
 export { registerUser, logIn, getUserProfileData, deleteAccount, logoRedirect,

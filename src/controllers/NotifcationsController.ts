@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getAllOtherNotificationsForUserId } from '../models/NotificationsModel';
+import { getAllOtherNotificationsForUserId, hasUnreadNotifications } from '../models/NotificationsModel';
 import { getUserById } from '../models/UserModel';
 
 async function renderNotifications(req: Request, res: Response): Promise<void> {
@@ -14,8 +14,9 @@ async function renderNotifications(req: Request, res: Response): Promise<void> {
     let user = await getUserById(authenticatedUser.userId);
 
     const notifications = await getAllOtherNotificationsForUserId(authenticatedUser.userId);
+    const hasUnread = await hasUnreadNotifications(authenticatedUser.userId);
     
-    res.render('notifications', {user, notifications: notifications})
+    res.render('notifications', {user, notifications: notifications, hasUnread,})
 }
 
 export { renderNotifications };

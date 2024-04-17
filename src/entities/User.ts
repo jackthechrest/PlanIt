@@ -1,8 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Relation, OneToOne, ManyToMany, JoinColumn, JoinTable } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Relation, OneToOne, ManyToMany, JoinColumn } from 'typeorm';
 import { VerifyCode } from './VerifyCode';
 import { FriendList } from './FriendList';
 import { Notifications } from './Notifications';
-import { Message } from './Message';
+import { Event } from './Event';
+import { Comment } from './Comment'
+import { Follow } from './Follow';
 
 @Entity()
 export class User {
@@ -33,15 +35,17 @@ export class User {
   @Column({ default: 0 })
   warningCount: number;
 
-  
   // need to add profile picture functionality
-  @Column()
+  @Column({nullable: true})
   profilePic: string;
 
   // Relationships
-  @ManyToMany(() => User)
-  @JoinTable()
-  friends: User[];
+  // Follow
+  @OneToMany(() => Follow, (follow) => follow.requestingUser, { cascade: ['insert', 'update'] })
+  following: Relation<Follow>[];
+
+  @OneToMany(() => Follow, (follow) => follow.targetedUser, { cascade: ['insert', 'update'] })
+  followers: Relation<Follow>[];
 
   // Friends
   @OneToOne(() => FriendList, (friendList) => friendList.owner, { cascade: ['insert', 'update'] })
@@ -69,14 +73,11 @@ export class User {
   @OneToMany(() => Notifications, (notifications) => notifications.sendingUser, { cascade: ['insert', 'update'] } )
   sentNotifications: Relation<User>[];
 
-  @OneToMany(() => Message, (message) => message.sender, { cascade: ['insert', 'update'] } )
-  sentMessages: Relation<Message>[];
-
   // Event Related
-  @OneToMany(() => Event, (event) => event.ownedEvents)
+  @OneToMany(() => Event, (event) => event.ownedEvents, { cascade: ['insert', 'update'] } )
   ownedEvents: Relation<Event>[];
 
-  @ManyToMany(() => Event, (event) => event.joinedEvents)
+  @ManyToMany(() => Event, (event) => event.joinedEvents, { cascade: ['insert', 'update'] } )
   joinedEvents: Relation<Event>[];
 
   //Comments
