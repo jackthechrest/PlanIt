@@ -12,8 +12,7 @@
     <div class="formCard">
       <section class="form-container">
         <div>
-          <h1 class="title gradient-text">Shrink Ray</h1>
-          <h2>Create An Account</h2>
+          <h1>Create An Account</h1>
         </div>
         <div class="form">
           <form action="/api/users" method="post">
@@ -31,7 +30,7 @@
             <input
               id="displayName"
               name="displayName"
-              placeholder="Display Name"
+              placeholder="Display Name (Optional)"
               class="text"
               type="text"
               maxlength="100"
@@ -54,10 +53,11 @@
               class="password"
               required
             />
-            <button class="btn">Create</button>
+            <button class="btn">Submit!</button>
           </form>
         </div>
       </section>
     </div>
+    <h2 class="login-register-redirect"><a href="/login">Log in to Existing Account</a></h2>
   </body>
 </html>
