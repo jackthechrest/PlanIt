@@ -7,40 +7,51 @@
     <title>Verify Email | PlanIt</title>
     <link rel="stylesheet" href="/css/style.css" />
   </head>
-  <body>
+  <body class="star-background">
     <div class="navbar">
       <a href="/logo" class="logo"><img src="/imgs/logo.png" alt="PlanIt Logo"></a>
       <% if (hasUnread) { %>
-        <a href="/messages" class="menu"><img src="/imgs/inbox_notification_icon.png" alt="Inbox (Notifications)"></a>
+        <a href="/messages" class="menu-inbox"><img src="/imgs/inbox_notification_icon.png" alt="Inbox (Notifications)"></a>
       <% } else { %>
-        <a href="/messages" class="menu"><img src="/imgs/inbox_icon.png" alt="Inbox (No Notifications)"></a>
+        <a href="/messages" class="menu-inbox"><img src="/imgs/inbox_icon.png" alt="Inbox (No Notifications)"></a>
       <% } %>
-      <a href="/search" class="menu"><img src="/imgs/search_icon.png" alt="Search"></a>
-      <a href="/calendar" class="menu"><img src="/imgs/calendar_icon.png" alt="Calendar"></a>
+      <a href="/search" class="menu-search"><img src="/imgs/search_icon.png" alt="Search"></a>
+      <a href="/calendar" class="menu-calendar"><img src="/imgs/calendar_icon.png" alt="Calendar"></a>
     </div>
 
-    <h1 id = "navbarEnd">WIP</h1>
+    <h1 id = "navbarEnd"></h1>
 
-    <% if (user.verifiedEmail) { %>
-      <p>Your email is already verified!</p>
-    <% } else { %>
-      <p>A verifcation code has been sent to your email.
-         Enter it to verify your email.
-      </p>
-      <div class = "form">
-        <form method = "POST" action = "/api/verify">
-          <label for="verifyCode">Verification Code</label>
-            <input
-              id="verifyCode"
-              name="verifyCode"
-              placeholder="Verification Code"
-              class="number"
-              type="number"
-              required
-            />
-          <button class = "btn">Verify Email</button>
-        </form>
-      </div>
-    <% } %>
+    <div class="formCard">
+      <section class="form-container">
+        <div>
+          <h1>Verify Your Email<h1>
+        </div>
+        <h2 class="padding"></h1>
+        <div class="info">
+        <% if (user.verifiedEmail) { %>
+          <p>Your email is already verified!</p>
+        <% } else { %>
+          <p>A verifcation code has been sent to your email.</p>
+          <p>Enter it to verify your email.</p>
+          <h3 class="padding"></h1>
+          <div class = "form">
+            <form method = "POST" action = "/api/verify">
+              <label for="verifyCode">Verification Code</label>
+                <input
+                  id="verifyCode"
+                  name="verifyCode"
+                  placeholder="Verification Code"
+                  class="number"
+                  type="number"
+                  required
+                />
+              <h3 class="padding"></h1>
+              <button class = "btn">Verify Email</button>
+            </form>
+          </div>
+        </div>
+        <% } %>
+      </section>
+    </div>
   </body>
 </html>

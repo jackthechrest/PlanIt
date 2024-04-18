@@ -81,6 +81,6 @@ export class User {
   joinedEvents: Relation<Event>[];
 
   //Comments
-  @OneToMany(() => Comment, (comment) => comment.commenter)
+  @OneToMany(() => Comment, (comment) => comment.commenter, { cascade: ['insert', 'update'] })
   commenter: Relation<Comment>[];
 }

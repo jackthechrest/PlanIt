@@ -82,4 +82,18 @@ async function hasUnreadMessageThreads(userId: string): Promise<boolean> {
   return unreadMessage;
 }
 
-export { getAllMessagesThreadsForUserId, getMessageThreadById, createMessageThread, updateMessageThread, setThreadRead, hasUnreadMessageThreads }
+async function removeMessageThreadData(requestingUserId: string): Promise<void> {
+  const messageThreads = await getAllMessagesThreadsForUserId(requestingUserId);
+
+  for (const messageThread of messageThreads) {
+    let threadId = messageThread.messageThreadId;
+    await messageThreadRepository
+    .createQueryBuilder('messageThread')
+    .delete()
+    .where('messageThreadId = :threadId', { threadId })
+    .execute();
+  }
+}
+
+export { getAllMessagesThreadsForUserId, getMessageThreadById, createMessageThread, 
+         updateMessageThread, setThreadRead, hasUnreadMessageThreads, removeMessageThreadData }

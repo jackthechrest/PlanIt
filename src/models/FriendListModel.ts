@@ -225,4 +225,17 @@ async function unblockUserById(requestingUserId: string, targetedUserId: string)
     }
 }
 
-export { getFriendListById, getFriendStatus, sendFriendRequest, replyFriendRequest, removeFriend, blockUserById, unblockUserById };
+async function removeFriendListData(requestingUserId: string): Promise<void> {
+    const requestingFriendList = await getFriendListById(`FL<+>${requestingUserId}`);
+
+    for (const targetedFriend of requestingFriendList.friends) {
+        await removeFriend(requestingUserId, targetedFriend.userId);
+    }
+
+    for (const targetedPendingFriend of requestingFriendList.pendingFriends) {
+        await replyFriendRequest(requestingUserId, targetedPendingFriend.userId, "DECLINE")
+    }
+}
+
+export { getFriendListById, getFriendStatus, sendFriendRequest, replyFriendRequest, removeFriend, 
+         blockUserById, unblockUserById, removeFriendListData };

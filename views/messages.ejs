@@ -11,46 +11,48 @@
     <div class="navbar">
         <a href="/logo" class="logo"><img src="/imgs/logo.png" alt="PlanIt Logo"></a>
         <% if (hasUnread) { %>
-            <a href="/messages" class="menu"><img src="/imgs/inbox_notification_icon.png" alt="Inbox (Notifications)"></a>
+          <a href="/messages" class="menu-inbox"><img src="/imgs/inbox_notification_icon.png" alt="Inbox (Notifications)"></a>
         <% } else { %>
-            <a href="/messages" class="menu"><img src="/imgs/inbox_icon.png" alt="Inbox (No Notifications)"></a>
+          <a href="/messages" class="menu-inbox"><img src="/imgs/inbox_icon.png" alt="Inbox (No Notifications)"></a>
         <% } %>
-        <a href="/search" class="menu"><img src="/imgs/search_icon.png" alt="Search"></a>
-        <a href="/calendar" class="menu"><img src="/imgs/calendar_icon.png" alt="Calendar"></a>
-      </div>
+        <a href="/search" class="menu-search"><img src="/imgs/search_icon.png" alt="Search"></a>
+        <a href="/calendar" class="menu-calendar"><img src="/imgs/calendar_icon.png" alt="Calendar"></a>
+    </div>
 
-    <h1 id = "navbarEnd">INBOX MENU</h1>
-    <ul>
+    <h1 id = "navbarEnd"></h1>
+    <ul class="inbox-menu">
         <li>
-            <p>- <a href="/messages">Messages</a></p>
+            <p><a href="/messages" style="font-weight: bold; font-style: italic;">Messages</a></p>
         </li>
         <li>
-            <p>- <a href="/notifications">Other Notifications</a></p>
+            <p><a href="/notifications">Other Notifications</a></p>
         </li>
         <% if (user.isAdmin) { %>
             <li>
-                <p>- <a href="/reports">Reports</a></p>
+                <p><a href="/reports">Reports</a></p>
             </li>
         <% } %>
+        <button class="btn"><a href="/send">Send New Message</a></button>
     </ul>
-    
-    <button class="btn-large"><a href="/send">Start New Message Thread</a></button>
-
-    <h1>Message Threads</h1>
-
-    <ul>
-    <% for (const messageThread of messageThreads) { %>
-        <% if (messageThread.user1Id !== user.userId) { %>
-        <li>
-            <p>[<%=messageThread.lastDateString%>] <a href="/messages/<%=messageThread.messageThreadId%>"><%=messageThread.user1Username%></a></p>
-        </li>
+    <div class="inbox-content">
+        <h1>Message Threads</h1>
+        <% if (messageThreads.length === 0) { %>
+            <h2>No Message Threads</h2>
         <% } else { %>
-        <li>
-            <p>[<%=messageThread.lastDateString%>] <a href="/messages/<%=messageThread.messageThreadId%>"><%=messageThread.user2Username%></a></p>
-        </li> 
+            <ul>
+                <% for (const messageThread of messageThreads) { %>
+                    <% if (messageThread.user1Id !== user.userId) { %>
+                    <li>
+                        <p>[<%=messageThread.lastDateString%>] <a href="/messages/<%=messageThread.messageThreadId%>"><%=messageThread.user1Username%></a></p>
+                    </li>
+                    <% } else { %>
+                    <li>
+                        <p>[<%=messageThread.lastDateString%>] <a href="/messages/<%=messageThread.messageThreadId%>"><%=messageThread.user2Username%></a></p>
+                    </li> 
+                    <% } %>
+                <% } %>
+            </ul>
         <% } %>
-    <% } %>
-    </ul>
-
+    </div>
 </body>
 </html>

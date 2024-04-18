@@ -2,6 +2,8 @@ import { AppDataSource } from '../dataSource';
 import { FriendList } from '../entities/FriendList';
 import { User } from '../entities/User';
 import { VerifyCode } from '../entities/VerifyCode';
+import { removeFriendListData } from './FriendListModel';
+import { removeMessageThreadData } from './MessageThreadModel';
 
 const userRepository = AppDataSource.getRepository(User);
 
@@ -76,6 +78,9 @@ async function addNewUser(username: string, displayName: string, email: string, 
 }
 
 async function deleteUserById(userId: string): Promise<void> {
+  await removeMessageThreadData(userId);
+  await removeFriendListData(userId);
+
   await userRepository
     .createQueryBuilder('user')
     .delete()
@@ -106,4 +111,36 @@ async function incrementWarningCountForUser(userId: string): Promise<User | null
   return updatedUser;
 }
 
-export { getUserById, getUserByUsername, getUserByEmail, addNewUser, deleteUserById, setVerifiedByUserId, incrementWarningCountForUser };
+async function removeFriendData(userId: string): Promise<void> {
+  const requestingUser = await getUserById(userId);
+  let indexValue = -1;
+
+  for (const targetedFriendList of requestingUser.otherFriendLists) {
+    indexValue = -1;
+    let targetedUser = await getUserById(targetedFriendList.friendListId.split('FL<+>')[1]);
+    for (const friendList of targetedUser.otherFriendLists) {
+            ++indexValue;
+            if (friendList.friendListId === requestingUser.selfFriendList.friendListId) {
+                targetedUser.otherFriendLists.splice(indexValue, 1)
+                await userRepository.save(targetedUser);
+            }
+            break;
+        }
+    }
+
+    for (const targetedPendingFriendList of requestingUser.unconfirmedFriendLists) {
+        indexValue = -1;
+        let targetedUser = await getUserById(targetedPendingFriendList.friendListId.split('FL<+>')[1]);
+        for (const pendingFriendList of targetedUser.unconfirmedFriendLists) {
+            ++indexValue;
+            if (pendingFriendList.friendListId === requestingUser.selfFriendList.friendListId) {
+                targetedUser.unconfirmedFriendLists.splice(indexValue, 1)
+                await userRepository.save(targetedUser);
+            }
+            break;
+        }
+    }
+}
+
+export { getUserById, getUserByUsername, getUserByEmail, addNewUser, 
+         deleteUserById, setVerifiedByUserId, incrementWarningCountForUser, removeFriendData };

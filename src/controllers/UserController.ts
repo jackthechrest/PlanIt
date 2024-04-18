@@ -65,6 +65,11 @@ async function logIn(req: Request, res: Response): Promise<void> {
   res.redirect(`/users/${user.userId}`);
 }
 
+async function signOut(req: Request, res: Response): Promise<void> {
+  await req.session.clearSession();
+  res.redirect('/index');
+}
+
 async function getUserProfileData(req: Request, res: Response): Promise<void> {
   const { targetUserId } = req.params as UserIdParam;
   const { isLoggedIn, authenticatedUser } = req.session;
@@ -187,5 +192,5 @@ async function renderSearch(req: Request, res: Response): Promise<void> {
   res.render('search', { user, hasUnread, });
 }
 
-export { registerUser, logIn, getUserProfileData, deleteAccount, logoRedirect,
+export { registerUser, logIn, signOut, getUserProfileData, deleteAccount, logoRedirect,
          renderSettings, renderDelete, renderCalendar, renderSearch, };

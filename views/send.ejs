@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="/css/style.css" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> Start New Message Thread | PlanIt </title>
@@ -9,38 +10,57 @@
   <div class="navbar">
     <a href="/logo" class="logo"><img src="/imgs/logo.png" alt="PlanIt Logo"></a>
     <% if (hasUnread) { %>
-      <a href="/messages" class="menu"><img src="/imgs/inbox_notification_icon.png" alt="Inbox (Notifications)"></a>
+      <a href="/messages" class="menu-inbox"><img src="/imgs/inbox_notification_icon.png" alt="Inbox (Notifications)"></a>
     <% } else { %>
-      <a href="/messages" class="menu"><img src="/imgs/inbox_icon.png" alt="Inbox (No Notifications)"></a>
+      <a href="/messages" class="menu-inbox"><img src="/imgs/inbox_icon.png" alt="Inbox (No Notifications)"></a>
     <% } %>
-    <a href="/search" class="menu"><img src="/imgs/search_icon.png" alt="Search"></a>
-    <a href="/calendar" class="menu"><img src="/imgs/calendar_icon.png" alt="Calendar"></a>
-  </div>
-    
-    <h1 class="big-title" id="navbarEnd">Start a New Message Thread</h1>
-    <h2>Sender: <%=user.username%></h2>
+    <a href="/search" class="menu-search"><img src="/imgs/search_icon.png" alt="Search"></a>
+    <a href="/calendar" class="menu-calendar"><img src="/imgs/calendar_icon.png" alt="Calendar"></a>
+</div>
 
-    <div class = "form">
-        <form method = "POST" action = "/api/send">
-          <label for="username">Receiver</label>
-            <select id="username" name="username">
-              <% for (const friend of friends) { %>
-                <option value="<%=friend.username%>"><%=friend.username%></option>
-              <% } %>  
-            </select>
+<h1 id ="navbarEnd"></h1>
 
-          <label for="body">Message</label>
-            <input
-              id="body"
-              name="body"
-              placeholder="Message (Up to 100 Characters)"
-              class="text"
-              type="text"
-              maxlength="100"
-              required
-            />
-          <button class = "btn">Send Message</button>
-        </form>
+<ul class="inbox-menu">
+  <li>
+      <p><a href="/messages" style="font-weight: bold; font-style: italic;">Messages</a></p>
+  </li>
+  <li>
+      <p><a href="/notifications">Other Notifications</a></p>
+  </li>
+  <% if (user.isAdmin) { %>
+      <li>
+          <p><a href="/reports">Reports</a></p>
+      </li>
+  <% } %>
+</ul>
+    <div class="inbox-content" id="send">
+      <h1>Send a Message</h1>
+      <h2>Sender:</h2>
+      <h2><%=user.username%></h2>
+      <h3 class="padding"></h3>
+      <h2>Receiver:</h2>
+      <div class = "form">
+          <form method = "POST" action = "/api/send">
+            <label for="username">Receiver:</label>
+              <select name="username" id="username" required>
+                <% for (const friend of friends) { %>
+                  <option value="<%=friend.username%>"><%=friend.username%></option>
+                <% } %>  
+              </select>
+
+            <label for="body">Message</label>
+              <input
+                id="body"
+                name="body"
+                placeholder="Message (Up to 100 Characters)"
+                class="text"
+                type="text"
+                maxlength="100"
+                required
+              />
+            <button class = "btn">Send Message</button>
+          </form>
       </div>
+    </div>
 </body>
 </html>

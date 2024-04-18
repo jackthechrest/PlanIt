@@ -3,7 +3,7 @@ import { Notifications } from './Notifications';
 
 @Entity()
 export class Report extends Notifications{
-  // offendingContentId = U(user)/E(event)/W(wall post)/C(comment) + the content's id
+  // offendingContentId = U(user)/E(event)/C(comment) + the content's id
   @Column()
   offendingContentId: string;
 

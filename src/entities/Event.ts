@@ -27,7 +27,7 @@ export class Event{
     @ManyToOne(() => User, (user) => user.ownedEvents, { cascade: ['insert', 'update'], onDelete: "CASCADE",})
     ownedEvents: Relation<User>;
 
-    @ManyToMany(() => User, (user) => user.joinedEvents, { cascade: ['insert', 'update'] } )
+    @ManyToMany(() => User, (user) => user.joinedEvents, { cascade: ['insert', 'update'], onDelete: "SET NULL"} )
     @JoinTable()
     joinedEvents: Relation<User>[];
 

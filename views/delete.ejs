@@ -7,29 +7,37 @@
     <title>Delete Account | PlanIt</title>
     <link rel="stylesheet" href="/css/style.css" />
   </head>
-  <body>
-    <div class="navbar">
-      <a href="/logo" class="logo"><img src="/imgs/logo.png" alt="PlanIt Logo"></a>
-      <% if (hasUnread) { %>
-        <a href="/messages" class="menu"><img src="/imgs/inbox_notification_icon.png" alt="Inbox (Notifications)"></a>
-      <% } else { %>
-        <a href="/messages" class="menu"><img src="/imgs/inbox_icon.png" alt="Inbox (No Notifications)"></a>
-      <% } %>
-      <a href="/search" class="menu"><img src="/imgs/search_icon.png" alt="Search"></a>
-      <a href="/calendar" class="menu"><img src="/imgs/calendar_icon.png" alt="Calendar"></a>
+  <body class="star-background">
+    <a href="/logo" class="center"><img src="/imgs/logo.png" alt="PlanIt Logo"></a>
+    <div class="formCard">
+      <section class="form-container">
+        <div>
+          <h1>Delete Account<h1>
+        </div>
+        <div class="form">
+          <form action="/api/delete" method="post">
+            <label for="email">Email</label>
+            <input
+              type="text"
+              name="email"
+              placeholder="Email"
+              class="text"
+              id="email"
+              required
+            />
+            <label for="password">Password</label>
+            <input
+              id="password"
+              type="password"
+              placeholder="Password"
+              class="password"
+              name="password"
+              required
+            />
+            <button class="btn">Delete</button>
+          </form>
+        </div>
+      </section>
     </div>
-
-    <div class = "form" id = "navbarEnd">
-      <form method = "POST" action = "/api/delete">
-        <label for = "email"></label>
-        <input name = "email" id = "email" class = "email" placeholder = "Email" type = "email" required>
-
-        <label for = "password"></label>
-        <input name = "password" id = "password" class = "password" placeholder = "Password" type = "password" required>
-
-        <button class = "btn">Delete Account</button>
-      </form>
-    </div>
-
   </body>
 </html>

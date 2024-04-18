@@ -36,9 +36,6 @@ async function createReport(reportType: ReportType, contentId: string): Promise<
     } else if (reportType === 'EVENT') {
         admin = await getUserByUsername('Quinn');
         // reportedUser = await getUserByEventId(contentId);
-    } else if (reportType === 'WALL POST') { // Wall posts and comments
-        admin = await getUserByUsername('Matthew');
-        // reportedUser = await getUserByWallPostId(contentId);
     } else if (reportType === 'COMMENT') {
         admin = await getUserByUsername('Matthew');
         // reportedUser = await getUserByCommentId(contentId);
