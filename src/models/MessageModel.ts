@@ -50,9 +50,10 @@ async function createNewMessage(messageThreadId: string, sender: User, receiver:
   newMessage.sendingUser = sender;
   newMessage.sendingUserId = sender.userId;
   newMessage.sendingUsername = sender.username;
+  newMessage.sendingDisplayName = sender.displayName;
+  newMessage.sendingPictureOptions = sender.pictureOptions;
   newMessage.receivingUser = receiver;
   newMessage.receivingUserId = receiver.userId;
-  newMessage.receivingUsername = receiver.username;
   newMessage.body = body.substring(0, 100);
 
   newMessage = await messageRepository.save(newMessage);

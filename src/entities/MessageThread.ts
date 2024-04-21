@@ -13,6 +13,12 @@ export class MessageThread {
   @Column()
   user1Username: string;
 
+  @Column()
+  user1DisplayName: string;
+
+  @Column('simple-array')
+  user1PictureOptions: ProfileColors[];
+
   @Column({default: true})
   user1BeenRead: boolean;
 
@@ -21,6 +27,12 @@ export class MessageThread {
 
   @Column()
   user2Username: string;
+
+  @Column()
+  user2DisplayName: string;
+
+  @Column('simple-array')
+  user2PictureOptions: ProfileColors[];
 
   @Column({default: true})
   user2BeenRead: boolean;

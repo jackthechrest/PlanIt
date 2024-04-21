@@ -43,11 +43,40 @@
                 <% for (const messageThread of messageThreads) { %>
                     <% if (messageThread.user1Id !== user.userId) { %>
                     <li>
-                        <p>[<%=messageThread.lastDateString%>] <a href="/messages/<%=messageThread.messageThreadId%>"><%=messageThread.user1Username%></a></p>
+                        <% if (!messageThread.user2BeenRead) { %>
+                            <span class="notification"></span>
+                        <% } %>
+                        <div class="grid-container">
+                            <div class="profile-background <%=messageThread.user1PictureOptions[0]%>">
+                                <div class="profile-head <%=messageThread.user1PictureOptions[1]%>"></div>
+                                <div class="profile-body <%=messageThread.user1PictureOptions[2]%>"></div>
+                            </div>
+                            <div>
+                                <p><a href="/messages/<%=messageThread.messageThreadId%>"><%=messageThread.user1DisplayName%> <span class="username">@<%=messageThread.user1Username%></span></a></p>
+                            </div>
+                            <div>
+                                <p class="date">Last Message Sent:</p>
+                                <p class="date"><%=messageThread.lastDateString%></p>
+                            </div>
+                        </div>
                     </li>
                     <% } else { %>
                     <li>
-                        <p>[<%=messageThread.lastDateString%>] <a href="/messages/<%=messageThread.messageThreadId%>"><%=messageThread.user2Username%></a></p>
+                        <% if (!messageThread.user1BeenRead) { %>
+                            <span class="notification"></span>
+                        <% } %>
+                        <div class="grid-container">
+                            <div class="profile-background <%=messageThread.user2PictureOptions[0]%>">
+                                <div class="profile-head <%=messageThread.user2PictureOptions[1]%>"></div>
+                                <div class="profile-body <%=messageThread.user2PictureOptions[2]%>"></div>
+                            </div>
+                            <div>
+                                <p><a href="/messages/<%=messageThread.messageThreadId%>"><%=messageThread.user2DisplayName%> <span class="username"></span>@<%=messageThread.user2Username%></span></a></p>
+                            </div>
+                            <div>
+                                <p class="date">Last Message Sent:</p>
+                                <p class="date"><%=messageThread.lastDateString%></p>
+                            </div>
                     </li> 
                     <% } %>
                 <% } %>

@@ -56,6 +56,7 @@ async function addNewUser(username: string, displayName: string, email: string, 
   newUser.displayName = displayName.substring(0, 100);;
   newUser.email = email;
   newUser.passwordHash = passwordHash;
+  newUser.pictureOptions = ["blue", "green", "green"];
 
   if (username === 'JackTheChrest' || username === 'Quinn' || username === 'Matthew') {
     newUser.isAdmin = true;
@@ -111,6 +112,40 @@ async function incrementWarningCountForUser(userId: string): Promise<User | null
   return updatedUser;
 }
 
+async function updateProfile(userId: string, displayName: string, biography: string, profileBackground: ProfileColors, profileHead: ProfileColors, profileBody: ProfileColors): Promise<boolean> {
+  let updatedUser = await getUserById(userId);
+  let wasUpdated = false;
+
+  if (displayName.length !== 0) {
+    updatedUser.displayName = displayName;
+    wasUpdated = true;
+  }
+
+  if (biography.length !== 0) {
+    updatedUser.biography = biography;
+    wasUpdated = true;
+  }
+
+  if (profileBackground !== "no change") {
+    updatedUser.pictureOptions[0] = profileBackground;
+    wasUpdated = true;
+  }
+
+  if (profileHead !== "no change") {
+    updatedUser.pictureOptions[1] = profileHead;
+    wasUpdated = true;
+  }
+
+  if (profileBody !== "no change") {
+    updatedUser.pictureOptions[2] = profileBody;
+    wasUpdated = true;
+  }
+
+  updatedUser = await userRepository.save(updatedUser);
+
+  return wasUpdated;
+}
+
 async function removeFriendData(userId: string): Promise<void> {
   const requestingUser = await getUserById(userId);
   let indexValue = -1;
@@ -143,4 +178,4 @@ async function removeFriendData(userId: string): Promise<void> {
 }
 
 export { getUserById, getUserByUsername, getUserByEmail, addNewUser, 
-         deleteUserById, setVerifiedByUserId, incrementWarningCountForUser, removeFriendData };
+         deleteUserById, setVerifiedByUserId, updateProfile, incrementWarningCountForUser, removeFriendData };

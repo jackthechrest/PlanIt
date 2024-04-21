@@ -26,8 +26,12 @@ async function createMessageThread(user1: User, user2: User): Promise<MessageThr
   newMessageThread.messageThreadId = user1.userId + '<+>' + user2.userId;
   newMessageThread.user1Id = user1.userId;
   newMessageThread.user1Username = user1.username;
+  newMessageThread.user1DisplayName = user1.displayName;
+  newMessageThread.user1PictureOptions = user1.pictureOptions;
   newMessageThread.user2Id = user2.userId;
   newMessageThread.user2Username = user2.username;
+  newMessageThread.user2DisplayName = user2.displayName;
+  newMessageThread.user2PictureOptions = user2.pictureOptions;
   newMessageThread.lastDateSent = new Date();
   newMessageThread.lastDateString = newMessageThread.lastDateSent.toLocaleString('en-us', {month:'short', day:'numeric', year:'numeric', hour12:true, hour:'numeric', minute:'2-digit'});
   newMessageThread.lastSecondsSinceEnoch = newMessageThread.lastDateSent.getTime() / 1000;
@@ -67,7 +71,7 @@ async function setThreadRead(messageThreadId: string, userId: string): Promise<v
 }
 
 async function hasUnreadMessageThreads(userId: string): Promise<boolean> {
-  const messageThreads = await messageThreadRepository.findBy({ messageThreadId: Or(Like(`${userId}%`), Like(`%${userId}`))
+  const messageThreads = await messageThreadRepository.findBy({ messageThreadId: Or(Like(`${userId}<+>%`), Like(`%<+>${userId}`))
   });
 
   let unreadMessage = false;
@@ -80,6 +84,47 @@ async function hasUnreadMessageThreads(userId: string): Promise<boolean> {
   }
 
   return unreadMessage;
+}
+
+async function updateMessageThreads(userId: string, displayName: string, profileBackground: ProfileColors, profileHead: ProfileColors, profileBody: ProfileColors): Promise<void> {
+  const messageThreads = await messageThreadRepository.findBy({ messageThreadId: Or(Like(`${userId}<+>%`), Like(`%<+>${userId}`))});
+
+  for (const thread of messageThreads) {
+    if (userId === thread.user1Id) {
+      if (displayName.length !== 0) {
+        thread.user1DisplayName = displayName;
+      }
+
+      if (profileBackground !== "no change") {
+        thread.user1PictureOptions[0] = profileBackground;
+      }
+    
+      if (profileHead !== "no change") {
+        thread.user1PictureOptions[1] = profileHead;
+      }
+    
+      if (profileBody !== "no change") {
+        thread.user1PictureOptions[2] = profileBody;
+      }
+    } else if (userId === thread.user2Id) {
+      if (displayName.length !== 0) {
+        thread.user2DisplayName = displayName;
+      }
+
+      if (profileBackground !== "no change") {
+        thread.user2PictureOptions[0] = profileBackground;
+      }
+    
+      if (profileHead !== "no change") {
+        thread.user2PictureOptions[1] = profileHead;
+      }
+    
+      if (profileBody !== "no change") {
+        thread.user2PictureOptions[2] = profileBody;
+      }
+    }
+    await messageThreadRepository.save(thread);
+  }
 }
 
 async function removeMessageThreadData(requestingUserId: string): Promise<void> {
@@ -96,4 +141,4 @@ async function removeMessageThreadData(requestingUserId: string): Promise<void> 
 }
 
 export { getAllMessagesThreadsForUserId, getMessageThreadById, createMessageThread, 
-         updateMessageThread, setThreadRead, hasUnreadMessageThreads, removeMessageThreadData }
+         updateMessageThread, setThreadRead, hasUnreadMessageThreads, updateMessageThreads, removeMessageThreadData }

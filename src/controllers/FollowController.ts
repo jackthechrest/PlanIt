@@ -56,7 +56,7 @@ async function unfollowUser(req: Request, res: Response): Promise<void> {
   // get users and see if there is a follow entity
   const targetUser = await getUserById(targetUserId);
   const requestingUser = await getUserById(authenticatedUser.userId);
-  const followData = await getFollowById(targetUser.userId + requestingUser.userId);
+  const followData = await getFollowById(`${targetUser.userId}<+>${requestingUser.userId}`);
 
   if (!targetUser || !followData) {
     res.redirect(`/users/${authenticatedUser.userId}`); // target user doesn't exist or user isn't following them

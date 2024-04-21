@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="/css/style.css" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Profile | PlanIt </title>
 </head>
-<body>
+<body class="star-background">
     <div class="navbar">
         <a href="/logo" class="logo"><img src="/imgs/logo.png" alt="PlanIt Logo"></a>
         <% if (hasUnread) { %>
@@ -19,6 +20,85 @@
 
     <h1 id = "navbarEnd"></h1>
     
-    <p>Options to edit bio, profile pic, and display name (maybe username too, but not necessary)</p>
+    <div class="formCard">
+      <section class="form-container">
+        <div>
+          <h1>Edit Your Profile<h1>
+        </div>
+        <h2 class="padding"></h1>
+          <div class = "form">
+            <form method = "POST" action = "/api/edit">
+              <label for="displayName">Display Name</label>
+                <input
+                  id="displayName"
+                  name="displayName"
+                  placeholder="Keep Current Display Name: <%=user.displayName%>"
+                  class="text"
+                  type="text"
+                  maxlength="100"
+                />
+              <label for="biography">Biography</label>
+                <input
+                  id="biography"
+                  name="biography"
+                  placeholder="Keep Current Biography: <%=user.biography%>"
+                  class="text"
+                  type="text"
+                  maxlength="100"
+                />
+              <h2>Profile Background</h2>
+              <label for="profileBackground">Profile Background:</label>
+                <select name="profileBackground" id="profileBackground" required>
+                  <option value="no change" style ="background-color: #adadad;">Keep Current Background</option>
+                  <option value="red" style ="background-color: red">Red</option>
+                  <option value="orange" style ="background-color: orange;">Orange</option>
+                  <option value="yellow" style ="background-color: yellow;">Yellow</option>
+                  <option value="green" style ="background-color: lime;">Green</option>
+                  <option value="blue" style ="background-color: cyan;">Blue</option>
+                  <option value="purple" style ="background-color: violet;">Purple</option>
+                  <option value="pink" style ="background-color: pink;">Pink</option>
+                  <option value="brown" style ="background-color: rgb(124, 80, 0);">Brown</option>
+                  <option value="black" style ="background-color: rgb(31, 31, 31); color: white;">Black</option>
+                  <option value="white" style ="background-color: white;">White</option>
+                </select>
+              <h2>Profile Head</h2>
+              <label for="profileHead">Profile Head:</label>
+                <select name="profileHead" id="profileHead" required>
+                  <option value="no change" style ="background-color: #adadad;">Keep Current Body</option>
+                  <option value="blank">No Head</option>
+                  <option value="red" style ="background-color: rgb(159, 0, 0)">Red</option>
+                  <option value="orange" style ="background-color: rgb(198, 129, 0);">Orange</option>
+                  <option value="yellow" style ="background-color: rgb(183, 183, 1);">Yellow</option>
+                  <option value="green" style ="background-color: rgb(2, 182, 2);">Green</option>
+                  <option value="blue" style ="background-color: rgb(0, 176, 176);">Blue</option>
+                  <option value="purple" style ="background-color: rgb(240, 66, 240);">Purple</option>
+                  <option value="pink" style ="background-color: rgb(255, 148, 166);">Pink</option>
+                  <option value="brown" style ="background-color: rgb(87, 57, 0);">Brown</option>
+                  <option value="black" style ="background-color: rgb(0, 0, 0); color: white;">Black</option>
+                  <option value="white" style ="background-color: rgb(172, 172, 172);">White</option>
+                </select>  
+              <h2>Profile Body</h2>
+              <label for="profileBody">Profile Body:</label>
+                <select name="profileBody" id="profileBody" required>
+                  <option value="no change" style ="background-color: #adadad;">Keep Current Body</option>
+                  <option value="blank">No Body</option>
+                  <option value="red" style ="background-color: rgb(159, 0, 0)">Red</option>
+                  <option value="orange" style ="background-color: rgb(198, 129, 0);">Orange</option>
+                  <option value="yellow" style ="background-color: rgb(183, 183, 1);">Yellow</option>
+                  <option value="green" style ="background-color: rgb(2, 182, 2);">Green</option>
+                  <option value="blue" style ="background-color: rgb(0, 176, 176);">Blue</option>
+                  <option value="purple" style ="background-color: rgb(240, 66, 240);">Purple</option>
+                  <option value="pink" style ="background-color: rgb(255, 148, 166);">Pink</option>
+                  <option value="brown" style ="background-color: rgb(87, 57, 0);">Brown</option>
+                  <option value="black" style ="background-color: rgb(0, 0, 0); color: white;">Black</option>
+                  <option value="white" style ="background-color: rgb(172, 172, 172);">White</option>
+                </select>  
+              <h3 class="padding"></h1>
+              <button class = "btn">Save</button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </div>
 </body>
 </html>

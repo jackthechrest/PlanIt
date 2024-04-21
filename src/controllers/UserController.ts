@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
 import argon2 from 'argon2';
-import { addNewUser, deleteUserById, getUserByEmail, getUserById, getUserByUsername } from '../models/UserModel';
+import { addNewUser, deleteUserById, getUserByEmail, getUserById, getUserByUsername, updateProfile } from '../models/UserModel';
 import { parseDatabaseError } from '../utils/db-utils';
 import { sendEmail } from '../services/emailService';
-import { getFollowById } from '../models/FollowModel';
+import { getFollowById, updateFollows } from '../models/FollowModel';
 import { getFriendStatus } from '../models/FriendListModel';
-import { hasUnreadNotifications } from '../models/NotificationsModel';
+import { hasUnreadNotifications, updateNotifications } from '../models/NotificationsModel';
+import { updateMessageThreads } from '../models/MessageThreadModel';
 
 async function registerUser(req: Request, res: Response): Promise<void> {
   const { username, displayName, email, password } = req.body as RegisterRequest;
@@ -88,7 +89,7 @@ async function getUserProfileData(req: Request, res: Response): Promise<void> {
   }
 
   const viewingUser = await getUserById(authenticatedUser.userId);
-  const targetFollow = await getFollowById(user.userId + viewingUser.userId);
+  const targetFollow = await getFollowById(`${user.userId}<+>${viewingUser.userId}`);
   const friendStatus = await getFriendStatus(viewingUser.userId, user.userId);
   const hasUnread = await hasUnreadNotifications(authenticatedUser.userId);
 
@@ -167,6 +168,39 @@ async function renderDelete(req: Request, res: Response): Promise<void> {
   res.render('delete', { user, hasUnread });
 }
 
+async function renderEditPage(req: Request, res: Response): Promise<void> {
+  const { isLoggedIn, authenticatedUser } = req.session;
+
+  if (!isLoggedIn) {
+    res.redirect('/login'); // not logged in
+    return;
+  }
+
+  const user = await getUserById(authenticatedUser.userId);
+  const hasUnread = await hasUnreadNotifications(authenticatedUser.userId);
+
+  res.render('editProfile', { user, hasUnread, });
+}
+
+async function editProfile(req: Request, res: Response): Promise<void> {
+  const { isLoggedIn, authenticatedUser } = req.session;
+  const { displayName, biography, profileBackground, profileHead, profileBody} = req.body;
+
+  if (!isLoggedIn) {
+    res.redirect('/login'); // not logged in
+    return;
+  }
+
+  // update their profile with new information
+  const wasUpdated = await updateProfile(authenticatedUser.userId, displayName, biography, profileBackground, profileHead, profileBody);
+  if (wasUpdated) {  // only try to update the related entities if they actually changed something
+    await updateFollows(authenticatedUser.userId, displayName, profileBackground, profileHead, profileBody);
+    await updateNotifications(authenticatedUser.userId, displayName, profileBackground, profileHead, profileBody);
+    await updateMessageThreads(authenticatedUser.userId, displayName, profileBackground, profileHead, profileBody);
+  }
+  res.redirect(`/users/${authenticatedUser.userId}`);
+}
+
 async function renderCalendar(req: Request, res: Response): Promise<void> {
   const { isLoggedIn } = req.session;
 
@@ -193,4 +227,4 @@ async function renderSearch(req: Request, res: Response): Promise<void> {
 }
 
 export { registerUser, logIn, signOut, getUserProfileData, deleteAccount, logoRedirect,
-         renderSettings, renderDelete, renderCalendar, renderSearch, };
+         renderSettings, renderDelete, renderEditPage, editProfile, renderCalendar, renderSearch, };

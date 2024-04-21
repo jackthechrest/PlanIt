@@ -42,38 +42,192 @@
                 <% for (const notification of notifications) { %>
                     <% if (notification.type === "FRIEND REQUEST SENT") { %>
                     <li>
-                        <p>[<%=notification.dateString%>]  <a href="<%=notification.link%>"><%=notification.sendingUsername%> sent you a friend request!</a></p>
-                        <% if (!notification.respondedTo) { %>
-                            <button><a href="/api/friend/<%=notification.sendingUserId%>/ACCEPT">Accept</a></button>
-                            <button><a href="/api/friend/<%=notification.sendingUserId%>/DECLINE">Decline</a></button>
+                        <% if (!notification.beenRead) { %>
+                            <span class="notification"></span>
                         <% } %>
+                        <div class="grid-container">
+                            <div class="profile-background <%=notification.sendingPictureOptions[0]%>">
+                                <div class="profile-head <%=notification.sendingPictureOptions[1]%>"></div>
+                                <div class="profile-body <%=notification.sendingPictureOptions[2]%>"></div>
+                            </div>
+                            <div>
+                                <p><a href="<%=notification.link%>"><%=notification.sendingDisplayName%> <span class="username">@<%=notification.sendingUsername%></span></a> sent you a friend request!</p>
+                                <% if (!notification.respondedTo) { %>
+                                    <button class = "btn-small" id="green"><a href="/api/friend/<%=notification.sendingUserId%>/ACCEPT">Accept</a></button>
+                                    <button class = "btn-small" id="red"><a href="/api/friend/<%=notification.sendingUserId%>/DECLINE">Decline</a></button>
+                                <% } %>
+                            </div>
+                            <div>
+                                <p class="date"><%=notification.dateString%></p>
+                            </div>
+                        </div>
                     </li>
                     <% } else if (notification.type === "FRIEND REQUEST ACCEPTED") { %>
                         <li>
-                            <p>[<%=notification.dateString%>]  <a href="<%=notification.link%>"><%=notification.sendingUsername%> accepted your friend request!</a></p>
+                            <% if (!notification.beenRead) { %>
+                                <span class="notification"></span>
+                            <% } %>
+                            <div class="grid-container">
+                                <div class="profile-background <%=notification.sendingPictureOptions[0]%>">
+                                    <div class="profile-head <%=notification.sendingPictureOptions[1]%>"></div>
+                                    <div class="profile-body <%=notification.sendingPictureOptions[2]%>"></div>
+                                </div>
+                                <div>
+                                    <p><a href="<%=notification.link%>"><%=notification.sendingDisplayName%> <span class="username">@<%=notification.sendingUsername%></span></a> accepted your friend request!</p>
+                                </div>
+                                <div>
+                                    <p class="date"><%=notification.dateString%></p>
+                                </div>
+                            </div>
                         </li>
                     <% } else if (notification.type === "FOLLOW") { %>
                     <li>
-                        <p>[<%=notification.dateString%>]  <a href="<%=notification.link%>"><%=notification.sendingUsername%> followed you!</a></p>
+                        <% if (!notification.beenRead) { %>
+                            <span class="notification"></span>
+                        <% } %>
+                        <div class="grid-container">
+                            <div class="profile-background <%=notification.sendingPictureOptions[0]%>">
+                                <div class="profile-head <%=notification.sendingPictureOptions[1]%>"></div>
+                                <div class="profile-body <%=notification.sendingPictureOptions[2]%>"></div>
+                            </div>
+                            <div>
+                                <p><a href="<%=notification.link%>"><%=notification.sendingDisplayName%> <span class="username">@<%=notification.sendingUsername%></span></a> followed you!</p>
+                            </div>
+                            <div>
+                                <p class="date"><%=notification.dateString%></p>
+                            </div>
+                        </div>
                     </li>
                     <% } else if (notification.type === "WARNING") { %>
                         <% if (notification.sendingUsername === "JackTheChrest") { %>
                         <li>
-                            <p>[<%=notification.dateString%>] Your profile features offensive content and has been modified.  Don't do it again.</p>
+                            <% if (!notification.beenRead) { %>
+                                <span class="notification"></span>
+                            <% } %>
+                            <div class="grid-container">
+                                <div class="profile-background <%=notification.sendingPictureOptions[0]%>">
+                                    <div class="profile-head <%=notification.sendingPictureOptions[1]%>"></div>
+                                    <div class="profile-body <%=notification.sendingPictureOptions[2]%>"></div>
+                                </div>
+                                <div>
+                                    <p>Your profile features offensive content and has been modified.  Don't do it again.</p>
+                                </div>
+                                <div>
+                                    <p class="date"><%=notification.dateString%></p>
+                                </div>
+                            </div>
                         </li>   
                         <% } else if (notification.sendingUsername === "Quinn") { %>
                         <li>
-                            <p>[<%=notification.dateString%>]  Your event features offensive content and has been modified.  Don't do it again.</p>
+                            <% if (!notification.beenRead) { %>
+                                <span class="notification"></span>
+                            <% } %>
+                            <div class="grid-container">
+                                <div class="profile-background <%=notification.sendingPictureOptions[0]%>">
+                                    <div class="profile-head <%=notification.sendingPictureOptions[1]%>"></div>
+                                    <div class="profile-body <%=notification.sendingPictureOptions[2]%>"></div>
+                                </div>
+                                <div>
+                                    <p>Your event features offensive content and has been modified.  Don't do it again.</p>
+                                </div>
+                                <div>
+                                    <p class="date"><%=notification.dateString%></p>
+                                </div>
+                            </div>
                         </li>   
                         <% } else if (notification.sendingUsername === "Matthew") { %>
                         <li>
-                            <p>[<%=notification.dateString%>]  You posted an offensive wall post/comment, which has been removed.  Don't do it again.</p>
+                            <% if (!notification.beenRead) { %>
+                                <span class="notification"></span>
+                            <% } %>
+                            <div class="grid-container">
+                                <div class="profile-background <%=notification.sendingPictureOptions[0]%>">
+                                    <div class="profile-head <%=notification.sendingPictureOptions[1]%>"></div>
+                                    <div class="profile-body <%=notification.sendingPictureOptions[2]%>"></div>
+                                </div>
+                                <div>
+                                    <p>You posted an offensive comment, which has been removed.  Don't do it again.</p>
+                                </div>
+                                <div>
+                                    <p class="date"><%=notification.dateString%></p>
+                                </div>
+                            </div>
                         </li>   
                         <% } %>
-                    <% } else if (notification.type === "EVENT CREATED" || notification.type === "EVENT EDITED" || notification.type === "EVENT CANCELLED") { %>
-                    <li>
-                        <p>[<%=notification.dateString%>]  <a href="<%=notification.link%>">Event</a></p>
-                    </li>
+                    <% } else if (notification.type === "EVENT CREATED") { %>
+                        <li>
+                            <% if (!notification.beenRead) { %>
+                                <span class="notification"></span>
+                            <% } %>
+                            <div class="grid-container">
+                                <div class="profile-background <%=notification.sendingPictureOptions[0]%>">
+                                    <div class="profile-head <%=notification.sendingPictureOptions[1]%>"></div>
+                                    <div class="profile-body <%=notification.sendingPictureOptions[2]%>"></div>
+                                </div>
+                                <div>
+                                    <p>Your friend, <a href="/users/<%=notification.sendingUserId%>"><%=notification.sendingDisplayName%> <span class="username">@<%=notification.sendingUsername%></a></span> created an event!</p>
+                                    <p class="emphasis"><a href="<%=notification.link%>">Check it out!</a></p>
+                                <div>
+                                    <p class="date"><%=notification.dateString%></p>
+                                </div>
+                            </div>
+                        </li>
+                    <% } else if (notification.type === "EVENT EDITED") { %>
+                        <li>
+                            <% if (!notification.beenRead) { %>
+                                <span class="notification"></span>
+                            <% } %>
+                            <div class="grid-container">
+                                <div class="profile-background <%=notification.sendingPictureOptions[0]%>">
+                                    <div class="profile-head <%=notification.sendingPictureOptions[1]%>"></div>
+                                    <div class="profile-body <%=notification.sendingPictureOptions[2]%>"></div>
+                                </div>
+                                <div>
+                                    <p><a href="/users/<%=notification.sendingUserId%>"><%=notification.sendingDisplayName%> <span class="username">@<%=notification.sendingUsername%></a></span> has edited their event.</p>
+                                    <p class="emphasis"><a href="<%=notification.link%>">Check it out!</a></p>
+                                </div>
+                                <div>
+                                    <p class="date"><%=notification.dateString%></p>
+                                </div>
+                            </div>
+                        </li>
+                    <% } else if (notification.type === "EVENT DELETED") { %>
+                        <li>
+                            <% if (!notification.beenRead) { %>
+                                <span class="notification"></span>
+                            <% } %>
+                            <div class="grid-container">
+                                <div class="profile-background <%=notification.sendingPictureOptions[0]%>">
+                                    <div class="profile-head <%=notification.sendingPictureOptions[1]%>"></div>
+                                    <div class="profile-body <%=notification.sendingPictureOptions[2]%>"></div>
+                                </div>
+                                <div>
+                                    <p><a href="/users/<%=notification.sendingUserId%>"><%=notification.sendingDisplayName%> <span class="username">@<%=notification.sendingUsername%></a></span> has deleted their event.</p>
+                                </div>
+                                <div>
+                                    <p class="date"><%=notification.dateString%></p>
+                                </div>
+                            </div>
+                        </li>
+                    <% } else if (notification.type === "EVENT INVITE") { %>
+                        <li>
+                            <% if (!notification.beenRead) { %>
+                                <span class="notification"></span>
+                            <% } %>
+                            <div class="grid-container">
+                                <div class="profile-background <%=notification.sendingPictureOptions[0]%>">
+                                    <div class="profile-head <%=notification.sendingPictureOptions[1]%>"></div>
+                                    <div class="profile-body <%=notification.sendingPictureOptions[2]%>"></div>
+                                </div>
+                                <div>
+                                    <p>Your friend, <a href="/users/<%=notification.sendingUserId%>"><%=notification.sendingDisplayName%> <span class="username">@<%=notification.sendingUsername%></a></span> has invited you to an event!</p>
+                                    <p class="emphasis"><a href="<%=notification.link%>">Check it out!</a></p>
+                                </div>
+                                <div>
+                                    <p class="date"><%=notification.dateString%></p>
+                                </div>
+                            </div>
+                        </li>
                     <% } %>
                 <% } %>
             </ul>

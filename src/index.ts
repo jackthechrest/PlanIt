@@ -5,7 +5,7 @@ import express, { Express } from 'express';
 
 import session from 'express-session';
 import connectSqlite3 from 'connect-sqlite3';
-import { registerUser, logIn, getUserProfileData, logoRedirect, deleteAccount, renderCalendar, renderSearch, renderSettings, renderDelete, signOut } from './controllers/UserController';
+import { registerUser, logIn, getUserProfileData, logoRedirect, deleteAccount, renderCalendar, renderSearch, renderSettings, renderDelete, signOut, renderEditPage, editProfile } from './controllers/UserController';
 import { followUser, renderFollowersPage, renderFollowingPage, unfollowUser } from './controllers/FollowController';
 import { sendVerification, verifyEmail } from './controllers/VerifyCodeController';
 import { blockUser, friendRequestUser, renderBlockedPage, renderFriendsPage, respondFriendRequest, unblockUser, unfriendUser } from './controllers/FriendListController';
@@ -57,6 +57,8 @@ app.post('/api/delete', deleteAccount);
 app.get('/logo', logoRedirect);
 app.get('/settings', renderSettings);
 app.get('/delete', renderDelete);
+app.get('/edit', renderEditPage);
+app.post('/api/edit', editProfile);
 app.get('/calendar', renderCalendar);
 app.get('/search', renderSearch);
 app.get('/notifications', renderNotifications);

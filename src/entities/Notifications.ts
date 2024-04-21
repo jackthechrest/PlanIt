@@ -39,10 +39,6 @@ export class Notifications {
   @Column()
   receivingUserId: string;
 
-  @Column()
-  receivingUsername: string;
-
-
   @ManyToOne(() => User, (user) => user.sentNotifications, { cascade: ['insert', 'update'], onDelete: "CASCADE", } )
   sendingUser: Relation<User>;
 
@@ -51,4 +47,10 @@ export class Notifications {
 
   @Column()
   sendingUsername: string;
+
+  @Column()
+  sendingDisplayName: string;
+
+  @Column('simple-array')
+  sendingPictureOptions: ProfileColors[];
 }

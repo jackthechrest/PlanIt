@@ -44,7 +44,7 @@
             <label for="username">Receiver:</label>
               <select name="username" id="username" required>
                 <% for (const friend of friends) { %>
-                  <option value="<%=friend.username%>"><%=friend.username%></option>
+                  <option value="<%=friend.username%>">@<%=friend.username%></option>
                 <% } %>  
               </select>
 
@@ -58,7 +58,9 @@
                 maxlength="100"
                 required
               />
-            <button class = "btn">Send Message</button>
+            <div class="center">
+              <button class = "btn">Send Message</button>
+            </div>
           </form>
       </div>
     </div>

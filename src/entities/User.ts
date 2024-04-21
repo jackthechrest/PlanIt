@@ -36,8 +36,8 @@ export class User {
   warningCount: number;
 
   // need to add profile picture functionality
-  @Column({nullable: true})
-  profilePic: string;
+  @Column('simple-array')
+  pictureOptions: ProfileColors[];
 
   // Relationships
   // Follow

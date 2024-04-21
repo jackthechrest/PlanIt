@@ -58,10 +58,12 @@ async function createNewNotification(receivingUserId: string, sendingUserId: str
   newNotification.secondsSinceEnoch = newNotification.dateSent.getTime() / 1000;
   newNotification.receivingUser = receiver;
   newNotification.receivingUserId = receiver.userId;
-  newNotification.receivingUsername = receiver.username;
   newNotification.sendingUser = sender;
   newNotification.sendingUserId = sender.userId;
   newNotification.sendingUsername = sender.username;
+  newNotification.sendingDisplayName = sender.displayName;
+  newNotification.sendingPictureOptions = sender.pictureOptions;
+  
 
   // no link for warning or event cancelled notifications
   if (link) {
@@ -109,4 +111,27 @@ async function hasUnreadNotifications(userId: string): Promise<boolean> {
   return false;
 }
 
-export { getAllOtherNotificationsForUserId, createNewNotification, setResponded, hasUnreadNotifications };
+async function updateNotifications(userId: string, displayName: string, profileBackground: ProfileColors, profileHead: ProfileColors, profileBody: ProfileColors): Promise<void> {
+  const notifications = await notificationsRepository.find({where: {sendingUserId: userId}});
+
+  for (const notification of notifications) {
+    if (displayName.length !== 0) {
+      notification.sendingDisplayName = displayName;
+    }
+
+    if (profileBackground !== "no change") {
+      notification.sendingPictureOptions[0] = profileBackground;
+    }
+    
+    if (profileHead !== "no change") {
+      notification.sendingPictureOptions[1] = profileHead;
+    }
+    
+    if (profileBody !== "no change") {
+      notification.sendingPictureOptions[2] = profileBody;
+    }
+    await notificationsRepository.save(notification);
+  }
+}
+
+export { getAllOtherNotificationsForUserId, createNewNotification, setResponded, hasUnreadNotifications, updateNotifications };
