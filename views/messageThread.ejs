@@ -40,7 +40,7 @@
         <div class="profile-head <%=otherUser.pictureOptions[1]%>"></div>
         <div class="profile-body <%=otherUser.pictureOptions[2]%>"></div>
       </div>
-      <h1>Messages with <span class="username"><a href="/users/<%=otherUser.userId%>">@<%=otherUser.username%></a></span></h1>
+      <h1>Messages with <a href="/users/<%=otherUser.userId%>"><%=otherUser.displayName%> <span class="username">@<%=otherUser.username%></span></a></h1>
     </div>
 
     <ul>
@@ -64,7 +64,8 @@
     <% } %>
     </ul>
 
-    <div class = "form-container">
+    <% if (friendStatus === "FRIEND") { %>
+      <div class = "form-container">
         <form method = "POST" action = "/api/send">
           <input 
             type="hidden"
@@ -72,7 +73,7 @@
             id="username"
             name="username"
           />
-          
+            
           <label for="body">Message</label>
             <input
               id="body"
@@ -86,6 +87,12 @@
           <button class = "btn">Send Message</button>
         </form>
       </div>
-    </div>
+    <% } else { %>
+      <div class="padding"></div>
+      <div class="padding"></div>
+      <div class="padding"></div>
+      <h2 style="font-size: 30px;">You Can Only Message Friends</h2>
+    <% } %>
+  </div>
 </body>
 </html>

@@ -19,19 +19,31 @@
         <a href="/calendar" class="menu-calendar"><img src="/imgs/calendar_icon.png" alt="Calendar"></a>
     </div>
 
-    <h1 class = "follow-header" id="navbarEnd"><%= user.username %> Blocked Users:</h1>
-
-    <% if (blockedUsers.length === 0) { %>
-    <p>No Blocked Users</p>
-    <% } else { %>
-    <ul>
-        <% for (const blocked of blockedUsers) { %>
-        <li>
-            <p>- <a href="/users/<%= blocked.userId %>"><%= blocked.username %></a></p>
-        </li>
-        <% } %>
-    </ul>
-    <% } %>
-
+    <h1 id="navbarEnd"></h1>
+    <div class="follow-content">
+      <h1><%= user.username %>'s Blocked Users:</h1>
+      <% if (blockedUsers.length === 0) { %>
+        <h2>No Blocked Users</h2>
+      <% } else { %>
+        <ul>
+            <% for (const blocked of blockedUsers) { %>
+            <li>              
+              <div class="grid-container">
+                <div class="profile-background <%=blocked.pictureOptions[0]%>">
+                  <div class="profile-head <%=blocked.pictureOptions[1]%>"></div>
+                  <div class="profile-body <%=blocked.pictureOptions[2]%>"></div>
+                </div>
+                <div>
+                  <p><a href="/users/<%= blocked.userId %>"><%=blocked.displayName%> <span class="username">@<%= blocked.username %></span></a></p>
+                </div>
+                <div>
+                  <button class="btn-small" id="green"><a href = '/users/unblock/<%=blocked.userId %>'>Unblock</a></button>
+                </div>
+              </div>
+            </li>
+            <% } %>
+        </ul>
+      <% } %>
+    </div>
 </body>
 </html>

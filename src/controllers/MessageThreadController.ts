@@ -3,6 +3,7 @@ import { getUserById } from '../models/UserModel';
 import { getAllMessagesThreadsForUserId, getMessageThreadById, setThreadRead } from '../models/MessageThreadModel'; 
 import { getAllMessagesByThreadId } from '../models/MessageModel';
 import { hasUnreadNotifications } from '../models/NotificationsModel';
+import { getFriendStatus } from '../models/FriendListModel';
 
 async function renderAllMessageThreads(req: Request, res: Response): Promise<void> {
     const { isLoggedIn, authenticatedUser } = req.session;
@@ -61,8 +62,9 @@ async function renderSingleMessageThread(req: Request, res: Response): Promise<v
 
     const messages = await getAllMessagesByThreadId(messageThreadId, authenticatedUser.userId);
     const hasUnread = await hasUnreadNotifications(authenticatedUser.userId);
+    const friendStatus = await getFriendStatus(authenticatedUser.userId, otherUser.userId);
 
-    res.render('messageThread', { user, otherUser, messageThread, messages, hasUnread });
+    res.render('messageThread', { user, otherUser, messageThread, messages, hasUnread, friendStatus });
 }
 
 export { renderAllMessageThreads, renderSingleMessageThread }

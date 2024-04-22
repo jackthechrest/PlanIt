@@ -6,7 +6,7 @@ import express, { Express } from 'express';
 import session from 'express-session';
 import connectSqlite3 from 'connect-sqlite3';
 import { registerUser, logIn, getUserProfileData, logoRedirect, deleteAccount, renderCalendar, renderSearch, renderSettings, renderDelete, signOut, renderEditPage, editProfile } from './controllers/UserController';
-import { followUser, renderFollowersPage, renderFollowingPage, unfollowUser } from './controllers/FollowController';
+import { followUser, removeFollower, renderFollowersPage, renderFollowingPage, unfollowUser } from './controllers/FollowController';
 import { sendVerification, verifyEmail } from './controllers/VerifyCodeController';
 import { blockUser, friendRequestUser, renderBlockedPage, renderFriendsPage, respondFriendRequest, unblockUser, unfriendUser } from './controllers/FriendListController';
 import { renderNotifications } from './controllers/NotifcationsController';
@@ -29,17 +29,6 @@ app.use(
     saveUninitialized: false,
   })
 );
-
-// Image Uploads
-/* 
-const cloudinary = require('cloudinary')
-cloudinary.config({
-cloud_name: 'your_cloud_name',
-api_key: 'your_api_key',
-api_secret: "your_api_secret"
-});
-module.exports = cloudinary;
-*/
 
 app.use(express.static('public', { extensions: ['html'] }));
 app.use(express.json());
@@ -67,6 +56,7 @@ app.get('/reports', renderReports);
 // Following/Followers/Friends/Blocked
 app.get('/users/follow/:targetUserId', followUser);
 app.get('/users/unfollow/:targetUserId', unfollowUser);
+app.get('/users/remove/:targetUserId', removeFollower);
 app.get('/users/block/:targetUserId', blockUser);
 app.get('/users/unblock/:targetUserId', unblockUser);
 app.get('/users/friend/:targetUserId', friendRequestUser);

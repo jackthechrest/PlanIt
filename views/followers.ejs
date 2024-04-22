@@ -19,19 +19,33 @@
         <a href="/calendar" class="menu-calendar"><img src="/imgs/calendar_icon.png" alt="Calendar"></a>
     </div>
 
-    <h1 class = "follow-header" id ="navbarEnd"><%= user.username %>'s Followers:</h1>
-
-    <% if (user.followers.length === 0) { %>
-    <p>No Followers</p>
-    <% } else { %>
-    <ul>
-        <% for (const follower of user.followers) { %>
-        <li>
-            <p>- <a href="/users/<%= follower.requestingUserId %>"><%= follower.requestingUsername %></a></p>
-        </li>
-        <% } %>
-    </ul>
-    <% } %>
-
+    <h1 id ="navbarEnd"></h1>
+    <div class="follow-content">
+      <h1><%= user.username %>'s Followers:</h1>
+      <% if (user.followers.length === 0) { %>
+        <h2>No Followers</h2>
+      <% } else { %>
+        <ul>
+            <% for (const follower of user.followers) { %>
+            <li>
+              <div class="grid-container">
+                <div class="profile-background <%=follower.requestingPictureOptions[0]%>">
+                  <div class="profile-head <%=follower.requestingPictureOptions[1]%>"></div>
+                  <div class="profile-body <%=follower.requestingPictureOptions[2]%>"></div>
+                </div>
+                <div>
+                  <p><a href="/users/<%= follower.requestingUserId %>"><%=follower.requestingDisplayName%> <span class="username">@<%= follower.requestingUsername %></span></a></p>
+                </div>
+                <div>
+                  <% if (viewingUser.userId === user.userId) { %>
+                    <button class="btn-small" id="red"><a href = '/users/remove/<%= follower.requestingUserId %>'>Remove</a></button>
+                  <% } %>
+                </div>
+              </div>
+            </li>
+            <% } %>
+        </ul>
+      <% } %>
+    </div>
 </body>
 </html>

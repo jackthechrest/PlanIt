@@ -18,18 +18,32 @@
         <a href="/calendar" class="menu-calendar"><img src="/imgs/calendar_icon.png" alt="Calendar"></a>
     </div>
 
-    <h1 class="big-title" id="navbarEnd">WIP</h1>
+    <h1 id="navbarEnd"></h1>
 
-    <% if (friends.length === 0) { %>
-        <p>No Friends</p>
+    <div class="follow-content">
+    <h1><%= user.username %>'s Friends:</h1>
+        <% if (friends.length === 0) { %>
+            <h2>No Friends</h2>
         <% } else { %>
-        <ul>
-            <% for (const friend of friends) { %>
-            <li>
-                <p>- <a href="/users/<%= friend.userId %>"><%= friend.username %></a></p>
-            </li>
-            <% } %>
-        </ul>
-        <% } %>       
+            <ul>
+                <% for (const friend of friends) { %>
+                <li>
+                    <div class="grid-container">
+                        <div class="profile-background <%=friend.pictureOptions[0]%>">
+                        <div class="profile-head <%=friend.pictureOptions[1]%>"></div>
+                        <div class="profile-body <%=friend.pictureOptions[2]%>"></div>
+                        </div>
+                        <div>
+                        <p><a href="/users/<%= friend.userId %>"><%=friend.displayName%> <span class="username">@<%= friend.username %></span></a></p>
+                        </div>
+                        <div>
+                        <button class="btn-small" id="red"><a href = '/api/unfriend/<%=friend.userId %>'>Unfriend</a></button>
+                        </div>
+                    </div>
+                </li>
+                <% } %>
+            </ul>
+        <% } %>  
+</div>     
 </body>
 </html>

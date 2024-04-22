@@ -3,7 +3,7 @@ import { getUserById, getUserByUsername } from '../models/UserModel';
 import { createNewMessage } from '../models/MessageModel';
 import { createMessageThread, getMessageThreadById, updateMessageThread } from '../models/MessageThreadModel';
 import { parseDatabaseError } from '../utils/db-utils';
-import { getFriendListById } from '../models/FriendListModel';
+import { getFriendListById, getFriendStatus } from '../models/FriendListModel';
 import { hasUnreadNotifications } from '../models/NotificationsModel';
 
 async function sendMessage(req: Request, res: Response): Promise<void> {
@@ -29,16 +29,9 @@ async function sendMessage(req: Request, res: Response): Promise<void> {
 
     // check that sender and receiver are friends
     const sender = await getUserById(authenticatedUser.userId);
-    let isFriend = false;
+    const friendStatus = await getFriendStatus(authenticatedUser.userId, receiver.userId);
 
-    for (const friendList of receiver.otherFriendLists) {
-        if (friendList.friendListId === sender.selfFriendList.friendListId) {
-            isFriend = true;
-            break;
-        }
-    }
-
-    if (!isFriend) {
+    if (!(friendStatus !== "FRIEND")) {
         res.redirect('/send');  // users are not friends
         return;
     }

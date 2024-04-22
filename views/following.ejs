@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= user.username %> Following | PlanIt</title>
+  <title><%= user.username %>'s Following | PlanIt</title>
 </head>
 <body>
     <div class="navbar">
@@ -19,19 +19,33 @@
         <a href="/calendar" class="menu-calendar"><img src="/imgs/calendar_icon.png" alt="Calendar"></a>
     </div>
 
-    <h1 class = "follow-header" id="navbarEnd"><%= user.username %> Following:</h1>
-
-    <% if (user.following.length === 0) { %>
-    <p>Not Following Anyone</p>
-    <% } else { %>
-    <ul>
-        <% for (const followed of user.following) { %>
-        <li>
-            <p>- <a href="/users/<%= followed.targetedUserId %>"><%= followed.targetedUsername %></a></p>
-        </li>
-        <% } %>
-    </ul>
-    <% } %>
+    <h1 id="navbarEnd"></h1>
+    <div class="follow-content">
+      <h1><%= user.username %>'s Following:</h1>
+      <% if (user.following.length === 0) { %>
+        <h2>Not Following Anyone</h2>
+      <% } else { %>
+        <ul>
+            <% for (const followed of user.following) { %>
+            <li>
+              <div class="grid-container">
+                <div class="profile-background <%=followed.targetedPictureOptions[0]%>">
+                    <div class="profile-head <%=followed.targetedPictureOptions[1]%>"></div>
+                    <div class="profile-body <%=followed.targetedPictureOptions[2]%>"></div>
+                </div>
+                <div>
+                  <p><a href="/users/<%= followed.targetedUserId %>"><%=followed.targetedDisplayName%> <span class="username">@<%= followed.targetedUsername %></span></a></p>
+                </div>
+                <div>
+                  <% if (viewingUser.userId === user.userId) { %>
+                    <button class="btn-small" id="red"><a href = '/users/unfollow/<%= followed.targetedUserId %>'>Unfollow</a></button>
+                  <% } %>
+                </div>
+            </li>
+            <% } %>
+        </ul>
+      <% } %>
+  </div>
 
 </body>
 </html>
