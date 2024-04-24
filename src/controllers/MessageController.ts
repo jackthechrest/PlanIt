@@ -31,7 +31,7 @@ async function sendMessage(req: Request, res: Response): Promise<void> {
     const sender = await getUserById(authenticatedUser.userId);
     const friendStatus = await getFriendStatus(authenticatedUser.userId, receiver.userId);
 
-    if (!(friendStatus !== "FRIEND")) {
+    if (friendStatus !== "FRIEND") {
         res.redirect('/send');  // users are not friends
         return;
     }

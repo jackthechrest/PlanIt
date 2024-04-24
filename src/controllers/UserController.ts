@@ -202,14 +202,29 @@ async function editProfile(req: Request, res: Response): Promise<void> {
 }
 
 async function renderCalendar(req: Request, res: Response): Promise<void> {
-  const { isLoggedIn } = req.session;
+  const { isLoggedIn, authenticatedUser } = req.session;
 
   if (!isLoggedIn) {
     res.redirect('/login'); // not logged in
     return;
   }
 
-  res.redirect('/calendar');
+  const user = await getUserById(authenticatedUser.userId);
+
+  res.render('calendar', { user });
+}
+
+async function renderCreateEvent(req: Request, res: Response): Promise<void> {
+  const { isLoggedIn, authenticatedUser } = req.session;
+
+  if (!isLoggedIn) {
+    res.redirect('/login'); // not logged in
+    return;
+  }
+
+  const user = await getUserById(authenticatedUser.userId);
+
+  res.render('createEvent', { user });
 }
 
 async function renderSearch(req: Request, res: Response): Promise<void> {
@@ -227,4 +242,4 @@ async function renderSearch(req: Request, res: Response): Promise<void> {
 }
 
 export { registerUser, logIn, signOut, getUserProfileData, deleteAccount, logoRedirect,
-         renderSettings, renderDelete, renderEditPage, editProfile, renderCalendar, renderSearch, };
+         renderSettings, renderDelete, renderEditPage, editProfile, renderCalendar, renderCreateEvent, renderSearch, };

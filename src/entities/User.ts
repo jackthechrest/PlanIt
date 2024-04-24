@@ -68,16 +68,16 @@ export class User {
 
   // Notifications
   @OneToMany(() => Notifications, (notifications) => notifications.receivingUser, { cascade: ['insert', 'update'] } )
-  receivedNotifications: Relation<User>[];
+  receivedNotifications: Relation<Notifications>[];
 
   @OneToMany(() => Notifications, (notifications) => notifications.sendingUser, { cascade: ['insert', 'update'] } )
-  sentNotifications: Relation<User>[];
+  sentNotifications: Relation<Notifications>[];
 
   // Event Related
-  @OneToMany(() => Event, (event) => event.ownedEvents, { cascade: ['insert', 'update'] } )
+  @OneToMany(() => Event, (event) => event.owner, { cascade: ['insert', 'update'] } )
   ownedEvents: Relation<Event>[];
 
-  @ManyToMany(() => Event, (event) => event.joinedEvents, { cascade: ['insert', 'update'] } )
+  @ManyToMany(() => Event, (event) => event.joinedUsers, { cascade: ['insert', 'update'] } )
   joinedEvents: Relation<Event>[];
 
   //Comments

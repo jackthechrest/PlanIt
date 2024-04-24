@@ -5,7 +5,8 @@ import express, { Express } from 'express';
 
 import session from 'express-session';
 import connectSqlite3 from 'connect-sqlite3';
-import { registerUser, logIn, getUserProfileData, logoRedirect, deleteAccount, renderCalendar, renderSearch, renderSettings, renderDelete, signOut, renderEditPage, editProfile } from './controllers/UserController';
+import { registerEvent } from './controllers/EventController';
+import { registerUser, logIn, getUserProfileData, logoRedirect, deleteAccount, renderCalendar, renderCreateEvent, renderSearch, renderSettings, renderDelete, signOut, renderEditPage, editProfile } from './controllers/UserController';
 import { followUser, removeFollower, renderFollowersPage, renderFollowingPage, unfollowUser } from './controllers/FollowController';
 import { sendVerification, verifyEmail } from './controllers/VerifyCodeController';
 import { blockUser, friendRequestUser, renderBlockedPage, renderFriendsPage, respondFriendRequest, unblockUser, unfriendUser } from './controllers/FriendListController';
@@ -48,7 +49,7 @@ app.get('/settings', renderSettings);
 app.get('/delete', renderDelete);
 app.get('/edit', renderEditPage);
 app.post('/api/edit', editProfile);
-app.get('/calendar', renderCalendar);
+app.get('/users/:targetUserId/calendar', renderCalendar);
 app.get('/search', renderSearch);
 app.get('/notifications', renderNotifications);
 app.get('/reports', renderReports);
@@ -72,6 +73,10 @@ app.get('/messages', renderAllMessageThreads);
 app.get('/messages/:messageThreadId', renderSingleMessageThread);
 app.get('/send', renderCreateMessageThread); 
 app.post('/api/send', sendMessage); // Post request to send a message
+
+// Events
+app.post('/api/event', registerEvent);
+app.get('/users/:targetUserId/createEvent', renderCreateEvent);
 
 app.listen(PORT, () => {
   console.log(`Listening at http://localhost:${PORT}`);

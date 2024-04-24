@@ -25,11 +25,11 @@ export class Event{
 
     // relationships
     @ManyToOne(() => User, (user) => user.ownedEvents, { cascade: ['insert', 'update'], onDelete: "CASCADE",})
-    ownedEvents: Relation<User>;
+    owner: Relation<User>;
 
     @ManyToMany(() => User, (user) => user.joinedEvents, { cascade: ['insert', 'update'], onDelete: "SET NULL"} )
     @JoinTable()
-    joinedEvents: Relation<User>[];
+    joinedUsers: Relation<User>[];
 
     @OneToMany(() => Comment, (comment) => comment.commentUnder, { cascade: ['insert', 'update'] } )
     comments: Relation<Comment>[];
