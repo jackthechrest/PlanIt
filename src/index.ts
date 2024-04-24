@@ -11,9 +11,10 @@ import { followUser, removeFollower, renderFollowersPage, renderFollowingPage, u
 import { sendVerification, verifyEmail } from './controllers/VerifyCodeController';
 import { blockUser, friendRequestUser, renderBlockedPage, renderFriendsPage, respondFriendRequest, unblockUser, unfriendUser } from './controllers/FriendListController';
 import { renderNotifications } from './controllers/NotifcationsController';
-import { renderReports } from './controllers/ReportController';
+import { renderReports, respondReport, sendReport } from './controllers/ReportController';
 import { renderAllMessageThreads, renderSingleMessageThread } from './controllers/MessageThreadController';
 import { renderCreateMessageThread, sendMessage } from './controllers/MessageController';
+import { postNewComment } from './controllers/CommentController';
 
 const app: Express = express();
 const { PORT, COOKIE_SECRET } = process.env;
@@ -74,9 +75,22 @@ app.get('/messages/:messageThreadId', renderSingleMessageThread);
 app.get('/send', renderCreateMessageThread); 
 app.post('/api/send', sendMessage); // Post request to send a message
 
+// Reports
+app.get('/report/:reportType/:contentId', sendReport)
+app.get('/report/respond/:contentId/:action', respondReport)
+
 // Events
 app.post('/api/event', registerEvent);
 app.get('/users/:targetUserId/createEvent', renderCreateEvent);
+//app.get('/events/:eventId', renderEvent)
+//app.post('/api/editEvent', editEvent);
+//app.get('/events/:eventId/edit', renderEventEditPage);
+//app.get('/events/:eventId/join', joinEvent);
+//app.get('/events/:eventId/leave', leaveEvent);
+//app.get('/events/:eventId/cancel', cancelEvent);
+//app.get('/events/:eventId/ban/:targetUserId', banUser);
+//app.get('/events/:eventId/unban/:targetUserId', unbanUser);
+app.post('/api/comment', postNewComment);
 
 app.listen(PORT, () => {
   console.log(`Listening at http://localhost:${PORT}`);

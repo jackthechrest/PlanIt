@@ -31,12 +31,12 @@ async function registerEvent(req: Request, res: Response): Promise<void> {
 
   try {
     await addNewEvent(eventID, startDate, stopDate, currentUser.userId);
+    res.redirect(`/users/${authenticatedUser.userId}}/calendar`);
   } catch (err) {
     console.error(err);
     const databaseErrorMessage = parseDatabaseError(err);
     res.status(500).json(databaseErrorMessage);
   }
-  res.redirect(`/users/${authenticatedUser.userId}}/calendar`);
 }
 
 export { registerEvent };

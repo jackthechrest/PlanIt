@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="/css/style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile | PlanIt </title>
+</head>
+
+<body class="star-background">
+    <div class="navbar">
+        <a href="/logo" class="logo"><img src="/imgs/logo.png" alt="PlanIt Logo"></a>
+        <% if (hasUnread) { %>
+          <a href="/messages" class="menu-inbox"><img src="/imgs/inbox_notification_icon.png" alt="Inbox (Notifications)"></a>
+        <% } else { %>
+          <a href="/messages" class="menu-inbox"><img src="/imgs/inbox_icon.png" alt="Inbox (No Notifications)"></a>
+        <% } %>
+        <a href="/search" class="menu-search"><img src="/imgs/search_icon.png" alt="Search"></a>
+        <a href="/users/<%=user.userId%>/calendar" class="menu-calendar"><img src="/imgs/calendar_icon.png" alt="Calendar"></a>
+    </div>
+
+    <h1 id = "navbarEnd"></h1>
+    
+    <div class="formCard">
+      <section class="form-container">
+        <div>
+          <h1>Edit Your Event<h1>
+        </div>
+        <h2 class="padding"></h1>
+          <div class = "form">
+            <form method = "POST" action = "/api/editEvent">
+              <label for="eventName">Event Name</label>
+                <input
+                  id="eventName"
+                  name="eventName"
+                  placeholder="Keep Current Name: <%=event.eventName%>"
+                  class="text"
+                  type="text"
+                  maxlength="100"
+                />
+              <label for="description">Description</label>
+                <input
+                  id="description"
+                  name="location"
+                  placeholder="Keep Current Description: <%=event.description%>"
+                  class="text"
+                  type="text"
+                  maxlength="100"
+                />
+                <label for="location">Location</label>
+                <input
+                  id="location"
+                  name="location"
+                  placeholder="Keep Current Location: <%=event.location%>"
+                  class="text"
+                  type="text"
+                  maxlength="100"
+                />
+                <label for="startYear">Start Year</label>
+                <input
+                  id="startYear"
+                  name="startYear"
+                  placeholder="startYear"
+                  class="text"
+                  type="number"
+                  maxlength="4"
+                />
+                <label for="startMonth">Start Month</label>
+                <input
+                  id="startMonth"
+                  name="startMonth"
+                  placeholder="startMonth"
+                  class="text"
+                  type="number"
+                  maxlength="2"
+                />
+                <label for="startDay">Start Day</label>
+                <input
+                  id="startDay"
+                  name="startDay"
+                  placeholder="startDay"
+                  class="text"
+                  type="number"
+                  maxlength="2"
+                />
+                <label for="startHour">Start Hour</label>
+                <input
+                  id="startHour"
+                  name="startHour"
+                  placeholder="startHour"
+                  class="text"
+                  type="number"
+                  maxlength="2"
+                />
+                <label for="startMinute">Start Minute</label>
+                <input
+                  id="startMinute"
+                  name="startMinute"
+                  placeholder="startMinute"
+                  class="text"
+                  type="number"
+                  maxlength="2"
+                />
+                <label for="stopYear">Stop Year</label>
+                <input
+                  id="stopYear"
+                  name="stopYear"
+                  placeholder="stopYear"
+                  class="text"
+                  type="number"
+                  maxlength="4"
+                />
+                <label for="stopMonth">Stop Month</label>
+                <input
+                  id="stopMonth"
+                  name="stopMonth"
+                  placeholder="stopMonth"
+                  class="text"
+                  type="number"
+                  maxlength="2"
+                />
+                <label for="stopDay">Stop Day</label>
+                <input
+                  id="stopDay"
+                  name="stopDay"
+                  placeholder="stopDay"
+                  class="text"
+                  type="number"
+                  maxlength="2"
+                />
+                <label for="stopHour">Stop Hour</label>
+                <input
+                  id="stopHour"
+                  name="stopHour"
+                  placeholder="stopHour"
+                  class="text"
+                  type="number"
+                  maxlength="2"
+                />
+                <label for="stopMinute">Stop Minute</label>
+                <input
+                  id="stopMinute"
+                  name="stopMinute"
+                  placeholder="stopMinute"
+                  class="text"
+                  type="number"
+                  maxlength="2"
+                />
+              <h3 class="padding"></h1>
+              <button class = "btn">Save</button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </div>
+</body>
+</html>

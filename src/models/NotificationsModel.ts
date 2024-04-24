@@ -36,7 +36,7 @@ async function getAllOtherNotificationsForUserId(userId: string): Promise<Notifi
   return notifications;
 }
 
-async function createNewNotification(receivingUserId: string, sendingUserId: string, type: NotificationType, link: null | string): Promise<Notifications | null> {
+async function createNewNotification(receivingUserId: string, sendingUserId: string, type: NotificationType, link: void | string): Promise<Notifications | null> {
   // delete any previous duplicate notifications
   await notificationsRepository
     .createQueryBuilder('notifications')

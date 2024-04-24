@@ -31,3 +31,8 @@ type EventRequest = {
   stopHour: number;
   stopMinute: number;
 };
+
+type ReportRequest = {
+  reportType: ReportType;
+  contentId: string;
+}

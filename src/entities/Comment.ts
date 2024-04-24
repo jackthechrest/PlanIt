@@ -8,11 +8,17 @@ export class Comment {
     @PrimaryGeneratedColumn('uuid')
     commentId: string;
 
-    @Column()
+    @Column({ length: 100 })
     commentText: string;
 
     @Column()
-    commentTime: Date;
+    commentDate: Date;
+
+    @Column()
+    commentSecondsSinceEnoch: number;
+  
+    @Column()
+    commentDateString: string;
 
     //relationships
     @ManyToOne(() => User, (user) => user.commenter, {cascade: ['insert', 'update'], onDelete: "CASCADE",})
