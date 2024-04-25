@@ -44,7 +44,7 @@ async function createNewMessage(messageThreadId: string, sender: User, receiver:
   newMessage.type = 'MESSAGE';
   newMessage.link = `/users/${sender.userId}`
   newMessage.dateSent = new Date();
-  newMessage.dateString = newMessage.dateSent.toLocaleString('en-us', {month:'short', day:'numeric', year:'numeric', hour12:true, hour:'numeric', minute:'2-digit'});
+  newMessage.dateString = newMessage.dateSent.toLocaleString('en-us', {month:'short', day:'numeric', year:'numeric', hour12:true, hour:'numeric', minute:'2-digit', timeZone: 'America/Chicago'});
   newMessage.secondsSinceEnoch = newMessage.dateSent.getTime() / 1000;
   newMessage.thread = messageThread;
   newMessage.sendingUser = sender;

@@ -33,7 +33,7 @@ async function createMessageThread(user1: User, user2: User): Promise<MessageThr
   newMessageThread.user2DisplayName = user2.displayName;
   newMessageThread.user2PictureOptions = user2.pictureOptions;
   newMessageThread.lastDateSent = new Date();
-  newMessageThread.lastDateString = newMessageThread.lastDateSent.toLocaleString('en-us', {month:'short', day:'numeric', year:'numeric', hour12:true, hour:'numeric', minute:'2-digit'});
+  newMessageThread.lastDateString = newMessageThread.lastDateSent.toLocaleString('en-us', {month:'short', day:'numeric', year:'numeric', hour12:true, hour:'numeric', minute:'2-digit', timeZone: 'America/Chicago'});
   newMessageThread.lastSecondsSinceEnoch = newMessageThread.lastDateSent.getTime() / 1000;
 
   newMessageThread = await messageThreadRepository.save(newMessageThread);
@@ -44,7 +44,7 @@ async function createMessageThread(user1: User, user2: User): Promise<MessageThr
 async function updateMessageThread(messageThreadId: string, updatedDate: Date, userId: string): Promise<MessageThread> {
   let updatedMessageThread = await getMessageThreadById(messageThreadId);
   updatedMessageThread.lastDateSent = updatedDate;
-  updatedMessageThread.lastDateString = updatedDate.toLocaleString('en-us', {month:'short', day:'numeric', year:'numeric', hour12:true, hour:'numeric', minute:'2-digit'});
+  updatedMessageThread.lastDateString = updatedDate.toLocaleString('en-us', {month:'short', day:'numeric', year:'numeric', hour12:true, hour:'numeric', minute:'2-digit', timeZone: 'America/Chicago'});
   updatedMessageThread.lastSecondsSinceEnoch = updatedDate.getTime() / 1000;
 
   if (userId === updatedMessageThread.user1Id) {

@@ -54,7 +54,7 @@ async function createNewNotification(receivingUserId: string, sendingUserId: str
   let newNotification = new Notifications();
   newNotification.type = type;
   newNotification.dateSent = new Date();
-  newNotification.dateString = newNotification.dateSent.toLocaleString('en-us', {month:'short', day:'numeric', year:'numeric', hour12:true, hour:'numeric', minute:'2-digit'});
+  newNotification.dateString = newNotification.dateSent.toLocaleString('en-us', {month:'short', day:'numeric', year:'numeric', hour12:true, hour:'numeric', minute:'2-digit', timeZone: 'America/Chicago'});
   newNotification.secondsSinceEnoch = newNotification.dateSent.getTime() / 1000;
   newNotification.receivingUser = receiver;
   newNotification.receivingUserId = receiver.userId;

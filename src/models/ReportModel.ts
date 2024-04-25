@@ -2,6 +2,7 @@ import { AppDataSource } from '../dataSource';
 import { Report } from '../entities/Report';
 import { User } from '../entities/User';
 import { updateFollows } from './FollowModel';
+import { updateMessageThreads } from './MessageThreadModel';
 import { updateNotifications } from './NotificationsModel';
 import { getUserById, getUserByUsername, updateProfile } from './UserModel';
 
@@ -50,7 +51,7 @@ async function createReport(reportType: ReportType, contentId: string): Promise<
     let newReport = new Report();
     newReport.offendingContentId = offendingContentId;
     newReport.dateSent = new Date();
-    newReport.dateString = newReport.dateSent.toLocaleString('en-us', {month:'short', day:'numeric', year:'numeric', hour12:true, hour:'numeric', minute:'2-digit'});
+    newReport.dateString = newReport.dateSent.toLocaleString('en-us', {month:'short', day:'numeric', year:'numeric', hour12:true, hour:'numeric', minute:'2-digit', timeZone: 'America/Chicago'});
     newReport.secondsSinceEnoch = newReport.dateSent.getTime() / 1000;
     newReport.type = "REPORT";
     newReport.receivingUser = admin;
@@ -78,6 +79,7 @@ async function respondToReport(offendingContentId: string, isValid: boolean): Pr
             await updateProfile(contentId, "PlanIt User", "I Love Planning Events on PlanIt!", "no change", "no change", "no change");
             await updateFollows(contentId, "PlanIt User", "no change", "no change", "no change");
             await updateNotifications(contentId, "PlanIt User", "no change", "no change", "no change");
+            await updateMessageThreads(contentId, "PlanIt User", "no change", "no change", "no change");
         } else if (type === "E") {
             // await deleteEvent(contentId);
         } else {

@@ -14,7 +14,7 @@ async function createNewComment(body: string, eventId: string, senderId: string)
     newComment.commentUnder = event;
     newComment.commenter = user;
     newComment.commentDate = new Date();
-    newComment.commentDateString = newComment.commentDate.toLocaleString('en-us', {month:'short', day:'numeric', year:'numeric', hour12:true, hour:'numeric', minute:'2-digit'});
+    newComment.commentDateString = newComment.commentDate.toLocaleString('en-us', {month:'short', day:'numeric', year:'numeric', hour12:true, hour:'numeric', minute:'2-digit', timeZone: 'America/Chicago'});
     newComment.commentSecondsSinceEnoch = newComment.commentDate.getTime() / 1000;
 
 
