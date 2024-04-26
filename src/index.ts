@@ -5,7 +5,7 @@ import express, { Express } from 'express';
 
 import session from 'express-session';
 import connectSqlite3 from 'connect-sqlite3';
-import { registerEvent } from './controllers/EventController';
+import { registerEvent, renderEvent } from './controllers/EventController';
 import { registerUser, logIn, getUserProfileData, logoRedirect, deleteAccount, renderCalendar, renderCreateEvent, renderSearch, renderSettings, renderDelete, signOut, renderEditPage, editProfile } from './controllers/UserController';
 import { followUser, removeFollower, renderFollowersPage, renderFollowingPage, unfollowUser } from './controllers/FollowController';
 import { sendVerification, verifyEmail } from './controllers/VerifyCodeController';
@@ -82,7 +82,7 @@ app.get('/report/respond/:contentId/:action', respondReport)
 // Events
 app.post('/api/event', registerEvent);
 app.get('/users/:targetUserId/createEvent', renderCreateEvent);
-//app.get('/events/:eventId', renderEvent)
+app.get('/events/:eventId', renderEvent);
 //app.post('/api/editEvent', editEvent);
 //app.get('/events/:eventId/edit', renderEventEditPage);
 //app.get('/events/:eventId/join', joinEvent);

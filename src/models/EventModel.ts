@@ -4,14 +4,18 @@ import { getUserById } from './UserModel';
 
 const eventRepository = AppDataSource.getRepository(Event);
 
+async function getEventById(eventID: string): Promise<Event | null> {
+  return await eventRepository.findOne({ where: { eventID }, relations: ['owner', 'joinedUsers'] });
+}
+
 async function addNewEvent(
   eventName: string,
   startDate: Date,
   stopDate: Date,
-  currentUserId: string
+  currentUserID: string
 ): Promise<Event | null> {
   // Create the new event object
-  const currentUser = await getUserById(currentUserId);
+  const currentUser = await getUserById(currentUserID);
 
   let newEvent = new Event();
   newEvent.eventName = eventName.substring(0, 100);
@@ -25,15 +29,9 @@ async function addNewEvent(
   newEvent.visibilityLevel = visibilityLevel;
   newEvent.owner = currentUser;
 
-  console.log(newEvent);
-
   newEvent = await eventRepository.save(newEvent);
 
   return newEvent;
-}
-
-async function getEventById(eventId: string): Promise<Event | null> {
-  return await eventRepository.findOne({where: { eventId}, relations: ['owner', 'joinedUsers'] });
 }
 
 export { addNewEvent, getEventById };

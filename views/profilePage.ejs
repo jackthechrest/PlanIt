@@ -80,6 +80,16 @@
         </li>
     </ul>
 
+    <% if (!user.ownedEvents) { %>
+      <p>No Events</p>
+    <% } else { %>
+     <ul>
+       <% for (const event of user.ownedEvents) { %>
+        <p>- <a href="/events/<%= event.eventID %>"><%= event.eventName %></a></p>
+       <% } %>
+     </ul>
+    <% } %>
+
     <style>
       h1, p {
         color: white;

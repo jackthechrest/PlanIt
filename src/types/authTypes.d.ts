@@ -19,7 +19,7 @@ type VerifyRequest = {
 };
 
 type EventRequest = {
-  eventID: string;
+  eventName: string;
   startYear: number;
   startMonth: number;
   startDay: number;

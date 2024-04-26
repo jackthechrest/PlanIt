@@ -75,6 +75,10 @@ async function createNewNotification(receivingUserId: string, sendingUserId: str
   return newNotification;
 }
 
+async function getNotification(receivingUserId: string, sendingUserId: string, type: NotificationType): Promise<Notifications | null> {
+  return await notificationsRepository.findOne({where: {receivingUserId, sendingUserId, type, respondedTo : false}})
+}
+
 async function setResponded(receivingUserId: string, sendingUserId: string): Promise<void> {
   await notificationsRepository
     .createQueryBuilder('notifications')
@@ -134,4 +138,4 @@ async function updateNotifications(userId: string, displayName: string, profileB
   }
 }
 
-export { getAllOtherNotificationsForUserId, createNewNotification, setResponded, hasUnreadNotifications, updateNotifications };
+export { getAllOtherNotificationsForUserId, createNewNotification, getNotification, setResponded, hasUnreadNotifications, updateNotifications };

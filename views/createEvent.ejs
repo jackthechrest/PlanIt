@@ -22,11 +22,11 @@
         </div>
         <div class="form">
           <form action="/api/event" method="post">
-            <label for="eventID">eventID</label>
+            <label for="eventName">Event Name</label>
             <input
-              id="eventID"
-              name="eventID"
-              placeholder="eventID"
+              id="eventName"
+              name="eventName"
+              placeholder="Event Name"
               class="text"
               type="text"
               maxlength="100"
@@ -36,91 +36,128 @@
             <input
               id="startYear"
               name="startYear"
-              placeholder="startYear"
+              placeholder="Start Year"
               class="text"
               type="number"
               maxlength="4"
+              minlength="4"
+              min="2024"
+              required
             />
             <label for="startMonth">Start Month</label>
             <input
               id="startMonth"
               name="startMonth"
-              placeholder="startMonth"
+              placeholder="Start Month"
               class="text"
               type="number"
               maxlength="2"
+              minlength="1"
+              min="1"
+              max="12"
+              required
             />
             <label for="startDay">Start Day</label>
             <input
               id="startDay"
               name="startDay"
-              placeholder="startDay"
+              placeholder="Start Day"
               class="text"
               type="number"
               maxlength="2"
+              minlength="1"
+              min="1"
+              max="31"
+              required
             />
             <label for="startHour">Start Hour</label>
             <input
               id="startHour"
               name="startHour"
-              placeholder="startHour"
+              placeholder="Start Hour"
               class="text"
               type="number"
               maxlength="2"
+              minlength="1"
+              min="1"
+              max="12"
+              required
             />
             <label for="startMinute">Start Minute</label>
             <input
               id="startMinute"
               name="startMinute"
-              placeholder="startMinute"
+              placeholder="Start Minute"
               class="text"
               type="number"
               maxlength="2"
+              minlength="1"
+              min="0"
+              max="59"
+              required
             />
             <label for="stopYear">Stop Year</label>
             <input
               id="stopYear"
               name="stopYear"
-              placeholder="stopYear"
+              placeholder="Stop Year"
               class="text"
               type="number"
               maxlength="4"
+              minlength="4"
+              min="2024"
+              required
             />
             <label for="stopMonth">Stop Month</label>
             <input
               id="stopMonth"
               name="stopMonth"
-              placeholder="stopMonth"
+              placeholder="Stop Month"
               class="text"
               type="number"
               maxlength="2"
+              minlength="1"
+              min="1"
+              max="12"
+              required
             />
             <label for="stopDay">Stop Day</label>
             <input
               id="stopDay"
               name="stopDay"
-              placeholder="stopDay"
+              placeholder="Stop Day"
               class="text"
               type="number"
               maxlength="2"
+              minlength="1"
+              min="1"
+              max="31"
+              required
             />
             <label for="stopHour">Stop Hour</label>
             <input
               id="stopHour"
               name="stopHour"
-              placeholder="stopHour"
+              placeholder="Stop Hour"
               class="text"
               type="number"
               maxlength="2"
+              minlength="1"
+              min="1"
+              max="12"
+              required
             />
             <label for="stopMinute">Stop Minute</label>
             <input
               id="stopMinute"
               name="stopMinute"
-              placeholder="stopMinute"
+              placeholder="Stop Minute"
               class="text"
               type="number"
               maxlength="2"
+              minlength="1"
+              min="0"
+              max="59"
             />
             <button class="btn">Create</button>
           </form>

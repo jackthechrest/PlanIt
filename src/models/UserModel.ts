@@ -18,6 +18,7 @@ async function getUserById(userId: string): Promise<User | null> {
     'unconfirmedFriendLists',
     'blockedFriendLists',
     'code',
+    'ownedEvents',
     ],
   });
 

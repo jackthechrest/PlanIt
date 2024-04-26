@@ -188,6 +188,7 @@ async function blockUserById(requestingUserId: string, targetedUserId: string): 
     await removeFollow(targetedUserId, requestingUserId);
     await removeFriend(requestingUserId, targetedUserId);
     await replyFriendRequest(requestingUserId, targetedUserId, "DECLINE");
+    await replyFriendRequest(targetedUserId, requestingUserId, "DECLINE");
 
     // add targeted user to requesting user's block list
     const requestingFriendList = await getFriendListById(`FL<+>${requestingUserId}`);

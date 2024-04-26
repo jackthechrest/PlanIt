@@ -28,7 +28,7 @@ async function getCommentById(commentId: string): Promise<Comment | null> {
 }
 
 async function getAllCommentsByEventId(eventId: string): Promise<Comment[]> {
-    return await commentRepository.find({ relations: { commentUnder: true }, where: { commentUnder: {eventId : eventId }}, order: { commentSecondsSinceEnoch: "DESC" } });
+    return await commentRepository.find({ relations: { commentUnder: true }, where: { commentUnder: {eventID : eventId }}, order: { commentSecondsSinceEnoch: "DESC" } });
 }
 
 async function deleteCommentById(commentId: string): Promise<void> {

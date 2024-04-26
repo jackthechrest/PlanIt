@@ -10,9 +10,9 @@ async function sendVerification(req: Request, res: Response): Promise<void> {
     const { isLoggedIn, authenticatedUser } = req.session;
 
     if (!isLoggedIn) {
-        res.redirect('/login'); // not logged in
-        return;
-      }
+      res.redirect('/login'); // not logged in
+      return;
+    }
   
     const user = await getUserById(authenticatedUser.userId);
     if (!user) {
@@ -20,21 +20,21 @@ async function sendVerification(req: Request, res: Response): Promise<void> {
       return;
     }
     try {
-        const verifyCode = await generateVerifyCode(user.userId);
+      const verifyCode = await generateVerifyCode(user.userId);
 
-        if (!user.verifiedEmail && verifyCode) {
-            await sendEmail(user.email, 'PlanIt: Verify Your Email', 
-            `Hello, ${user.username}.\n
-            We have received a request to verify this email.  Here is the code:\n\n
-            ${verifyCode}\n\n 
-            If you did not request this, your account may be compromised.\n
-            Please reply to this email if this is the case.\n\n
-            Best,\nPlanIt Administration`);
-        }
+      if (!user.verifiedEmail && verifyCode) {
+        await sendEmail(user.email, 'PlanIt: Verify Your Email', 
+          `Hello, ${user.username}.
+          \nWe have received a request to verify this email.  Here is the code:
+          \n\n${verifyCode}
+          \n\n If you did not request this, your account may be compromised.
+          \nPlease reply to this email if this is the case.
+          \n\nBest,\nPlanIt Administration`);
+      }
 
-        const hasUnread = await hasUnreadNotifications(authenticatedUser.userId);
+      const hasUnread = await hasUnreadNotifications(authenticatedUser.userId);
 
-        res.render('verify', { user, hasUnread, });
+      res.render('verify', { user, hasUnread, });
     } catch (err) {
         console.error(err);
         const databaseErrorMessage = parseDatabaseError(err);
@@ -47,9 +47,9 @@ async function sendVerification(req: Request, res: Response): Promise<void> {
     const { verifyCode } = req.body as VerifyRequest;
 
     if (!isLoggedIn) {
-        res.redirect('/login'); // not logged in
-        return;
-      }
+      res.redirect('/login'); // not logged in
+      return;
+    }
   
     const user = await getUserById(authenticatedUser.userId);
     if (!user) {
@@ -65,11 +65,11 @@ async function sendVerification(req: Request, res: Response): Promise<void> {
 
     await setVerifiedByUserId(user.userId);
     await sendEmail(user.email, 'PlanIt: Your Email is Verified!', 
-            `Hello, user.username.\n
-            The verification code was entered, so this email has been verified!\n
-            If you did not request this, your account may be compromised.\n
-            Please reply to this email if this is the case.\n\n
-            Best,\nPlanIt Administration`);
+      `Hello, ${user.username}.
+      \nThe verification code was entered, so this email has been verified!
+      \nIf you did not request this, your account may be compromised.
+      \nPlease reply to this email if this is the case.
+      \n\nBest,\nPlanIt Administration`);
   
     res.redirect(`/users/${user.userId}`);
   }

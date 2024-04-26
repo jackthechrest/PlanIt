@@ -6,7 +6,7 @@ import { Comment } from "./Comment"
 @Entity()
 export class Event {
     @PrimaryGeneratedColumn('uuid')
-    eventId: string;
+    eventID: string;
 
     @Column({ length: 100 })
     eventName: string;
