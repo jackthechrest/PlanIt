@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="/css/style.css" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= event.eventName %> | Event on PlanIt </title>
@@ -15,20 +16,39 @@
     </div>
   </div>
     
-    <h1 id = "navbarEnd">Event</h1>
-    <%if(viewingUser.userId === owningUser.userId) {%>
-      <h1>Welcome owner</h1>
-    <%}else {%>
-      <h1>Welcome user</h1>
-    <%}%>
-    <p><%=event.eventName%></p>
-    <p><%=event.startDate%></p>
-    <p><%=event.stopDate%></p>
-    <p><%=event.description%></p>
-    <p><%=event.location%></p>
-
-    <p>Edit/Delete Event Options (Self)</p>
-    <p>Report Event Option (Others)</p>
-    <p>Join/Leave Event Option (Others)</p>
+    <h1 id = "navbarEnd"></h1>
+    <div class="form-container" style="padding-bottom: 50px; padding-left: 50px; padding-right: 50px;">
+      <h1><%=event.eventName%></h1>
+      <h2>Host: <a href="/users/<%=owningUser.userId%>"><%=owningUser.displayName%> <span class="username">@<%=owningUser.username%></span></a></h2>
+      <h1 class="padding-bottom"></h1>
+      <h1 class="padding-bottom"></h1>
+      <h2>Starts at: <%=event.startDate.toLocaleString('en-us', {month:'short', day:'numeric', year:'numeric', hour12:true, hour:'numeric', minute:'2-digit', timeZone: 'America/Chicago'})%></p>
+      <h2>Ends at: <%=event.stopDate.toLocaleString('en-us', {month:'short', day:'numeric', year:'numeric', hour12:true, hour:'numeric', minute:'2-digit', timeZone: 'America/Chicago'})%></p>
+      <h1 class="padding-bottom"></h1>
+      <h2>Location: <%=event.location%></p>
+      <h1 class="padding-bottom"></h1>  
+      <h2>Description: <%=event.description%></p>
+      <h1 class="padding-bottom"></h1>
+      <h1 class="padding-bottom"></h1> 
+      
+      <h2 style="text-decoration: underline;"><a href="/events/<%=event.eventID%>/joined"><%=event.joinedUsers.length%> Attendees</a></h2>
+      <% if (viewingUser.userId === owningUser.userId) { %>
+        <h2 style="text-decoration: underline;"><a href="/events/<%=event.eventID%>/banned"><%=event.bannedUsers.length%> Users Banned</a></h2>
+        <h2 style="text-decoration: underline;"><a href="/events/<%=event.eventID%>/invited"><%=event.invitedUsers.length%> Users Invited</a></h2>
+      <% } %>
+        
+      <% if (viewingUser.userId === owningUser.userId) { %>
+        <button class="btn-small" id="green"><a href="/events/<%=event.eventID%>/invite">Invite</a></button>
+        <button class="btn-small"><a href="/events/<%=event.eventID%>/edit">Edit</a></button>
+        <button class="btn-small" id="red">Cancel</button>
+      <% } else { %>
+          <% if (!joined) { %>
+            <button class="btn-small" id="green"><a href="/events/<%=event.eventID%>/join">Join</a></button>
+          <% } else { %>
+            <button class="btn-small" id="red"><a href="/events/<%=event.eventID%>/leave">Leave</a></button>
+          <% } %>
+        <button class="btn-small" id="red"><a href="/report/EVENT/<%=event.eventID%>">Report</a></button>
+      <% } %>
+    </div>
 </body>
 </html>

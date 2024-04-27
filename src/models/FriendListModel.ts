@@ -54,13 +54,6 @@ async function sendFriendRequest(requestingUserId: string, targetedUserId: strin
     // get requesting user's friend list
     const requestingFriendList = await getFriendListById(`FL<+>${requestingUserId}`);
 
-    // check that friend request hasn't already been sent
-    for (const entry of requestingFriendList.pendingFriends) {
-        if (entry.userId === targetedUserId) {
-            return;
-        }
-    }
-
     // add targeted user to requesting user pending friend list
     requestingFriendList.pendingFriends.push(await getUserById(targetedUserId));
 

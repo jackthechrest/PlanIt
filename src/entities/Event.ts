@@ -40,7 +40,7 @@ export class Event {
 
     @ManyToMany(() => User, (user) => user.bannedEvents, { cascade: ['insert', 'update'], onDelete: "CASCADE"} )
     @JoinTable()
-    kickedUsers: Relation<User>[];
+    bannedUsers: Relation<User>[];
 
     @OneToMany(() => Comment, (comment) => comment.commentUnder, { cascade: ['insert', 'update'] } )
     comments: Relation<Comment>[];

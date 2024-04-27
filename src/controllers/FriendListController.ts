@@ -27,6 +27,11 @@ async function friendRequestUser(req: Request, res: Response): Promise<void> {
     return;
   }
 
+  if (friendStatus === "PENDING") {
+    res.redirect(`/users/${targetUserId}`);
+    return;
+  }
+
   await sendFriendRequest(authenticatedUser.userId, targetUserId);
 
   res.redirect(`/users/${targetUserId}`);

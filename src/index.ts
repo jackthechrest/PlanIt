@@ -5,7 +5,7 @@ import express, { Express } from 'express';
 
 import session from 'express-session';
 import connectSqlite3 from 'connect-sqlite3';
-import { registerEvent, renderEvent } from './controllers/EventController';
+import { banUser, inviteToEvent, joinEvent, leaveEvent, registerEvent, renderBannedPage, renderEvent, renderInvitePage, renderInvitedPage, renderJoinedPage, unbanUser, uninviteFromEvent } from './controllers/EventController';
 import { registerUser, logIn, getUserProfileData, logoRedirect, deleteAccount, renderCalendar, renderCreateEvent, renderSearch, renderSettings, renderDelete, signOut, renderEditPage, editProfile } from './controllers/UserController';
 import { followUser, removeFollower, renderFollowersPage, renderFollowingPage, unfollowUser } from './controllers/FollowController';
 import { sendVerification, verifyEmail } from './controllers/VerifyCodeController';
@@ -82,14 +82,20 @@ app.get('/report/respond/:contentId/:action', respondReport)
 // Events
 app.post('/api/event', registerEvent);
 app.get('/users/:targetUserId/createEvent', renderCreateEvent);
-app.get('/events/:eventId', renderEvent);
+app.get('/events/:eventID', renderEvent);
 //app.post('/api/editEvent', editEvent);
-//app.get('/events/:eventId/edit', renderEventEditPage);
-//app.get('/events/:eventId/join', joinEvent);
-//app.get('/events/:eventId/leave', leaveEvent);
-//app.get('/events/:eventId/cancel', cancelEvent);
-//app.get('/events/:eventId/ban/:targetUserId', banUser);
-//app.get('/events/:eventId/unban/:targetUserId', unbanUser);
+//app.get('/events/:eventID/edit', renderEventEditPage);
+app.get('/events/:eventID/join', joinEvent);
+app.get('/events/:eventID/leave', leaveEvent);
+app.get('/events/:eventID/joined', renderJoinedPage);
+app.get('/events/:eventID/invite', renderInvitePage);
+app.post('/api/invite', inviteToEvent);
+app.get('/events/:eventID/uninvite/:targetUserId', uninviteFromEvent);
+app.get('/events/:eventID/invited', renderInvitedPage);
+//app.get('/events/:eventID/cancel', cancelEvent);
+app.get('/events/:eventID/ban/:targetUserId', banUser);
+app.get('/events/:eventID/unban/:targetUserId', unbanUser);
+app.get('/events/:eventID/banned', renderBannedPage);
 app.post('/api/comment', postNewComment);
 
 app.listen(PORT, () => {
