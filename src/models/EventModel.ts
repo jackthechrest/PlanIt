@@ -87,9 +87,8 @@ async function removeUserFromEvent(eventID: string, userID: string): Promise<voi
 
   if (pendingIndex !== -1) {
     event.joinedUsers.splice(pendingIndex, 1);
+    await eventRepository.save(event);
   }
-
-  await eventRepository.save(event);
 }
 
 async function banUserFromEvent(eventID: string, userID: string): Promise<void> {
@@ -116,9 +115,8 @@ async function unbanUserFromEvent(eventID: string, userID: string): Promise<void
 
   if (pendingIndex !== -1) {
     event.bannedUsers.splice(pendingIndex, 1);
+    await eventRepository.save(event);
   }
-
-  await eventRepository.save(event);
 }
 
 async function inviteUserToEvent(eventID: string, userID: string): Promise<void> {
@@ -145,9 +143,8 @@ async function uninviteUserFromEvent(eventID: string, userID: string): Promise<v
 
   if (pendingIndex !== -1) {
     event.invitedUsers.splice(pendingIndex, 1);
+    await eventRepository.save(event);
   }
-
-  await eventRepository.save(event);
 }
 
 export { addNewEvent, getEventById, getEventStatusForUser, addUserToEvent, removeUserFromEvent, 

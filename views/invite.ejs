@@ -21,8 +21,9 @@
 <h1 id ="navbarEnd"></h1>
 
 
-    <div class="inbox-content" id="send">
-      <h1>Invite a User to Your Event, <%=event.eventName%></h1>
+<div class="formCard">
+  <section class="form-container">
+      <h1>Invite a User to Your Event, <a href="/events/<%=event.eventID%>"><%=event.eventName%></a></h1>
       <h2>Sender:</h2>
       <h2><%=user.username%></h2>
       <h3 class="padding"></h3>
@@ -35,7 +36,7 @@
                   <option value="<%=friend.username%>">@<%=friend.username%></option>
                 <% } %>  
               </select>
-              <input 
+            <input 
               type="hidden"
               value="<%=event.eventID%>"
               id="eventID"
@@ -46,6 +47,7 @@
             </div>
           </form>
       </div>
-    </div>
+  </section>
+</div>
 </body>
 </html>

@@ -24,11 +24,11 @@ async function createNewComment(body: string, eventId: string, senderId: string)
 }
 
 async function getCommentById(commentId: string): Promise<Comment | null> {
-    return await commentRepository.findOne({where: {commentId}})
+    return await commentRepository.findOne({where: {commentId}, relations: { commentUnder: true, commenter: true }})
 }
 
 async function getAllCommentsByEventId(eventId: string): Promise<Comment[]> {
-    return await commentRepository.find({ relations: { commentUnder: true }, where: { commentUnder: {eventID : eventId }}, order: { commentSecondsSinceEnoch: "DESC" } });
+    return await commentRepository.find({ relations: { commentUnder: true, commenter: true }, where: { commentUnder: {eventID : eventId }}, order: { commentSecondsSinceEnoch: "ASC" } });
 }
 
 async function deleteCommentById(commentId: string): Promise<void> {

@@ -1,10 +1,11 @@
 import { AppDataSource } from '../dataSource';
 import { Report } from '../entities/Report';
 import { User } from '../entities/User';
+import { deleteCommentById, getCommentById } from './CommentModel';
 import { updateFollows } from './FollowModel';
 import { updateMessageThreads } from './MessageThreadModel';
 import { updateNotifications } from './NotificationsModel';
-import { getUserById, getUserByUsername, updateProfile } from './UserModel';
+import { getUserByCommentId, getUserByEventId, getUserById, getUserByUsername, updateProfile } from './UserModel';
 
 const reportRepository = AppDataSource.getRepository(Report);
 
@@ -40,12 +41,13 @@ async function createReport(reportType: ReportType, contentId: string): Promise<
         link = `/users/${contentId}`
     } else if (reportType === 'EVENT') {
         admin = await getUserByUsername('Quinn');
-        // reportedUser = await getUserByEventId(contentId);
+        reportedUser = await getUserByEventId(contentId);
         link = `/events/${contentId}`
     } else if (reportType === 'COMMENT') {
         admin = await getUserByUsername('Matthew');
-        link = `/comments/${contentId}`
-        // reportedUser = await getUserByCommentId(contentId);
+        const comment = await getCommentById(contentId);
+        link = `/events/${comment.commentUnder.eventID}/comments/${contentId}`
+        reportedUser = await getUserByCommentId(contentId);
     }
 
     let newReport = new Report();
@@ -83,7 +85,7 @@ async function respondToReport(offendingContentId: string, isValid: boolean): Pr
         } else if (type === "E") {
             // await deleteEvent(contentId);
         } else {
-            // await deleteComment(contentId);
+            await deleteCommentById(contentId);
         }
     }
 

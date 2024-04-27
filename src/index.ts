@@ -6,7 +6,7 @@ import express, { Express } from 'express';
 import session from 'express-session';
 import connectSqlite3 from 'connect-sqlite3';
 import { banUser, inviteToEvent, joinEvent, leaveEvent, registerEvent, renderBannedPage, renderEvent, renderInvitePage, renderInvitedPage, renderJoinedPage, unbanUser, uninviteFromEvent } from './controllers/EventController';
-import { registerUser, logIn, getUserProfileData, logoRedirect, deleteAccount, renderCalendar, renderCreateEvent, renderSearch, renderSettings, renderDelete, signOut, renderEditPage, editProfile } from './controllers/UserController';
+import { registerUser, logIn, getUserProfileData, logoRedirect, deleteAccount, renderCalendar, renderCreateEvent, renderSearch, renderSettings, signOut, renderEditPage, editProfile } from './controllers/UserController';
 import { followUser, removeFollower, renderFollowersPage, renderFollowingPage, unfollowUser } from './controllers/FollowController';
 import { sendVerification, verifyEmail } from './controllers/VerifyCodeController';
 import { blockUser, friendRequestUser, renderBlockedPage, renderFriendsPage, respondFriendRequest, unblockUser, unfriendUser } from './controllers/FriendListController';
@@ -14,7 +14,7 @@ import { renderNotifications } from './controllers/NotifcationsController';
 import { renderReports, respondReport, sendReport } from './controllers/ReportController';
 import { renderAllMessageThreads, renderSingleMessageThread } from './controllers/MessageThreadController';
 import { renderCreateMessageThread, sendMessage } from './controllers/MessageController';
-import { postNewComment } from './controllers/CommentController';
+import { postNewComment, renderComment } from './controllers/CommentController';
 
 const app: Express = express();
 const { PORT, COOKIE_SECRET } = process.env;
@@ -47,7 +47,6 @@ app.post('/api/delete', deleteAccount);
 
 app.get('/logo', logoRedirect);
 app.get('/settings', renderSettings);
-app.get('/delete', renderDelete);
 app.get('/edit', renderEditPage);
 app.post('/api/edit', editProfile);
 app.get('/users/:targetUserId/calendar', renderCalendar);
@@ -97,6 +96,7 @@ app.get('/events/:eventID/ban/:targetUserId', banUser);
 app.get('/events/:eventID/unban/:targetUserId', unbanUser);
 app.get('/events/:eventID/banned', renderBannedPage);
 app.post('/api/comment', postNewComment);
+app.get('/events/:eventID/comments/:commentId', renderComment);
 
 app.listen(PORT, () => {
   console.log(`Listening at http://localhost:${PORT}`);

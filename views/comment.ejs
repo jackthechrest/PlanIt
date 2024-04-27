@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="/css/style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Comment on <%= comment.commentUnder.eventName %> | PlanIt </title>
+</head>
+<body>
+  <div id="container">
+    <div class="navbar">
+      <a href="/logo" class="logo"><img src="/imgs/logo.png" alt="PlanIt Logo"></a>
+      <% if (hasUnread) { %>
+        <a href="/messages" class="menu-inbox"><img src="/imgs/inbox_notification_icon.png" alt="Inbox (Notifications)"></a>
+      <% } else { %>
+        <a href="/messages" class="menu-inbox"><img src="/imgs/inbox_icon.png" alt="Inbox (No Notifications)"></a>
+      <% } %>
+      <a href="/search" class="menu-search"><img src="/imgs/search_icon.png" alt="Search"></a>
+      <a href="/users/<%=viewingUser.userId%>/calendar" class="menu-calendar"><img src="/imgs/calendar_icon.png" alt="Calendar"></a>
+    </div>
+  </div>
+    
+    <h1 id = "navbarEnd"></h1>
+    <div class="form-container">
+        <h1>Comment on <a href="/events/<%=comment.commentUnder.eventID%>"><%=comment.commentUnder.eventName%></a></h1>
+        <h1 class="padding-bottom"></h1>
+        <div class="event-host-profile">
+            <div class="profile-background <%=comment.commenter.pictureOptions[0]%>">
+              <div class="profile-head <%=comment.commenter.pictureOptions[1]%>"></div>
+              <div class="profile-body <%=comment.commenter.pictureOptions[2]%>"></div>
+            </div>
+        </div>
+        <h2>Commented by: <a href="/users/<%=comment.commenter.userId%>"><%=comment.commenter.displayName%> <span class="username">@<%=comment.commenter.username%></span></a></h3>
+        <h1 class="padding-bottom"></h1>
+        <h3 style="font-size: 20px;"><%=comment.commentText%></h3>
+        <h1 class="padding-bottom"></h1>
+        <h3 style="font-size: 20px;">Posted: <%=comment.commentDateString%></h3>
+        <button class="btn-small" id="red"><a href="/report/COMMENT/<%=comment.commentId%>">Report</a></button>
+    </div>
+</body>
+</html>

@@ -88,5 +88,5 @@ export class User {
 
   //Comments
   @OneToMany(() => Comment, (comment) => comment.commenter, { cascade: ['insert', 'update'] })
-  commenter: Relation<Comment>[];
+  comments: Relation<Comment>[];
 }

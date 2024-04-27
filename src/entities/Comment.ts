@@ -21,7 +21,7 @@ export class Comment {
     commentDateString: string;
 
     //relationships
-    @ManyToOne(() => User, (user) => user.commenter, {cascade: ['insert', 'update'], onDelete: "CASCADE",})
+    @ManyToOne(() => User, (user) => user.comments, {cascade: ['insert', 'update'], onDelete: "CASCADE",})
     commenter: Relation<User>;
 
     @ManyToOne(() => Event, (event) => event.comments, {cascade: ['insert', 'update'], onDelete: "CASCADE",})

@@ -64,7 +64,7 @@ async function sendReport(req: Request, res: Response): Promise<void> {
             return;
         }
     }
-
+    
     const report = await getReportById(`${reportType.charAt(0)}-${contentId}`);
 
     if (report) {
