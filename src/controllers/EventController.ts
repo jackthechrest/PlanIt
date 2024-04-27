@@ -7,29 +7,29 @@ import { hasUnreadNotifications } from '../models/NotificationsModel';
 
 async function renderEvent(req: Request, res: Response): Promise<void> {
   const { isLoggedIn, authenticatedUser } = req.session;
-  const { targetEventId } = req.params;
+  const { eventID } = req.params;
 
   if (!isLoggedIn) {
     res.redirect('/login'); // not logged in
     return;
   }
 
-  const targetEvent = await getEventById(targetEventId);
+  const event = await getEventById(eventID);
 
-  if (!targetEvent) {
+  if (!event) {
     res.redirect(`/users/${authenticatedUser.userId}`); // user not found
     return;
   }
 
-  const friendStatus = await getFriendStatus(authenticatedUser.userId, targetEvent.owner.userId);
-  const eventStatus = await getEventStatusForUser(targetEventId, authenticatedUser.userId);
+  const friendStatus = await getFriendStatus(authenticatedUser.userId, event.owner.userId);
+  const eventStatus = await getEventStatusForUser(eventID, authenticatedUser.userId);
 
-  if (targetEvent.visibilityLevel === "FRIENDS ONLY" && friendStatus !== "FRIEND") {
+  if (event.visibilityLevel === "Friends Only" && friendStatus !== "FRIEND") {
     res.redirect(`/users/${authenticatedUser.userId}`);
     return;
   }
 
-  if (targetEvent.visibilityLevel === "INVITE ONLY" && eventStatus !== "INVITED") {
+  if (event.visibilityLevel === "Invite Only" && eventStatus !== "INVITED") {
     res.redirect(`/users/${authenticatedUser.userId}`);
     return;
   }
@@ -47,7 +47,7 @@ async function renderEvent(req: Request, res: Response): Promise<void> {
   const viewingUser = await getUserById(authenticatedUser.userId);
   const hasUnread = await hasUnreadNotifications(authenticatedUser.userId);
 
-  res.render('event', { event: targetEvent, viewingUser, owningUser: targetEvent.owner, joined, hasUnread });
+  res.render('event', { event, viewingUser, owningUser: event.owner, joined, hasUnread });
 }
 
 async function registerEvent(req: Request, res: Response): Promise<void> {
@@ -110,12 +110,12 @@ async function joinEvent(req: Request, res: Response): Promise<void> {
     return;
   }
 
-  if (event.visibilityLevel === "FRIENDS ONLY" && friendStatus !== "FRIEND") {
+  if (event.visibilityLevel === "Friends Only" && friendStatus !== "FRIEND") {
     res.redirect(`/users/${authenticatedUser.userId}`);
     return;
   }
 
-  if (event.visibilityLevel === "INVITE ONLY" && eventStatus !== "INVITED") {
+  if (event.visibilityLevel === "Invite Only" && eventStatus !== "INVITED") {
     res.redirect(`/users/${authenticatedUser.userId}`);
     return;
   }
@@ -175,12 +175,12 @@ async function renderJoinedPage(req: Request, res: Response): Promise<void> {
   const eventStatus = await getEventStatusForUser(eventID, authenticatedUser.userId);
   const friendStatus = await getFriendStatus(authenticatedUser.userId, event.owner.userId);
 
-  if (event.visibilityLevel === "FRIENDS ONLY" && friendStatus !== "FRIEND") {
+  if (event.visibilityLevel === "Friends Only" && friendStatus !== "FRIEND") {
     res.redirect(`/users/${authenticatedUser.userId}`);
     return;
   }
 
-  if (event.visibilityLevel === "INVITE ONLY" && eventStatus !== "INVITED") {
+  if (event.visibilityLevel === "Invite Only" && eventStatus !== "INVITED") {
     res.redirect(`/users/${authenticatedUser.userId}`);
     return;
   }

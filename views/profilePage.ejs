@@ -80,10 +80,11 @@
         </li>
     </ul>
 
-    <% if (!user.ownedEvents) { %>
-      <p>No Events</p>
+    <% if (user.ownedEvents.length === 0) { %>
+      <p>No Events:</p>
     <% } else { %>
      <ul>
+      <p>Events:</p>
        <% for (const event of user.ownedEvents) { %>
         <p>- <a href="/events/<%= event.eventID %>"><%= event.eventName %></a></p>
        <% } %>

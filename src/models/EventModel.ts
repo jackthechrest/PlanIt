@@ -5,7 +5,8 @@ import { getUserById } from './UserModel';
 const eventRepository = AppDataSource.getRepository(Event);
 
 async function getEventById(eventID: string): Promise<Event | null> {
-  return await eventRepository.findOne({ where: { eventID }, relations: ['owner', 'joinedUsers', 'bannedUsers', 'invitedUsers'] });
+  const event = await eventRepository.findOne({ where: { eventID }, relations: ['owner', 'joinedUsers', 'bannedUsers', 'invitedUsers'] });
+  return event;
 }
 
 async function addNewEvent(
@@ -23,7 +24,7 @@ async function addNewEvent(
   newEvent.stopDate = stopDate;
   const description = 'Hello';
   const location = 'College';
-  const visibilityLevel = 'PUBLIC';
+  const visibilityLevel = 'Public';
   newEvent.description = description;
   newEvent.location = location;
   newEvent.visibilityLevel = visibilityLevel;

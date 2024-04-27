@@ -4,7 +4,7 @@ type NotificationType = "FRIEND REQUEST SENT" | "FRIEND REQUEST ACCEPTED" | "FOL
 
 type ReportType = "PROFILE" | "EVENT" | "COMMENT"
 
-type EventVisibility = "PUBLIC" | "INVITE ONLY" | "FRIENDS ONLY"
+type EventVisibility = "Public" | "Invite Only" | "Friends Only"
 
 type FriendStatus = "FRIEND" | "NOT FRIEND" | "PENDING" | "I BLOCKED" | "THEY BLOCKED"
 
