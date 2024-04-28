@@ -227,19 +227,7 @@ async function renderCreateEvent(req: Request, res: Response): Promise<void> {
   res.render('createEvent', { user });
 }
 
-async function renderSearch(req: Request, res: Response): Promise<void> {
-  const { isLoggedIn, authenticatedUser } = req.session;
 
-  if (!isLoggedIn) {
-    res.redirect('/login'); // not logged in
-    return;
-  }
-
-  const user = await getUserById(authenticatedUser.userId);
-  const hasUnread = await hasUnreadNotifications(authenticatedUser.userId);
-
-  res.render('search', { user, hasUnread, });
-}
 
 export { registerUser, logIn, signOut, getUserProfileData, deleteAccount, logoRedirect,
-         renderSettings, renderDelete, renderEditPage, editProfile, renderCalendar, renderCreateEvent, renderSearch, };
+         renderSettings, renderDelete, renderEditPage, editProfile, renderCalendar, renderCreateEvent, };

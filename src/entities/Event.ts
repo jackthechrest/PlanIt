@@ -8,6 +8,9 @@ export class Event{
     @PrimaryGeneratedColumn('uuid')
     eventID: string;
 
+    @Column({ length: 100 })
+    eventName: string;
+    
     @Column()
     startDate: Date;
 

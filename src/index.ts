@@ -6,8 +6,9 @@ import express, { Express } from 'express';
 import session from 'express-session';
 import connectSqlite3 from 'connect-sqlite3';
 import { registerEvent } from './controllers/EventController';
-import { registerUser, logIn, getUserProfileData, logoRedirect, deleteAccount, renderCalendar, renderCreateEvent, renderSearch, renderSettings, renderDelete, signOut, renderEditPage, editProfile } from './controllers/UserController';
+import { registerUser, logIn, getUserProfileData, logoRedirect, deleteAccount, renderCalendar, renderCreateEvent, renderSettings, renderDelete, signOut, renderEditPage, editProfile } from './controllers/UserController';
 import { followUser, removeFollower, renderFollowersPage, renderFollowingPage, unfollowUser } from './controllers/FollowController';
+import { renderSearch } from './controllers/SearchController';
 import { sendVerification, verifyEmail } from './controllers/VerifyCodeController';
 import { blockUser, friendRequestUser, renderBlockedPage, renderFriendsPage, respondFriendRequest, unblockUser, unfriendUser } from './controllers/FriendListController';
 import { renderNotifications } from './controllers/NotifcationsController';
@@ -77,6 +78,8 @@ app.post('/api/send', sendMessage); // Post request to send a message
 // Events
 app.post('/api/event', registerEvent);
 app.get('/users/:targetUserId/createEvent', renderCreateEvent);
+
+// Search
 
 app.listen(PORT, () => {
   console.log(`Listening at http://localhost:${PORT}`);

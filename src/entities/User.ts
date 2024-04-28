@@ -35,7 +35,7 @@ export class User {
   @Column({ default: 0 })
   warningCount: number;
 
-  // need to add profile picture functionality
+  //profile picture functionality
   @Column('simple-array')
   pictureOptions: ProfileColors[];
 
