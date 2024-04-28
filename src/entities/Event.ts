@@ -4,7 +4,7 @@ import { User } from "./User";
 import { Comment } from "./Comment"
 
 @Entity()
-export class Event{
+export class Event {
     @PrimaryGeneratedColumn('uuid')
     eventID: string;
 
@@ -17,22 +17,30 @@ export class Event{
     @Column()
     stopDate: Date;
 
-    @Column()
+    @Column({ default: "", length: 100 })
     description: string;
 
-    @Column()
+    @Column({ length: 100 })
     location: string;
 
     @Column()
-    visibility_level: string;
+    visibilityLevel: EventVisibility;
 
     // relationships
     @ManyToOne(() => User, (user) => user.ownedEvents, { cascade: ['insert', 'update'], onDelete: "CASCADE",})
     owner: Relation<User>;
 
-    @ManyToMany(() => User, (user) => user.joinedEvents, { cascade: ['insert', 'update'], onDelete: "SET NULL"} )
+    @ManyToMany(() => User, (user) => user.joinedEvents, { cascade: ['insert', 'update'], onDelete: "CASCADE"} )
     @JoinTable()
     joinedUsers: Relation<User>[];
+
+    @ManyToMany(() => User, (user) => user.invitedEvents, { cascade: ['insert', 'update'], onDelete: "CASCADE"} )
+    @JoinTable()
+    invitedUsers: Relation<User>[];
+
+    @ManyToMany(() => User, (user) => user.bannedEvents, { cascade: ['insert', 'update'], onDelete: "CASCADE"} )
+    @JoinTable()
+    bannedUsers: Relation<User>[];
 
     @OneToMany(() => Comment, (comment) => comment.commentUnder, { cascade: ['insert', 'update'] } )
     comments: Relation<Comment>[];

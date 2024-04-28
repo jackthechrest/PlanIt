@@ -18,6 +18,7 @@ async function getUserById(userId: string): Promise<User | null> {
     'unconfirmedFriendLists',
     'blockedFriendLists',
     'code',
+    'ownedEvents',
     ],
   });
 
@@ -177,5 +178,17 @@ async function removeFriendData(userId: string): Promise<void> {
     }
 }
 
-export { getUserById, getUserByUsername, getUserByEmail, addNewUser, 
-         deleteUserById, setVerifiedByUserId, updateProfile, incrementWarningCountForUser, removeFriendData };
+async function getUserByEventId(eventId: string): Promise<User | null> {
+  const user = await userRepository.findOne({where: { ownedEvents: { eventID: eventId}}});
+
+  return user;
+}
+
+async function getUserByCommentId(commentId: string): Promise<User | null> {
+  const user = await userRepository.findOne({where: { comments: { commentId }}});
+
+  return user;
+}
+
+export { getUserById, getUserByUsername, getUserByEmail, addNewUser, deleteUserById, setVerifiedByUserId, 
+      updateProfile, incrementWarningCountForUser, removeFriendData, getUserByEventId, getUserByCommentId };

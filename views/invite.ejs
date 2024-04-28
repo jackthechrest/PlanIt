@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="/css/style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Invite to Your Event | PlanIt </title>
+</head>
+<body>
+  <div class="navbar">
+    <a href="/logo" class="logo"><img src="/imgs/logo.png" alt="PlanIt Logo"></a>
+    <% if (hasUnread) { %>
+      <a href="/messages" class="menu-inbox"><img src="/imgs/inbox_notification_icon.png" alt="Inbox (Notifications)"></a>
+    <% } else { %>
+      <a href="/messages" class="menu-inbox"><img src="/imgs/inbox_icon.png" alt="Inbox (No Notifications)"></a>
+    <% } %>
+    <a href="/search" class="menu-search"><img src="/imgs/search_icon.png" alt="Search"></a>
+    <a href="/users/<%=user.userId%>/calendar" class="menu-calendar"><img src="/imgs/calendar_icon.png" alt="Calendar"></a>
+</div>
+
+<h1 id ="navbarEnd"></h1>
+
+
+<div class="formCard">
+  <section class="form-container">
+      <h1>Invite a User to Your Event, <a href="/events/<%=event.eventID%>"><%=event.eventName%></a></h1>
+      <h2>Sender:</h2>
+      <h2><%=user.username%></h2>
+      <h3 class="padding"></h3>
+      <h2>Receiver:</h2>
+      <div class = "form">
+          <form method = "POST" action = "/api/invite">
+            <label for="username">Receiver:</label>
+              <select name="username" id="username" required>
+                <% for (const friend of friends) { %>
+                  <option value="<%=friend.username%>">@<%=friend.username%></option>
+                <% } %>  
+              </select>
+            <input 
+              type="hidden"
+              value="<%=event.eventID%>"
+              id="eventID"
+              name="eventID"
+            />
+            <div class="center">
+              <button class = "btn">Invite</button>
+            </div>
+          </form>
+      </div>
+  </section>
+</div>
+</body>
+</html>

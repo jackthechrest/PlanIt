@@ -83,6 +83,7 @@ body {
   font-weight: bold;
   background: #adadad;
   margin-top: 5%;
+  min-width: 600px;
   max-width: 50%;
   margin-right: auto;
   margin-left: auto;
@@ -112,6 +113,13 @@ body {
   width: 40%;
 }
 
+.form-container.event {
+  padding-bottom: 50px;
+  padding-left: 50px; 
+  padding-right: 50px;
+  min-width: 700px;
+  max-width: 700px;
+}
 
 input {
   border: none;
@@ -448,6 +456,23 @@ input[type=number]::-webkit-outer-spin-button {
   grid-gap: 0px;
 }
 
+.follow-content .grid-container .profile-background {
+  position: relative;
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+}
+
+.follow-content .grid-container .profile-background .profile-head {
+  width: 20%;
+  height: 50px;
+}
+
+.follow-content .grid-container .profile-background .profile-body {
+  height: 65px;
+  width: 20%;
+}
+
 .username {
   color: rgb(64, 64, 64);
 }
@@ -557,6 +582,11 @@ li.received-message h3 {
   padding: 20px 50px 100px 50px;
 }
 
+.follow-content.comment {
+  max-width: min-content;
+  min-width: min-content;
+}
+
 .follow-content li {
   color: rgb(0, 0, 0);
   font-weight: bold;
@@ -572,6 +602,36 @@ li.received-message h3 {
   border-radius: 40px;
   padding: 20px 50px 20px 50px;
   font-size: 20px;
+}
+
+.follow-content li.sent-message {
+  text-align: right;
+  color: white;
+  background-color: blue;
+  min-width: 600px;
+  width: fit-content;
+  margin-right: 5%;
+  font-size: 20px; 
+}
+
+.follow-content li.sent-message h3 {
+  font-size: 23px;
+  padding-bottom: 10px;
+}
+
+.follow-content li.received-message {
+  text-align: left;
+  color: black;
+  background-color: white;
+  min-width: 600px;
+  width: fit-content;
+  margin-left: 2%;
+  font-size: 20px; 
+}
+
+.follow-content li.received-message h3 {
+  font-size: 23px;
+  padding-bottom: 10px;
 }
 
 .follow-content h1 {
@@ -612,6 +672,20 @@ li.received-message h3 {
 .follow-content li .profile-background .profile-body {
   height: 65px;
   width: 20%;
+}
+
+.event-host-profile {
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  min-width: 30%;
+  width: 30%;
+  transform: scale(0.75);
+  margin-bottom: -2%;
+}
+
+.event-host-profile .profile-background {
+  border-radius: 50%;
 }
 
 .profile-background {

@@ -1,26 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="/css/style.css" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= event.title %> | Event on PlanIt </title>
+    <title><%= event.eventName %> | Event on PlanIt </title>
 </head>
 <body>
+  <div id="container">
     <div class="navbar">
-        <a href="/logo" class="logo"><img src="/imgs/logo.png" alt="PlanIt Logo"></a>
-        <% if (hasUnread) { %>
-          <a href="/messages" class="menu-inbox"><img src="/imgs/inbox_notification_icon.png" alt="Inbox (Notifications)"></a>
-        <% } else { %>
-          <a href="/messages" class="menu-inbox"><img src="/imgs/inbox_icon.png" alt="Inbox (No Notifications)"></a>
-        <% } %>
-        <a href="/search" class="menu-search"><img src="/imgs/search_icon.png" alt="Search"></a>
-        <a href="/users/<%=user.userId%>/calendar" class="menu-calendar"><img src="/imgs/calendar_icon.png" alt="Calendar"></a>
+      <a href="/logo" class="logo"><img src="/imgs/logo.png" alt="PlanIt Logo"></a>
+      <% if (hasUnread) { %>
+        <a href="/messages" class="menu-inbox"><img src="/imgs/inbox_notification_icon.png" alt="Inbox (Notifications)"></a>
+      <% } else { %>
+        <a href="/messages" class="menu-inbox"><img src="/imgs/inbox_icon.png" alt="Inbox (No Notifications)"></a>
+      <% } %>
+      <a href="/search" class="menu-search"><img src="/imgs/search_icon.png" alt="Search"></a>
+      <a href="/users/<%=viewingUser.userId%>/calendar" class="menu-calendar"><img src="/imgs/calendar_icon.png" alt="Calendar"></a>
     </div>
+  </div>
     
-    <h1 id = "navbarEnd">Event</h1>
+    <h1 id = "navbarEnd"></h1>
+    <div class="form-container event">
+      <h1><%=event.eventName%></h1>
+      <div class="event-host-profile">
+        <div class="profile-background <%=owningUser.pictureOptions[0]%>">
+          <div class="profile-head <%=owningUser.pictureOptions[1]%>"></div>
+          <div class="profile-body <%=owningUser.pictureOptions[2]%>"></div>
+        </div>
+      </div>
+      <h2>Host: <a href="/users/<%=owningUser.userId%>"><%=owningUser.displayName%> <span class="username">@<%=owningUser.username%></span></a></h2>
+      <h1 class="padding-bottom"></h1>
+      <h1 class="padding-bottom"></h1>
+      <h2>Starts at: <%=event.startDate.toLocaleString('en-us', {month:'short', day:'numeric', year:'numeric', hour12:true, hour:'numeric', minute:'2-digit', timeZone: 'America/Chicago'})%></p>
+      <h2>Ends at: <%=event.stopDate.toLocaleString('en-us', {month:'short', day:'numeric', year:'numeric', hour12:true, hour:'numeric', minute:'2-digit', timeZone: 'America/Chicago'})%></p>
+      <h1 class="padding-bottom"></h1>
+      <h2>Location: <%=event.location%></p>
+      <h1 class="padding-bottom"></h1>  
+      <h2>Description: <%=event.description%></p>
+      <h1 class="padding-bottom"></h1>
+      <h2>Visibility: <%=event.visibilityLevel%></h2>
+      <h1 class="padding-bottom"></h1>
+      <h1 class="padding-bottom"></h1> 
+      
+      <h2 style="text-decoration: underline;"><a href="/events/<%=event.eventID%>/joined"><%=event.joinedUsers.length%> Attendees</a></h2>
+      <% if (viewingUser.userId === owningUser.userId) { %>
+        <h2 style="text-decoration: underline;"><a href="/events/<%=event.eventID%>/banned"><%=event.bannedUsers.length%> Users Banned</a></h2>
+        <h2 style="text-decoration: underline;"><a href="/events/<%=event.eventID%>/invited"><%=event.invitedUsers.length%> Users Invited</a></h2>
+      <% } %>
+        
+      <% if (viewingUser.userId === owningUser.userId) { %>
+        <button class="btn-small" id="green"><a href="/events/<%=event.eventID%>/invite">Invite</a></button>
+        <button class="btn-small"><a href="/events/<%=event.eventID%>/edit">Edit</a></button>
+        <button class="btn-small" id="red">Cancel</button>
+      <% } else { %>
+          <% if (!joined) { %>
+            <button class="btn-small" id="green"><a href="/events/<%=event.eventID%>/join">Join</a></button>
+          <% } else { %>
+            <button class="btn-small" id="red"><a href="/events/<%=event.eventID%>/leave">Leave</a></button>
+          <% } %>
+        <button class="btn-small" id="red"><a href="/report/EVENT/<%=event.eventID%>">Report</a></button>
+      <% } %>
+    </div>
 
-    <p>Edit/Delete Event Options (Self)</p>
-    <p>Report Event Option (Others)</p>
-    <p>Join/Leave Event Option (Others)</p>
+    <div class="follow-content comment">
+      <h1>Comments</h1>
+      <% if (comments.length === 0) { %>
+        <h2>No Comments</h2>
+      <% } else { %>
+        <ul>
+          <% for (const comment of comments) { %>
+              <% if (comment.commenter.userId === viewingUser.userId) { %>
+                <div class="grid-container">
+                  <div>
+                    <li class="sent-message">
+                      <h3><a href="/users/<%=comment.commenter.userId%>"><%=comment.commenter.displayName%> <span class="username">@<%=comment.commenter.username%></span></a></h3>
+                      <h4><a href="/events/<%=event.eventID%>/comments/<%=comment.commentId%>"><%=comment.commentText%></a></h4>
+                      <p style="text-align: left;"><%=comment.commentDateString%></p>
+                    </li>
+                  </div>
+                  <div class="profile-background <%=comment.commenter.pictureOptions[0]%>">
+                    <div class="profile-head <%=comment.commenter.pictureOptions[1]%>"></div>
+                    <div class="profile-body <%=comment.commenter.pictureOptions[2]%>"></div>
+                  </div>
+                </div>
+              <% } else { %>
+                <div class="grid-container">
+                  <div class="profile-background <%=comment.commenter.pictureOptions[0]%>">
+                    <div class="profile-head <%=comment.commenter.pictureOptions[1]%>"></div>
+                    <div class="profile-body <%=comment.commenter.pictureOptions[2]%>"></div>
+                  </div>
+                  <div>
+                    <li class="received-message">
+                      <h3><a href="/users/<%=comment.commenter.userId%>"><%=comment.commenter.displayName%> <span class="username">@<%=comment.commenter.username%></span></a></h3>
+                      <h4><a href="/events/<%=event.eventID%>/comments/<%=comment.commentId%>"><%=comment.commentText%></a></h4>
+                      <p style="text-align: right;"><%=comment.commentDateString%></p>
+                    </li>
+                  </div>
+                </div>
+              <% } %>
+          <% } %>
+        </ul>
+      <% } %>
+      <div class = "form-container">
+        <form method = "POST" action = "/api/comment">
+          <input 
+            type="hidden"
+            value="<%=event.eventID%>"
+            id="eventId"
+            name="eventId"
+          />
+            
+          <label for="commentText">Comment Text</label>
+            <input
+              id="commentText"
+              name="commentText"
+              placeholder="Comment (Up to 100 Characters)"
+              class="text"
+              type="text"
+              maxlength="100"
+              required
+            />
+          <button class = "btn">Send Comment</button>
+        </form>
+      </div>
+  </div>
 </body>
 </html>

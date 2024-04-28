@@ -80,7 +80,13 @@ export class User {
   @ManyToMany(() => Event, (event) => event.joinedUsers, { cascade: ['insert', 'update'] } )
   joinedEvents: Relation<Event>[];
 
+  @ManyToMany(() => Event, (event) => event.joinedUsers, { cascade: ['insert', 'update'] } )
+  invitedEvents: Relation<Event>[];
+
+  @ManyToMany(() => Event, (event) => event.joinedUsers, { cascade: ['insert', 'update'] } )
+  bannedEvents: Relation<Event>[];
+
   //Comments
   @OneToMany(() => Comment, (comment) => comment.commenter, { cascade: ['insert', 'update'] })
-  commenter: Relation<Comment>[];
+  comments: Relation<Comment>[];
 }

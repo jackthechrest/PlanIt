@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { getUserById } from '../models/UserModel';
 import { blockUserById, getFriendListById, getFriendStatus, removeFriend, replyFriendRequest, sendFriendRequest, unblockUserById } from '../models/FriendListModel';
-import { hasUnreadNotifications } from '../models/NotificationsModel';
+import { getNotification, hasUnreadNotifications } from '../models/NotificationsModel';
 
 async function friendRequestUser(req: Request, res: Response): Promise<void> {
   const { isLoggedIn, authenticatedUser } = req.session;
@@ -27,6 +27,11 @@ async function friendRequestUser(req: Request, res: Response): Promise<void> {
     return;
   }
 
+  if (friendStatus === "PENDING") {
+    res.redirect(`/users/${targetUserId}`);
+    return;
+  }
+
   await sendFriendRequest(authenticatedUser.userId, targetUserId);
 
   res.redirect(`/users/${targetUserId}`);
@@ -45,6 +50,21 @@ async function respondFriendRequest(req: Request, res: Response): Promise<void> 
 
   if (!targetUser || targetUserId === authenticatedUser.userId) {
     res.redirect(`/users/${authenticatedUser.userId}`); // target user doesn't exist or user is trying to friend themself
+    return;
+  }
+  // make sure they're the one who got the notification
+  const notification = await getNotification(authenticatedUser.userId, targetUserId, "FRIEND REQUEST SENT");
+
+  if (!notification) {
+    res.redirect(`/users/${authenticatedUser.userId}`); // other user didn't make request
+    return;
+  }
+
+  // see if user is blocked
+  const friendStatus = await getFriendStatus(authenticatedUser.userId, targetUserId);
+
+  if (friendStatus === "THEY BLOCKED" || friendStatus === "I BLOCKED") {
+    res.redirect(`/users/${authenticatedUser.userId}`); // can't friend user that has blocked them or they need to unblock them first
     return;
   }
 

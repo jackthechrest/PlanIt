@@ -154,20 +154,6 @@ async function renderSettings(req: Request, res: Response): Promise<void> {
   res.render('settings', { user, hasUnread, });
 }
 
-async function renderDelete(req: Request, res: Response): Promise<void> {
-  const { isLoggedIn, authenticatedUser } = req.session;
-
-  if (!isLoggedIn) {
-    res.redirect('/login'); // not logged in
-    return;
-  }
-
-  const user = await getUserById(authenticatedUser.userId);
-  const hasUnread = await hasUnreadNotifications(authenticatedUser.userId);
-
-  res.render('delete', { user, hasUnread });
-}
-
 async function renderEditPage(req: Request, res: Response): Promise<void> {
   const { isLoggedIn, authenticatedUser } = req.session;
 
@@ -223,11 +209,12 @@ async function renderCreateEvent(req: Request, res: Response): Promise<void> {
   }
 
   const user = await getUserById(authenticatedUser.userId);
+  const hasUnread = await hasUnreadNotifications(authenticatedUser.userId);
 
-  res.render('createEvent', { user });
+  res.render('createEvent', { user, hasUnread });
 }
 
 
 
 export { registerUser, logIn, signOut, getUserProfileData, deleteAccount, logoRedirect,
-         renderSettings, renderDelete, renderEditPage, editProfile, renderCalendar, renderCreateEvent, };
+         renderSettings, renderEditPage, editProfile, renderCalendar, renderCreateEvent, };

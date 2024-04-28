@@ -16,7 +16,7 @@
         <a href="/messages" class="menu-inbox"><img src="/imgs/inbox_icon.png" alt="Inbox (No Notifications)"></a>
       <% } %>
       <a href="/search" class="menu-search"><img src="/imgs/search_icon.png" alt="Search"></a>
-      <a href="/users/<%=user.userId%>/calendar" class="menu-calendar"><img src="/imgs/calendar_icon.png" alt="Calendar"></a>
+      <a href="/users/<%=viewingUser.userId%>/calendar" class="menu-calendar"><img src="/imgs/calendar_icon.png" alt="Calendar"></a>
     </div>
 
     <h1 id="navbarEnd"></h1>
@@ -31,24 +31,27 @@
 
     <% if (user.userId === viewingUser.userId) { %>
       <h1 class="big-text">Welcome to your profile page!</h1>
-    <% } else if (friendStatus !== "I BLOCKED" && friendStatus !== "THEY BLOCKED") { %>
-      <% if (following) { %>
-        <div class="center-btn">
-          <button class="btn-large"><a href = '/users/unfollow/<%= user.userId %>'>Unfollow</a></button>
-        </div>
-      <% } else { %>
-        <div class="center-btn">
-          <button class="btn-large"><a href = '/users/follow/<%= user.userId %>'>Follow</a></button>
-        </div>
-      <% } %>
-      <% if (friendStatus === "NOT FRIEND") { %>
-        <button class="btn-large"><a href = '/users/friend/<%= user.userId %>'>Send Friend Request</a></button>
-      <% } else if (friendStatus === "FRIEND") { %>
-        <button class="btn-large"><a href = '/api/unfriend/<%= user.userId %>'>Unfriend</a></button>
-      <% } %>
-      <button class="btn-large"><a href = '/users/block/<%=user.userId%>'>Block</a></button>
-    <% } else if (friendStatus !== "THEY BLOCKED") { %>
+    <% } else { %>
+      <button class="btn-large"><a href = '/report/PROFILE/<%= user.userId %>'>Report</a></button>
+      <% if (friendStatus !== "I BLOCKED" && friendStatus !== "THEY BLOCKED") { %>
+        <% if (following) { %>
+          <div class="center-btn">
+            <button class="btn-large"><a href = '/users/unfollow/<%= user.userId %>'>Unfollow</a></button>
+          </div>
+        <% } else { %>
+          <div class="center-btn">
+            <button class="btn-large"><a href = '/users/follow/<%= user.userId %>'>Follow</a></button>
+          </div>
+        <% } %>
+        <% if (friendStatus === "NOT FRIEND") { %>
+          <button class="btn-large"><a href = '/users/friend/<%= user.userId %>'>Send Friend Request</a></button>
+        <% } else if (friendStatus === "FRIEND") { %>
+          <button class="btn-large"><a href = '/api/unfriend/<%= user.userId %>'>Unfriend</a></button>
+        <% } %>
+        <button class="btn-large"><a href = '/users/block/<%=user.userId%>'>Block</a></button>
+      <% } else if (friendStatus !== "THEY BLOCKED") { %>
         <button class="btn-large"><a href = '/users/unblock/<%=user.userId%>'>Unblock</a></button>
+      <% } %>
     <% } %>
 
     <h1 class = "space"></h1>
@@ -76,6 +79,17 @@
             <p>- <a href="/guidelines">Rules/Guidelines</a></p>
         </li>
     </ul>
+
+    <% if (user.ownedEvents.length === 0) { %>
+      <p>No Events:</p>
+    <% } else { %>
+     <ul>
+      <p>Events:</p>
+       <% for (const event of user.ownedEvents) { %>
+        <p>- <a href="/events/<%= event.eventID %>"><%= event.eventName %></a></p>
+       <% } %>
+     </ul>
+    <% } %>
 
     <style>
       h1, p {

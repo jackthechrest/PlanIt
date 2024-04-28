@@ -42,15 +42,33 @@
             <% for (const report of pendingReports) { %>
                 <% if (report.offendingContentId.charAt(0) === "P") {  %>
                     <li>
-                        <p>[<%=report.dateString%>]  <a href="<%=report.link%>">Reported Profile</a></p>
+                        <% if (!report.beenRead) { %>
+                            <span class="notification"></span>
+                        <% } %>
+                        <p><a href="<%=report.link%>">Reported Profile</a></p>
+                        <p><%=report.dateString%></p>
+                        <button class="btn-small" id="green"><a href="/report/respond/<%=report.offendingContentId%>/VALID">Valid</a></button>
+                        <button class="btn-small" id="red"><a href="/report/respond/<%=report.offendingContentId%>/INVALID">Invalid</a></button>
                     </li>
                 <% } else if (report.offendingContentId.charAt(0) === "E") { %>
                     <li>
-                        <p>[<%=report.dateString%>]  <a href="<%=report.link%>">Reported Event</a></p>
+                        <% if (!report.beenRead) { %>
+                            <span class="notification"></span>
+                        <% } %>
+                        <p><a href="<%=report.link%>">Reported Event</a></p>
+                        <p><%=report.dateString%></p>
+                        <button class="btn-small" id="green"><a href="/report/respond/<%=report.offendingContentId%>/VALID">Valid</a></button>
+                        <button class="btn-small" id="red"><a href="/report/respond/<%=report.offendingContentId%>/INVALID">Invalid</a></button>
                     </li>
                 <% } else if (report.offendingContentId.charAt(0) === "C") { %>
                     <li>
-                        <p>[<%=report.dateString%>]  <a href="<%=report.link%>">Reported Comment</a></p>
+                        <% if (!report.beenRead) { %>
+                            <span class="notification"></span>
+                        <% } %>
+                        <p><a href="<%=report.link%>">Reported Comment</a></p>
+                        <p><%=report.dateString%></p>
+                        <button class="btn-small" id="green"><a href="/report/respond/<%=report.offendingContentId%>/VALID">Valid</a></button>
+                        <button class="btn-small" id="red"><a href="/report/respond/<%=report.offendingContentId%>/INVALID">Invalid</a></button>
                     </li>
                 <% } %>
             <% } %>

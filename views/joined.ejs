@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="/css/style.css" />
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= event.eventName %>'s Attendees | PlanIt</title>
+</head>
+<body>
+    <div class="navbar">
+        <a href="/logo" class="logo"><img src="/imgs/logo.png" alt="PlanIt Logo"></a>
+        <% if (hasUnread) { %>
+          <a href="/messages" class="menu-inbox"><img src="/imgs/inbox_notification_icon.png" alt="Inbox (Notifications)"></a>
+        <% } else { %>
+          <a href="/messages" class="menu-inbox"><img src="/imgs/inbox_icon.png" alt="Inbox (No Notifications)"></a>
+        <% } %>
+        <a href="/search" class="menu-search"><img src="/imgs/search_icon.png" alt="Search"></a>
+        <a href="/users/<%=viewingUser.userId%>/calendar" class="menu-calendar"><img src="/imgs/calendar_icon.png" alt="Calendar"></a>
+    </div>
+
+    <h1 id ="navbarEnd"></h1>
+    <div class="follow-content">
+      <h1><a href="/events/<%=event.eventID%>"><%= event.eventName %></a>'s Attendees:</h1>
+      <% if (event.joinedUsers.length === 0) { %>
+        <h2>No Followers</h2>
+      <% } else { %>
+        <ul>
+            <% for (const joinedUser of event.joinedUsers) { %>
+            <li>
+              <div class="grid-container">
+                <div class="profile-background <%=joinedUser.pictureOptions[0]%>">
+                  <div class="profile-head <%=joinedUser.pictureOptions[1]%>"></div>
+                  <div class="profile-body <%=joinedUser.pictureOptions[2]%>"></div>
+                </div>
+                <div>
+                  <p><a href="/users/<%= joinedUser.userId %>"><%=joinedUser.displayName%> <span class="username">@<%= joinedUser.username %></span></a></p>
+                </div>
+                <div>
+                  <% if (viewingUser.userId === owner.userId) { %>
+                    <button class="btn-small" id="red"><a href = '/events/<%=event.eventID%>/ban/<%=joinedUser.userId%>'>Ban</a></button>
+                  <% } %>
+                </div>
+              </div>
+            </li>
+            <% } %>
+        </ul>
+      <% } %>
+    </div>
+</body>
+</html>

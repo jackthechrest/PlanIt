@@ -5,16 +5,17 @@ import express, { Express } from 'express';
 
 import session from 'express-session';
 import connectSqlite3 from 'connect-sqlite3';
-import { registerEvent } from './controllers/EventController';
-import { registerUser, logIn, getUserProfileData, logoRedirect, deleteAccount, renderCalendar, renderCreateEvent, renderSettings, renderDelete, signOut, renderEditPage, editProfile } from './controllers/UserController';
+import { banUser, inviteToEvent, joinEvent, leaveEvent, registerEvent, renderBannedPage, renderEvent, renderInvitePage, renderInvitedPage, renderJoinedPage, unbanUser, uninviteFromEvent } from './controllers/EventController';
+import { registerUser, logIn, getUserProfileData, logoRedirect, deleteAccount, renderCalendar, renderCreateEvent, renderSettings, signOut, renderEditPage, editProfile } from './controllers/UserController';
 import { followUser, removeFollower, renderFollowersPage, renderFollowingPage, unfollowUser } from './controllers/FollowController';
 import { renderSearch } from './controllers/SearchController';
 import { sendVerification, verifyEmail } from './controllers/VerifyCodeController';
 import { blockUser, friendRequestUser, renderBlockedPage, renderFriendsPage, respondFriendRequest, unblockUser, unfriendUser } from './controllers/FriendListController';
 import { renderNotifications } from './controllers/NotifcationsController';
-import { renderReports } from './controllers/ReportController';
+import { renderReports, respondReport, sendReport } from './controllers/ReportController';
 import { renderAllMessageThreads, renderSingleMessageThread } from './controllers/MessageThreadController';
 import { renderCreateMessageThread, sendMessage } from './controllers/MessageController';
+import { postNewComment, renderComment } from './controllers/CommentController';
 
 const app: Express = express();
 const { PORT, COOKIE_SECRET } = process.env;
@@ -47,7 +48,6 @@ app.post('/api/delete', deleteAccount);
 
 app.get('/logo', logoRedirect);
 app.get('/settings', renderSettings);
-app.get('/delete', renderDelete);
 app.get('/edit', renderEditPage);
 app.post('/api/edit', editProfile);
 app.get('/users/:targetUserId/calendar', renderCalendar);
@@ -75,9 +75,29 @@ app.get('/messages/:messageThreadId', renderSingleMessageThread);
 app.get('/send', renderCreateMessageThread); 
 app.post('/api/send', sendMessage); // Post request to send a message
 
+// Reports
+app.get('/report/:reportType/:contentId', sendReport)
+app.get('/report/respond/:contentId/:action', respondReport)
+
 // Events
 app.post('/api/event', registerEvent);
 app.get('/users/:targetUserId/createEvent', renderCreateEvent);
+app.get('/events/:eventID', renderEvent);
+//app.post('/api/editEvent', editEvent);
+//app.get('/events/:eventID/edit', renderEventEditPage);
+app.get('/events/:eventID/join', joinEvent);
+app.get('/events/:eventID/leave', leaveEvent);
+app.get('/events/:eventID/joined', renderJoinedPage);
+app.get('/events/:eventID/invite', renderInvitePage);
+app.post('/api/invite', inviteToEvent);
+app.get('/events/:eventID/uninvite/:targetUserId', uninviteFromEvent);
+app.get('/events/:eventID/invited', renderInvitedPage);
+//app.get('/events/:eventID/cancel', cancelEvent);
+app.get('/events/:eventID/ban/:targetUserId', banUser);
+app.get('/events/:eventID/unban/:targetUserId', unbanUser);
+app.get('/events/:eventID/banned', renderBannedPage);
+app.post('/api/comment', postNewComment);
+app.get('/events/:eventID/comments/:commentId', renderComment);
 
 // Search
 

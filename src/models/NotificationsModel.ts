@@ -36,7 +36,7 @@ async function getAllOtherNotificationsForUserId(userId: string): Promise<Notifi
   return notifications;
 }
 
-async function createNewNotification(receivingUserId: string, sendingUserId: string, type: NotificationType, link: null | string): Promise<Notifications | null> {
+async function createNewNotification(receivingUserId: string, sendingUserId: string, type: NotificationType, link: void | string): Promise<Notifications | null> {
   // delete any previous duplicate notifications
   await notificationsRepository
     .createQueryBuilder('notifications')
@@ -54,7 +54,7 @@ async function createNewNotification(receivingUserId: string, sendingUserId: str
   let newNotification = new Notifications();
   newNotification.type = type;
   newNotification.dateSent = new Date();
-  newNotification.dateString = newNotification.dateSent.toLocaleString('en-us', {month:'short', day:'numeric', year:'numeric', hour12:true, hour:'numeric', minute:'2-digit'});
+  newNotification.dateString = newNotification.dateSent.toLocaleString('en-us', {month:'short', day:'numeric', year:'numeric', hour12:true, hour:'numeric', minute:'2-digit', timeZone: 'America/Chicago'});
   newNotification.secondsSinceEnoch = newNotification.dateSent.getTime() / 1000;
   newNotification.receivingUser = receiver;
   newNotification.receivingUserId = receiver.userId;
@@ -73,6 +73,10 @@ async function createNewNotification(receivingUserId: string, sendingUserId: str
   newNotification = await notificationsRepository.save(newNotification);
 
   return newNotification;
+}
+
+async function getNotification(receivingUserId: string, sendingUserId: string, type: NotificationType): Promise<Notifications | null> {
+  return await notificationsRepository.findOne({where: {receivingUserId, sendingUserId, type, respondedTo : false}})
 }
 
 async function setResponded(receivingUserId: string, sendingUserId: string): Promise<void> {
@@ -134,4 +138,4 @@ async function updateNotifications(userId: string, displayName: string, profileB
   }
 }
 
-export { getAllOtherNotificationsForUserId, createNewNotification, setResponded, hasUnreadNotifications, updateNotifications };
+export { getAllOtherNotificationsForUserId, createNewNotification, getNotification, setResponded, hasUnreadNotifications, updateNotifications };

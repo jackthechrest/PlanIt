@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="/css/style.css" />
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= event.eventName %>'s Invited Users | PlanIt</title>
+</head>
+<body>
+    <div class="navbar">
+        <a href="/logo" class="logo"><img src="/imgs/logo.png" alt="PlanIt Logo"></a>
+        <% if (hasUnread) { %>
+          <a href="/messages" class="menu-inbox"><img src="/imgs/inbox_notification_icon.png" alt="Inbox (Notifications)"></a>
+        <% } else { %>
+          <a href="/messages" class="menu-inbox"><img src="/imgs/inbox_icon.png" alt="Inbox (No Notifications)"></a>
+        <% } %>
+        <a href="/search" class="menu-search"><img src="/imgs/search_icon.png" alt="Search"></a>
+        <a href="/users/<%=user.userId%>/calendar" class="menu-calendar"><img src="/imgs/calendar_icon.png" alt="Calendar"></a>
+    </div>
+
+    <h1 id ="navbarEnd"></h1>
+    <div class="follow-content">
+      <h1><a href="/events/<%=event.eventID%>"><%= event.eventName %></a>'s Invited Users:</h1>
+      <% if (event.invitedUsers.length === 0) { %>
+        <h2>No Users Invited</h2>
+      <% } else { %>
+        <ul>
+            <% for (const invitedUser of event.invitedUsers) { %>
+            <li>
+              <div class="grid-container">
+                <div class="profile-background <%=invitedUser.pictureOptions[0]%>">
+                  <div class="profile-head <%=invitedUser.pictureOptions[1]%>"></div>
+                  <div class="profile-body <%=invitedUser.pictureOptions[2]%>"></div>
+                </div>
+                <div>
+                  <p><a href="/users/<%= invitedUser.userId %>"><%=invitedUser.displayName%> <span class="username">@<%=invitedUser.username%></span></a></p>
+                </div>
+                <div>
+                  <button class="btn-small" id="red"><a href = '/events/<%=event.eventID%>/uninvite/<%=invitedUser.userId%>'>Uninvite</a></button>
+                </div>
+              </div>
+            </li>
+            <% } %>
+        </ul>
+      <% } %>
+    </div>
+</body>
+</html>
