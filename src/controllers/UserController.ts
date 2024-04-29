@@ -200,21 +200,23 @@ async function renderCalendar(req: Request, res: Response): Promise<void> {
   res.render('calendar', { user });
 }
 
-async function renderCreateEvent(req: Request, res: Response): Promise<void> {
-  const { isLoggedIn, authenticatedUser } = req.session;
 
+async function renderDay(req: Request, res: Response): Promise<void> {
+  const { isLoggedIn, authenticatedUser } = req.session;
+  const { targetYear, targetMonth, targetDay } = req.params;
   if (!isLoggedIn) {
     res.redirect('/login'); // not logged in
     return;
   }
+  const year = Number(targetYear);
+  const month = Number(targetMonth);
+  const day = Number(targetDay);
+  const date = new Date(year, month, day);
 
   const user = await getUserById(authenticatedUser.userId);
-  const hasUnread = await hasUnreadNotifications(authenticatedUser.userId);
 
-  res.render('createEvent', { user, hasUnread });
+  res.render('day', { user, date });
 }
 
-
-
 export { registerUser, logIn, signOut, getUserProfileData, deleteAccount, logoRedirect,
-         renderSettings, renderEditPage, editProfile, renderCalendar, renderCreateEvent, };
+         renderSettings, renderEditPage, editProfile, renderCalendar, renderDay };

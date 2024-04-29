@@ -114,6 +114,8 @@ body {
 }
 
 .form-container.event {
+  margin-right: auto;
+  margin-left: auto;
   padding-bottom: 50px;
   padding-left: 50px; 
   padding-right: 50px;
@@ -686,6 +688,144 @@ li.received-message h3 {
 
 .event-host-profile .profile-background {
   border-radius: 50%;
+}
+
+
+.owned-events-wrapper {
+  max-height: 300px; /* Set a fixed height for the wrapper */
+  border: 1px solid white;
+  overflow-y: auto; /* Enable vertical scrolling */
+  position: absolute;
+  top: 150px; /* Adjust the top position as needed */
+  left: 50%; /* Adjust the left position as needed */
+  transform: translateX(-50%);
+  width: 800px; /* Adjust the width as needed */
+  padding: 20px; /* Adjust the padding as needed */
+}
+
+
+.owned-events-box {
+  padding: 10px;
+  font-size: 18px;
+}
+
+.owned-events-box ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.owned-events-box li {
+  margin-bottom: 10px;
+}
+
+.event {
+  margin-left: 30px; /* Tab events to the right */
+  margin-bottom: 10px; /* Add space between events */
+  color: black;
+}
+
+.joined-events-wrapper {
+  max-height: 300px; 
+  overflow-y: auto; 
+  border: 1px solid white;
+  position: absolute;
+    top: 500px; 
+    left: 50%; 
+    transform: translateX(-50%);
+    width: 800px; 
+    padding: 20px; 
+}
+
+.joined-events-box {
+  padding: 10px;
+  font-size: 18px;
+}
+
+.joined-events-box ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.joined-events-box li {
+  margin-bottom: 10px;
+}
+
+.h5{
+  top: 50%;
+  left: 50%;
+}
+
+.about {
+  max-height: 300px; /* Set a fixed height for the wrapper */
+  position: absolute;
+  bottom: 10px; /* Adjust the top position as needed */
+  right: 0%; /* Adjust the left position as needed */
+  transform: translateX(-50%);
+  width: 160px; /* Adjust the width as needed */
+  padding: 20px; /* Adjust the padding as needed */
+}
+
+.popularity{
+  max-height: 200px; /* Set a fixed height for the wrapper */
+  position: absolute;
+  top: 19%; /* Adjust the top position as needed */
+  right: 0%; /* Adjust the left position as needed */
+  transform: translateX(-50%);
+  width: 180px; /* Adjust the width as needed */
+}
+
+.viewer{
+  max-height: 200px; /* Set a fixed height for the wrapper */
+  font-size: 20px;
+  text-align: center;
+  border: 1px solid black;
+  position: absolute;
+  top: 40%; /* Adjust the top position as needed */
+  right: 0%; /* Adjust the left position as needed */
+  transform: translateX(-50%);
+  min-width: 180px;
+  max-width: fit-content; /* Adjust the width as needed */
+  padding: 10px;
+  background-image: linear-gradient(to right, #8c52ff 0%, #00bf63  60%);
+  line-height: 25px;
+  text-decoration: underline;
+}
+
+.userInfo{
+  max-height: 200px; /* Set a fixed height for the wrapper */
+  font-size: 14px;
+  text-align: center;
+  border: 1px solid black;
+  position: absolute;
+  top: 360px; /* Adjust the top position as needed */
+  left:9%; /* Adjust the left position as needed */
+  transform: translateX(-50%);
+  width: 250px; /* Adjust the width as needed */
+  min-width: fit-content;
+  padding: 10px;
+  background-image: linear-gradient(to right, #8c52ff 0%, #00bf63  60%);
+}
+
+.bio{
+  max-height: 200px; /* Set a fixed height for the wrapper */
+  font-size: 20px;
+  text-align: center;
+  border: 1px solid black;
+  position: absolute;
+  top: 440px; /* Adjust the top position as needed */
+  left:9%; /* Adjust the left position as needed */
+  transform: translateX(-50%);
+  width: 250px; /* Adjust the width as needed */
+  padding: 10px;
+  background-image: linear-gradient(to right, #8c52ff 0%, #00bf63  60%);
+}
+
+.tab{
+  padding-left: 20px;
+  font-size: 22px;
+  min-width: fit-content;
 }
 
 .profile-background {

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { getUserById, getUserByUsername } from '../models/UserModel';
-import { addNewEvent, addUserToEvent, banUserFromEvent, getEventById, getEventStatusForUser, inviteUserToEvent, removeUserFromEvent, unbanUserFromEvent, uninviteUserFromEvent } from '../models/EventModel';
+import { addNewEvent, addUserToEvent, banUserFromEvent, deleteEventById, getEventById, getEventStatusForUser, inviteUserToEvent, removeUserFromEvent, unbanUserFromEvent, uninviteUserFromEvent, updateEvent } from '../models/EventModel';
 import { parseDatabaseError } from '../utils/db-utils';
 import { getFriendListById, getFriendStatus } from '../models/FriendListModel';
 import { createNewNotification, hasUnreadNotifications } from '../models/NotificationsModel';
@@ -25,13 +25,13 @@ async function renderEvent(req: Request, res: Response): Promise<void> {
   const friendStatus = await getFriendStatus(authenticatedUser.userId, event.owner.userId);
   const eventStatus = await getEventStatusForUser(eventID, authenticatedUser.userId);
   
-  if (!authenticatedUser.isAdmin) {
-    if (event.visibilityLevel === "Friends Only" && friendStatus !== "FRIEND") {
+  if (!authenticatedUser.isAdmin && eventStatus !== "OWNER") {
+    if (event.visibilityLevel === "Friends Only" && friendStatus !== "FRIEND" && eventStatus !== "JOINED") {
       res.redirect(`/users/${authenticatedUser.userId}`);
       return;
     }
 
-    if (event.visibilityLevel === "Invite Only" && eventStatus !== "INVITED") {
+    if (event.visibilityLevel === "Invite Only" && eventStatus !== "INVITED" && eventStatus !== "JOINED") {
       res.redirect(`/users/${authenticatedUser.userId}`);
       return;
     }
@@ -74,15 +74,52 @@ async function registerEvent(req: Request, res: Response): Promise<void> {
     stopDay,
     stopHour,
     stopMinute,
+    description,
+    location,
+    visibilityLevel,
   } = req.body as EventRequest;
+
+  if (
+    stopYear < startYear ||
+    (stopYear === startYear && stopMonth < startMonth) ||
+    (stopYear === startYear && stopMonth === startMonth && stopDay < startDay) ||
+    (stopYear === startYear &&
+      stopMonth === startMonth &&
+      stopDay === startDay &&
+      stopHour < startHour) ||
+    (stopYear === startYear &&
+      stopMonth === startMonth &&
+      stopDay === startDay &&
+      stopHour === startHour &&
+      stopMinute < startMinute)
+  ) {
+    res.redirect(`/users/${authenticatedUser.userId}/createEvent`);
+    return;
+  }
+
+  if (visibilityLevel !== "Friends Only" && visibilityLevel !== "Public" && visibilityLevel !== "Invite Only") {
+    res.redirect(`/users/${authenticatedUser.userId}/createEvent`);
+    return;
+  }
+
   const startDate = new Date(startYear, startMonth - 1, startDay, startHour, startMinute);
   const stopDate = new Date(stopYear, stopMonth - 1, stopDay, stopHour, stopMinute);
 
   try {
-    const newEvent = await addNewEvent(eventName, startDate, stopDate, authenticatedUser.userId);
-    const friendList = await getFriendListById(`FL<+>${authenticatedUser.userId}`);
-    for (const friend of friendList.friends) {
-      await createNewNotification(friend.userId, authenticatedUser.userId, "EVENT CREATED", `/events/${newEvent.eventID}`);
+    const newEvent = await addNewEvent(
+      eventName,
+      startDate,
+      stopDate,
+      description,
+      location,
+      visibilityLevel,
+      authenticatedUser.userId
+    );
+    if (visibilityLevel !== "Invite Only") {
+      const friendList = await getFriendListById(`FL<+>${authenticatedUser.userId}`);
+      for (const friend of friendList.friends) {
+        await createNewNotification(friend.userId, authenticatedUser.userId, "EVENT CREATED", `/events/${newEvent.eventID}`);
+      }
     }
     res.redirect(`/users/${authenticatedUser.userId}}/calendar`);
   } catch (err) {
@@ -90,6 +127,20 @@ async function registerEvent(req: Request, res: Response): Promise<void> {
     const databaseErrorMessage = parseDatabaseError(err);
     res.status(500).json(databaseErrorMessage);
   }
+}
+
+async function renderCreateEvent(req: Request, res: Response): Promise<void> {
+  const { isLoggedIn, authenticatedUser } = req.session;
+
+  if (!isLoggedIn) {
+    res.redirect('/login'); // not logged in
+    return;
+  }
+
+  const user = await getUserById(authenticatedUser.userId);
+  const hasUnread = await hasUnreadNotifications(authenticatedUser.userId);
+
+  res.render('createEvent', { user, hasUnread });
 }
 
 async function joinEvent(req: Request, res: Response): Promise<void> {
@@ -174,19 +225,21 @@ async function renderJoinedPage(req: Request, res: Response): Promise<void> {
   const eventStatus = await getEventStatusForUser(eventID, authenticatedUser.userId);
   const friendStatus = await getFriendStatus(authenticatedUser.userId, event.owner.userId);
 
-  if (event.visibilityLevel === "Friends Only" && friendStatus !== "FRIEND") {
-    res.redirect(`/users/${authenticatedUser.userId}`);
-    return;
-  }
+  if (!authenticatedUser.isAdmin && eventStatus !== "OWNER") {
+    if (event.visibilityLevel === "Friends Only" && friendStatus !== "FRIEND" && eventStatus !== "JOINED") {
+      res.redirect(`/users/${authenticatedUser.userId}`);
+      return;
+    }
 
-  if (event.visibilityLevel === "Invite Only" && eventStatus !== "INVITED") {
-    res.redirect(`/users/${authenticatedUser.userId}`);
-    return;
-  }
+    if (event.visibilityLevel === "Invite Only" && eventStatus !== "INVITED" && eventStatus !== "JOINED") {
+      res.redirect(`/users/${authenticatedUser.userId}`);
+      return;
+    }
 
-  if (friendStatus === "I BLOCKED" || friendStatus === "THEY BLOCKED" || eventStatus === "BANNED") {
-    res.redirect(`/users/${authenticatedUser.userId}`);
-    return;
+    if (friendStatus === "I BLOCKED" || friendStatus === "THEY BLOCKED" || eventStatus === "BANNED") {
+      res.redirect(`/users/${authenticatedUser.userId}`);
+      return;
+    }
   }
 
   const viewingUser = await getUserById(authenticatedUser.userId);
@@ -425,6 +478,148 @@ async function renderBannedPage(req: Request, res: Response): Promise<void> {
   res.render('banned', {event, user, hasUnread});
 }
 
-export { registerEvent, renderEvent, joinEvent, leaveEvent, renderJoinedPage, 
-        renderInvitePage, inviteToEvent, renderInvitedPage, uninviteFromEvent, banUser, unbanUser, renderBannedPage };
+async function renderEditEventPage(req: Request, res: Response): Promise<void> {
+  const { isLoggedIn, authenticatedUser } = req.session;
+  const { eventID } = req.params;
+
+  if (!isLoggedIn) {
+    res.redirect('/login'); // not logged in
+    return;
+  }
+
+  const event = await getEventById(eventID);
+
+  if (!event) {
+    res.redirect(`/users/${authenticatedUser.userId}`); // event does not exist
+    return;
+  }  
+
+  const eventStatus = await getEventStatusForUser(eventID, authenticatedUser.userId);
+
+  if (eventStatus !== "OWNER") {
+    res.redirect(`/events/${eventID}`);
+    return;
+  }
+
+  const user = await getUserById(authenticatedUser.userId);
+  const hasUnread = await hasUnreadNotifications(authenticatedUser.userId);
+
+  res.render('editEvent', {event, user, hasUnread});
+}
+
+async function editEvent(req: Request, res: Response): Promise<void> {
+  const { isLoggedIn, authenticatedUser } = req.session;
+  let {
+    eventID,
+    eventName,
+    startYear,
+    startMonth,
+    startDay,
+    startHour,
+    startMinute,
+    stopYear,
+    stopMonth,
+    stopDay,
+    stopHour,
+    stopMinute,
+    description,
+    location,
+    visibilityLevel,
+  } = req.body as EventRequest;
+
+  if (!isLoggedIn) {
+    res.redirect('/login'); // not logged in
+    return;
+  }
+
+  const event = await getEventById(eventID);
+
+  if (!event) {
+    res.redirect(`/users/${authenticatedUser.userId}`); // event does not exist
+    return;
+  }  
+
+  const eventStatus = await getEventStatusForUser(eventID, authenticatedUser.userId);
+
+  if (eventStatus !== "OWNER") {
+    res.redirect(`/events/${eventID}`);
+    return;
+  }
+
+  if (!startYear) {
+    startYear = event.startDate.getFullYear();
+  }
+  if (!startMonth) {
+    startMonth = event.startDate.getMonth() + 1;
+  }
+  if (!startDay) {
+    startDay = event.startDate.getDate();
+  }
+  if (!startHour) {
+    startHour = event.startDate.getHours();
+  }
+  if (!startMinute) {
+    startMinute = event.startDate.getMinutes();
+  }
+
+  if (!stopYear) {
+    stopYear = event.stopDate.getFullYear();
+  }
+  if (!stopMonth) {
+    stopMonth = event.stopDate.getMonth() + 1;
+  }
+  if (!stopDay) {
+    stopDay = event.stopDate.getDate();
+  }
+  if (!stopHour) {
+    stopHour = event.stopDate.getHours();
+  }
+  if (!stopMinute) {
+    stopMinute = event.stopDate.getMinutes();
+  }
+
+  const startDate = new Date(startYear, startMonth - 1, startDay, startHour, startMinute);
+  const stopDate = new Date(stopYear, stopMonth - 1, stopDay, stopHour, stopMinute);
+
+  await updateEvent(eventID, eventName, startDate, stopDate, description, location, visibilityLevel)
+  for (const joinedUser of event.joinedUsers) {
+    await createNewNotification(joinedUser.userId, event.owner.userId, "EVENT EDITED", `/events/${eventID}`);
+  }
+  res.redirect(`/events/${eventID}`);
+}
+
+async function cancelEvent(req: Request, res: Response): Promise<void> {
+  const { isLoggedIn, authenticatedUser } = req.session;
+  const { eventID } = req.params;
+
+  if (!isLoggedIn) {
+    res.redirect('/login'); // not logged in
+    return;
+  }
+
+  const event = await getEventById(eventID);
+
+  if (!event) {
+    res.redirect(`/users/${authenticatedUser.userId}`); // event does not exist
+    return;
+  }  
+
+  const eventStatus = await getEventStatusForUser(eventID, authenticatedUser.userId);
+
+  if (eventStatus !== "OWNER") {
+    res.redirect(`/events/${eventID}`);
+    return;
+  }
+
+  for (const joinedUser of event.joinedUsers) {
+    await createNewNotification(joinedUser.userId, event.owner.userId, "EVENT CANCELLED");
+  }
+  await deleteEventById(eventID);
+
+  res.redirect(`/users/${authenticatedUser.userId}/calendar`)
+}
+
+export { registerEvent, renderEvent, renderCreateEvent, joinEvent, leaveEvent, renderJoinedPage, 
+        renderInvitePage, inviteToEvent, renderInvitedPage, uninviteFromEvent, 
+        banUser, unbanUser, renderBannedPage, renderEditEventPage, editEvent, cancelEvent };
 

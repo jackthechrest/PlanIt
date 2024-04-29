@@ -21,7 +21,11 @@
   </div>
     
     <h1 id = "navbarEnd"></h1>
-    <div class="form-container">
+    <% if (viewingUser.userId === comment.commenter.userId) { %>
+      <div class="form-container" style="color: white; background-color: blue;">
+    <% }  else { %>
+      <div class="form-container" style="background-color: white;">
+    <% } %>
         <h1>Comment on <a href="/events/<%=comment.commentUnder.eventID%>"><%=comment.commentUnder.eventName%></a></h1>
         <h1 class="padding-bottom"></h1>
         <div class="event-host-profile">
@@ -35,7 +39,9 @@
         <h3 style="font-size: 20px;"><%=comment.commentText%></h3>
         <h1 class="padding-bottom"></h1>
         <h3 style="font-size: 20px;">Posted: <%=comment.commentDateString%></h3>
-        <button class="btn-small" id="red"><a href="/report/COMMENT/<%=comment.commentId%>">Report</a></button>
+        <% if (viewingUser.userId !== comment.commenter.userId) { %>
+          <button class="btn-small" id="red"><a href="/report/COMMENT/<%=comment.commentId%>">Report</a></button>
+        <% } %>
     </div>
 </body>
 </html>

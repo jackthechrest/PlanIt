@@ -21,79 +21,109 @@
 
     <h1 id="navbarEnd"></h1>
     
-    <div class="profile-background <%=user.pictureOptions[0]%>">
+    <div class="profile-background <%=user.pictureOptions[0]%>" style="margin-left: 55px;">
         <div class="profile-head <%=user.pictureOptions[1]%>"></div>
         <div class="profile-body <%=user.pictureOptions[2]%>"></div>
     </div>
-    <h1><%= user.username %>'s Profile Page</h1>
-
+    <div class="userInfo">
+      <%if(user.displayName != ""){%>
+      <h4 style="font-size: 24px;"><%= user.displayName %></h4>
+      <%}%>
+      <h4 class="username" style="font-size: 24px;">@<%= user.username %></h4>
+    </div>
     <h1 class = "space"></h1>
 
-    <% if (user.userId === viewingUser.userId) { %>
-      <h1 class="big-text">Welcome to your profile page!</h1>
-    <% } else { %>
-      <button class="btn-large"><a href = '/report/PROFILE/<%= user.userId %>'>Report</a></button>
-      <% if (friendStatus !== "I BLOCKED" && friendStatus !== "THEY BLOCKED") { %>
-        <% if (following) { %>
-          <div class="center-btn">
-            <button class="btn-large"><a href = '/users/unfollow/<%= user.userId %>'>Unfollow</a></button>
-          </div>
+    <% if (!(user.userId === viewingUser.userId)) { %>
+      <div class="viewer">
+        <h4><a href = '/report/PROFILE/<%= user.userId %>'>Report</a></h4>
+        <% if (friendStatus !== "I BLOCKED" && friendStatus !== "THEY BLOCKED") { %>
+          <% if (following) { %>
+            <h4><a href = '/users/unfollow/<%= user.userId %>'>Unfollow</a></h4>
+          <% } else { %>
+            <h4><a href = '/users/follow/<%= user.userId %>'>Follow</a></h4>
+          <% } %>
+          <% if (friendStatus === "NOT FRIEND") { %>
+            <h4><a href = '/users/friend/<%= user.userId %>'>Send Friend Request</a></h4>
+          <% } else if (friendStatus === "FRIEND") { %>
+            <h4><a href = '/api/unfriend/<%= user.userId %>'>Unfriend</a></h4>
+          <% } %>
+          <h4><a href = '/users/block/<%=user.userId%>'>Block</a></h4>
+        <% } else if (friendStatus !== "THEY BLOCKED") { %>
+          <h4><a href = '/users/unblock/<%=user.userId%>'>Unblock</a></h4>
+        <% } %>
+      </div>
+    <% } %>
+    <%if (user.biography !== ""){%>
+    <div class ="bio">
+      <h4>Bio: <%=user.biography%></h4>
+    </div>
+    <%}%>
+    <h1 class = "space"></h1>
+    <div class = "popularity">
+        <button class="btn"><a href = '/users/<%= user.userId %>/following'>Following: <%= user.following.length %> Users</a></button>
+        <p> h</p>
+        <button class="btn"><a href = '/users/<%= user.userId %>/followers'>Followers: <%= user.followers.length %> Users</a></button>
+        <p>h </p>
+        <button class="btn"><a href = '/users/<%= user.userId %>/friends'>Friends: <%= user.otherFriendLists.length %> Users</a></button>
+      
+    </div>
+
+    <h1 class = "space"></h1>
+    <div class="about">
+      <div class="tab">
+          <p><a href ="/settings" style="text-decoration: underline;">Account Settings</a></p>
+          <p><a href="/about" style="text-decoration: underline;">About PlanIt</a></p>
+          <p><a href="/guidelines" style="text-decoration: underline;">Rules/Guidelines</a></p>
+        </div>
+    </div>
+    <div class="owned-events-wrapper">
+      <div class="owned-events-box">
+          <h4 style="font-weight: bold;">Owned Events</h4>
+          <h6>----------------------</h6>
+          <% if (!user.ownedEvents || user.ownedEvents.length === 0) { %>
+              <h6>No Events</h6>
+          <% } else { %>
+              <ul>
+                  <% const sortedEvents = user.ownedEvents.sort((a, b) => a.startDate.getTime() - b.startDate.getTime()); %>
+                  <%for (const event of sortedEvents) { %>
+                    <div class="event">
+                        <a href="/events/<%= event.eventID %>">- <%= event.eventName %> : <%= event.visibilityLevel%> Event</a>
+                    </div>
+                  <% } %>
+              </ul>
+          <% } %>
+      </div>
+  </div>
+
+  <div class="joined-events-wrapper">
+    <div class="joined-events-box">
+        <h4 style="font-weight: bold;">Joined Events</h4>
+        <h6>----------------------</h6>
+        <% if (!user.joinedEvents || user.joinedEvents.length === 0) { %>
+            <h6>No Events</h6>
         <% } else { %>
-          <div class="center-btn">
-            <button class="btn-large"><a href = '/users/follow/<%= user.userId %>'>Follow</a></button>
-          </div>
+            <ul>
+              <% const sortedEvents = user.joinedEvents.sort((a, b) => a.startDate.getTime() - b.startDate.getTime()); %>
+              <%for (const event of sortedEvents) { %>
+                <div class="event">
+                    <a href="/events/<%= event.eventID %>">- <%= event.eventName %> : <%= event.visibilityLevel%> Event</a>
+                </div>
+              <% } %>
+            </ul>
         <% } %>
-        <% if (friendStatus === "NOT FRIEND") { %>
-          <button class="btn-large"><a href = '/users/friend/<%= user.userId %>'>Send Friend Request</a></button>
-        <% } else if (friendStatus === "FRIEND") { %>
-          <button class="btn-large"><a href = '/api/unfriend/<%= user.userId %>'>Unfriend</a></button>
-        <% } %>
-        <button class="btn-large"><a href = '/users/block/<%=user.userId%>'>Block</a></button>
-      <% } else if (friendStatus !== "THEY BLOCKED") { %>
-        <button class="btn-large"><a href = '/users/unblock/<%=user.userId%>'>Unblock</a></button>
-      <% } %>
-    <% } %>
-
-    <h1 class = "space"></h1>
-    <div class="center-btn">
-      <button class="btn-large"><a href = '/users/<%= user.userId %>/following'>Following: <%= user.following.length %> Users</a></button>
     </div>
-    <div class="center-btn">
-      <button class="btn-large"><a href = '/users/<%= user.userId %>/followers'>Followers: <%= user.followers.length %> Users</a></button>
-    </div>
-    <div class="center-btn">
-      <button class="btn-large"><a href = '/users/<%= user.userId %>/friends'>Friends: <%= user.otherFriendLists.length %> Users</a></button>
-    </div>
-
-    <h1 class = "space"></h1>
-
-    <h1>PROFILE MENU</h1>
-    <ul>
-        <li>
-          <p>- <a href ="/settings">Account Settings</a></p>
-        </li>
-        <li>
-            <p>- <a href="/about">About PlanIt</a></p>
-        </li>
-        <li>
-            <p>- <a href="/guidelines">Rules/Guidelines</a></p>
-        </li>
-    </ul>
-
-    <% if (user.ownedEvents.length === 0) { %>
-      <p>No Events:</p>
-    <% } else { %>
-     <ul>
-      <p>Events:</p>
-       <% for (const event of user.ownedEvents) { %>
-        <p>- <a href="/events/<%= event.eventID %>"><%= event.eventName %></a></p>
-       <% } %>
-     </ul>
-    <% } %>
+</div>
 
     <style>
-      h1, p {
+      h1, li, p{
         color: white;
+      }
+      h4{
+        color:black;
+        font-size: 20px;
+      }
+      .owned-events-wrapper, .joined-events-wrapper{
+        background-color: rgb(202, 202, 202);
       }
     </style>
   </body>

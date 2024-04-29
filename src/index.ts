@@ -5,8 +5,13 @@ import express, { Express } from 'express';
 
 import session from 'express-session';
 import connectSqlite3 from 'connect-sqlite3';
+<<<<<<< HEAD
 import { banUser, inviteToEvent, joinEvent, leaveEvent, registerEvent, renderBannedPage, renderEvent, renderInvitePage, renderInvitedPage, renderJoinedPage, unbanUser, uninviteFromEvent } from './controllers/EventController';
 import { registerUser, logIn, getUserProfileData, logoRedirect, deleteAccount, renderCalendar, renderCreateEvent, renderSettings, signOut, renderEditPage, editProfile } from './controllers/UserController';
+=======
+import { banUser, cancelEvent, editEvent, inviteToEvent, joinEvent, leaveEvent, registerEvent, renderBannedPage, renderCreateEvent, renderEditEventPage, renderEvent, renderInvitePage, renderInvitedPage, renderJoinedPage, unbanUser, uninviteFromEvent } from './controllers/EventController';
+import { registerUser, logIn, getUserProfileData, logoRedirect, deleteAccount, renderCalendar, renderSearch, renderSettings, signOut, renderEditPage, editProfile, renderDay } from './controllers/UserController';
+>>>>>>> e21de81c18e118c0d71f95031090f5d0cf128968
 import { followUser, removeFollower, renderFollowersPage, renderFollowingPage, unfollowUser } from './controllers/FollowController';
 import { renderSearch, search, searchResults } from './controllers/SearchController';
 import { sendVerification, verifyEmail } from './controllers/VerifyCodeController';
@@ -83,8 +88,9 @@ app.get('/report/respond/:contentId/:action', respondReport)
 app.post('/api/event', registerEvent);
 app.get('/users/:targetUserId/createEvent', renderCreateEvent);
 app.get('/events/:eventID', renderEvent);
-//app.post('/api/editEvent', editEvent);
-//app.get('/events/:eventID/edit', renderEventEditPage);
+app.get('/users/:targetUserId/:targetYear/:targetMonth/:targetDay', renderDay);
+app.post('/api/editEvent', editEvent);
+app.get('/events/:eventID/edit', renderEditEventPage);
 app.get('/events/:eventID/join', joinEvent);
 app.get('/events/:eventID/leave', leaveEvent);
 app.get('/events/:eventID/joined', renderJoinedPage);
@@ -92,7 +98,7 @@ app.get('/events/:eventID/invite', renderInvitePage);
 app.post('/api/invite', inviteToEvent);
 app.get('/events/:eventID/uninvite/:targetUserId', uninviteFromEvent);
 app.get('/events/:eventID/invited', renderInvitedPage);
-//app.get('/events/:eventID/cancel', cancelEvent);
+app.get('/events/:eventID/cancel', cancelEvent);
 app.get('/events/:eventID/ban/:targetUserId', banUser);
 app.get('/events/:eventID/unban/:targetUserId', unbanUser);
 app.get('/events/:eventID/banned', renderBannedPage);

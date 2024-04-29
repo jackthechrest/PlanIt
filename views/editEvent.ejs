@@ -1,157 +1,240 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="/css/style.css" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Profile | PlanIt </title>
+    <title>Edit Event <%= event.eventName %> | PlanIt </title>
+    <link rel="stylesheet" href="/css/calendar.css" />
 </head>
-
-<body class="star-background">
-    <div class="navbar">
-        <a href="/logo" class="logo"><img src="/imgs/logo.png" alt="PlanIt Logo"></a>
-        <% if (hasUnread) { %>
-          <a href="/messages" class="menu-inbox"><img src="/imgs/inbox_notification_icon.png" alt="Inbox (Notifications)"></a>
-        <% } else { %>
+<body>
+    <div id="container">
+        <div class="navbar">
+          <a href="/logo" class="logo"><img src="/imgs/logo.png" alt="PlanIt Logo"></a>
           <a href="/messages" class="menu-inbox"><img src="/imgs/inbox_icon.png" alt="Inbox (No Notifications)"></a>
-        <% } %>
-        <a href="/search" class="menu-search"><img src="/imgs/search_icon.png" alt="Search"></a>
-        <a href="/users/<%=user.userId%>/calendar" class="menu-calendar"><img src="/imgs/calendar_icon.png" alt="Calendar"></a>
-    </div>
-
-    <h1 id = "navbarEnd"></h1>
-    
-    <div class="formCard">
+          <a href="/search" class="menu-search"><img src="/imgs/search_icon.png" alt="Search"></a>
+          <a href="/users/<%=user.userId%>/calendar" class="menu-calendar"><img src="/imgs/calendar_icon.png" alt="Calendar"></a>
+        </div>
+    <div class="owned-events-wrapper">
       <section class="form-container">
         <div>
-          <h1>Edit Your Event<h1>
+          <h1>Edit Event <a href="/events/<%=event.eventID%>"><%= event.eventName %></a></h1>
         </div>
-        <h2 class="padding"></h1>
-          <div class = "form">
-            <form method = "POST" action = "/api/editEvent">
-              <label for="eventName">Event Name</label>
-                <input
-                  id="eventName"
-                  name="eventName"
-                  placeholder="Keep Current Name: <%=event.eventName%>"
-                  class="text"
-                  type="text"
-                  maxlength="100"
-                />
-              <label for="description">Description</label>
-                <input
-                  id="description"
-                  name="location"
-                  placeholder="Keep Current Description: <%=event.description%>"
-                  class="text"
-                  type="text"
-                  maxlength="100"
-                />
-                <label for="location">Location</label>
-                <input
-                  id="location"
-                  name="location"
-                  placeholder="Keep Current Location: <%=event.location%>"
-                  class="text"
-                  type="text"
-                  maxlength="100"
-                />
-                <label for="startYear">Start Year</label>
-                <input
-                  id="startYear"
-                  name="startYear"
-                  placeholder="startYear"
-                  class="text"
-                  type="number"
-                  maxlength="4"
-                />
-                <label for="startMonth">Start Month</label>
-                <input
-                  id="startMonth"
-                  name="startMonth"
-                  placeholder="startMonth"
-                  class="text"
-                  type="number"
-                  maxlength="2"
-                />
-                <label for="startDay">Start Day</label>
-                <input
-                  id="startDay"
-                  name="startDay"
-                  placeholder="startDay"
-                  class="text"
-                  type="number"
-                  maxlength="2"
-                />
-                <label for="startHour">Start Hour</label>
-                <input
-                  id="startHour"
-                  name="startHour"
-                  placeholder="startHour"
-                  class="text"
-                  type="number"
-                  maxlength="2"
-                />
-                <label for="startMinute">Start Minute</label>
-                <input
-                  id="startMinute"
-                  name="startMinute"
-                  placeholder="startMinute"
-                  class="text"
-                  type="number"
-                  maxlength="2"
-                />
-                <label for="stopYear">Stop Year</label>
-                <input
-                  id="stopYear"
-                  name="stopYear"
-                  placeholder="stopYear"
-                  class="text"
-                  type="number"
-                  maxlength="4"
-                />
-                <label for="stopMonth">Stop Month</label>
-                <input
-                  id="stopMonth"
-                  name="stopMonth"
-                  placeholder="stopMonth"
-                  class="text"
-                  type="number"
-                  maxlength="2"
-                />
-                <label for="stopDay">Stop Day</label>
-                <input
-                  id="stopDay"
-                  name="stopDay"
-                  placeholder="stopDay"
-                  class="text"
-                  type="number"
-                  maxlength="2"
-                />
-                <label for="stopHour">Stop Hour</label>
-                <input
-                  id="stopHour"
-                  name="stopHour"
-                  placeholder="stopHour"
-                  class="text"
-                  type="number"
-                  maxlength="2"
-                />
-                <label for="stopMinute">Stop Minute</label>
-                <input
-                  id="stopMinute"
-                  name="stopMinute"
-                  placeholder="stopMinute"
-                  class="text"
-                  type="number"
-                  maxlength="2"
-                />
-              <h3 class="padding"></h1>
-              <button class = "btn">Save</button>
-            </form>
-          </div>
+        <div class="form">
+          <form action="/api/editEvent" method="post">
+            <label for="eventID"></label>
+            <input
+              id="eventID"
+              name="eventID"
+              value="<%=event.eventID%>"
+              class="text"
+              type="hidden"
+            />
+            <p>
+            <label for="eventName"></label>
+            <input
+              id="eventName"
+              name="eventName"
+              placeholder="Keep Name: <%= event.eventName %>"
+              class="text"
+              type="text"
+              maxlength="100"
+              style="text-align: center;"
+            />
+            </p>
+            <p>From</p>
+            <h1>Start Date:</h1>
+            <p>
+            <label for="startYear"></label>
+            <input
+              id="startYear"
+              name="startYear"
+              placeholder="<%=event.startDate.toLocaleString('en-us', {year:'numeric', timeZone: 'America/Chicago'})%>"
+              class="text"
+              type="number"
+              maxlength="4"
+              minlength="4"
+              min="2024"
+              style="text-align: center;"
+            />
+            <label for="startMonth"></label>
+            <input
+              id="startMonth"
+              name="startMonth"
+              placeholder="<%=event.startDate.toLocaleString('en-us', {month:'short', timeZone: 'America/Chicago'})%>"
+              class="text"
+              type="number"
+              maxlength="2"
+              minlength="1"
+              min="1"
+              max="12"
+              style="text-align: center;"
+            />
+            <label for="startDay"></label>
+            <input
+              id="startDay"
+              name="startDay"
+              placeholder="<%=event.startDate.toLocaleString('en-us', {day: 'numeric', timeZone: 'America/Chicago'})%>"
+              class="text"
+              type="number"
+              maxlength="2"
+              minlength="1"
+              min="1"
+              max="31"
+              style="text-align: center;"
+            />
+            <label for="startHour"></label>
+            <input
+              id="startHour"
+              name="startHour"
+              placeholder="<%=event.startDate.toLocaleString('en-us', {hour12:true, hour: 'numeric', timeZone: 'America/Chicago'})%>"
+              class="text"
+              type="number"
+              maxlength="2"
+              minlength="1"
+              min="1"
+              max="24"
+              style="text-align: center;"
+            />
+            <label for="startMinute"></label>
+            <input
+              id="startMinute"
+              name="startMinute"
+              placeholder="<%=event.startDate.toLocaleString('en-us', {minute: '2-digit', timeZone: 'America/Chicago'})%>"
+              class="text"
+              type="number"
+              maxlength="2"
+              minlength="1"
+              min="0"
+              max="59"
+              style="text-align: center;"
+            />
+            </p>
+            <p>to</p>
+            <h1>Stop Date:</h1>
+            <p>
+            <label for="stopYear"></label>
+            <input
+              id="stopYear"
+              name="stopYear"
+              placeholder="<%=event.stopDate.toLocaleString('en-us', {year:'numeric', timeZone: 'America/Chicago'})%>"
+              class="text"
+              type="number"
+              maxlength="4"
+              minlength="4"
+              min="2024"
+              style="text-align: center;"
+            />
+            <label for="stopMonth"></label>
+            <input
+              id="stopMonth"
+              name="stopMonth"
+              placeholder="<%=event.stopDate.toLocaleString('en-us', {month: 'short', timeZone: 'America/Chicago'})%>"
+              class="text"
+              type="number"
+              maxlength="2"
+              minlength="1"
+              min="1"
+              max="12"
+              style="text-align: center;"
+            />
+            <label for="stopDay"></label>
+            <input
+              id="stopDay"
+              name="stopDay"
+              placeholder="<%=event.stopDate.toLocaleString('en-us', {day: 'numeric', timeZone: 'America/Chicago'})%>"
+              class="text"
+              type="number"
+              maxlength="2"
+              minlength="1"
+              min="1"
+              max="31"
+              style="text-align: center;"
+            />
+            <label for="stopHour"></label>
+            <input
+              id="stopHour"
+              name="stopHour"
+              placeholder="<%=event.stopDate.toLocaleString('en-us', {hour12:true, hour:'numeric', timeZone: 'America/Chicago'})%>"
+              class="text"
+              type="number"
+              maxlength="2"
+              minlength="1"
+              min="1"
+              max="24"
+              style="text-align: center;"
+            />
+            <label for="stopMinute"></label>
+            <input
+              id="stopMinute"
+              name="stopMinute"
+              placeholder="<%=event.stopDate.toLocaleString('en-us', {minute:'2-digit', timeZone: 'America/Chicago'})%>"
+              class="text"
+              type="number"
+              maxlength="2"
+              minlength="1"
+              min="0"
+              max="59"
+              style="text-align: center;"
+            />
+            </p>
+            <p>
+            <label for="description"></label>
+            <input
+              id="description"
+              name="description"
+              placeholder="Keep Description: <%= event.description %>"
+              class="text"
+              type="text"
+              maxlength="100"
+              style="text-align: center;"
+            />
+            </p>
+            <p>
+            <label for="location"></label>
+            <input
+              id="location"
+              name="location"
+              placeholder="Keep Location: <%= event.location %>"
+              class="text"
+              type="text"
+              maxlength="100"
+              style="text-align: center;"
+            />
+            </p>
+            <p>
+              <label for="visibilityLevel"></label>
+              <select name="visibilityLevel" id="visibilityLevel" style="text-align: center;" required>
+                <% if (event.visibilityLevel === "Friends Only") { %>
+                  <option value="Friends Only">Friends Only (Current)</option>
+                  <option value="Public">Public</option>
+                  <option value="Invite Only">Invite Only</option>
+                <% } else if (event.visibilityLevel === "Invite Only") { %>
+                  <option value="Invite Only">Invite Only (Current)</option>
+                  <option value="Public">Public</option>
+                  <option value="Friends Only">Friends Only</option>
+                <% } else { %>
+                  <option value="Public">Public (Current)</option>
+                  <option value="Invite Only">Invite Only</option>
+                  <option value="Friends Only">Friends Only</option>
+                <% } %>
+              </select>
+              </p>
+            <p>            
+              <button class="btn">Save</button>
+            </p>
+          </form>
         </div>
       </section>
     </div>
+    </div>
+    <style>
+      h1, p, li {
+        color: white;
+        text-align: center;
+      }
+      button{
+        color: black;
+      }
+    </style>
 </body>
 </html>

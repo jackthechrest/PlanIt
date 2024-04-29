@@ -23,21 +23,22 @@ async function postNewComment(req: Request, res: Response): Promise<void> {
         return;
     }
 
-    if (!authenticatedUser.isAdmin) {
+    const eventStatus = await getEventStatusForUser(eventId, authenticatedUser.userId);
+
+    if (!authenticatedUser.isAdmin && eventStatus !== "OWNER") {
         const friendStatus = await getFriendStatus(authenticatedUser.userId, event.owner.userId);
-        const eventStatus = await getEventStatusForUser(eventId, authenticatedUser.userId);
 
-        if (eventStatus === "BANNED" || friendStatus === "I BLOCKED" || friendStatus ==="THEY BLOCKED") {
+        if (eventStatus === "BANNED" || friendStatus === "I BLOCKED" || friendStatus === "THEY BLOCKED") {
             res.redirect(`/users/${authenticatedUser.userId}`);
             return;
         }
 
-        if (event.visibilityLevel === "Friends Only" && friendStatus !== "FRIEND") {
+        if (event.visibilityLevel === "Friends Only" && friendStatus !== "FRIEND" && eventStatus !== "JOINED") {
             res.redirect(`/users/${authenticatedUser.userId}`);
             return;
         }
 
-        if (event.visibilityLevel === "Invite Only" && eventStatus !== "INVITED") {
+        if (event.visibilityLevel === "Invite Only" && eventStatus !== "INVITED" && eventStatus !== "JOINED") {
             res.redirect(`/users/${authenticatedUser.userId}`);
             return;
         }
@@ -70,21 +71,22 @@ async function renderComment(req: Request, res: Response): Promise<void> {
         return;
     }
 
-    if (!authenticatedUser.isAdmin) {
+    const eventStatus = await getEventStatusForUser(eventID, authenticatedUser.userId);
+
+    if (!authenticatedUser.isAdmin && eventStatus !== "OWNER") {
         const friendStatus = await getFriendStatus(authenticatedUser.userId, event.owner.userId);
-        const eventStatus = await getEventStatusForUser(eventID, authenticatedUser.userId);
 
-        if (eventStatus === "BANNED" || friendStatus === "I BLOCKED" || friendStatus ==="THEY BLOCKED") {
+        if (eventStatus === "BANNED" || friendStatus === "I BLOCKED" || friendStatus === "THEY BLOCKED") {
             res.redirect(`/users/${authenticatedUser.userId}`);
             return;
         }
 
-        if (event.visibilityLevel === "Friends Only" && friendStatus !== "FRIEND") {
+        if (event.visibilityLevel === "Friends Only" && friendStatus !== "FRIEND" && eventStatus !== "JOINED") {
             res.redirect(`/users/${authenticatedUser.userId}`);
             return;
         }
 
-        if (event.visibilityLevel === "Invite Only" && eventStatus !== "INVITED") {
+        if (event.visibilityLevel === "Invite Only" && eventStatus !== "INVITED" && eventStatus !== "JOINED") {
             res.redirect(`/users/${authenticatedUser.userId}`);
             return;
         }

@@ -19,6 +19,7 @@ type VerifyRequest = {
 };
 
 type EventRequest = {
+  eventID: string;
   eventName: string;
   startYear: number;
   startMonth: number;
@@ -30,6 +31,9 @@ type EventRequest = {
   stopDay: number;
   stopHour: number;
   stopMinute: number;
+  description: string;
+  location: string;
+  visibilityLevel: EventVisibility;
 };
 
 type ReportRequest = {

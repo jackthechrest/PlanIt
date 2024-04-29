@@ -2,6 +2,7 @@ import { AppDataSource } from '../dataSource';
 import { Report } from '../entities/Report';
 import { User } from '../entities/User';
 import { deleteCommentById, getCommentById } from './CommentModel';
+import { deleteEventById } from './EventModel';
 import { updateFollows } from './FollowModel';
 import { updateMessageThreads } from './MessageThreadModel';
 import { updateNotifications } from './NotificationsModel';
@@ -83,7 +84,7 @@ async function respondToReport(offendingContentId: string, isValid: boolean): Pr
             await updateNotifications(contentId, "PlanIt User", "no change", "no change", "no change");
             await updateMessageThreads(contentId, "PlanIt User", "no change", "no change", "no change");
         } else if (type === "E") {
-            // await deleteEvent(contentId);
+            await deleteEventById(contentId);
         } else {
             await deleteCommentById(contentId);
         }

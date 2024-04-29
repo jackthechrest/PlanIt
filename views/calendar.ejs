@@ -16,9 +16,11 @@
         </div>
         <div id="header">
           <div id="monthDisplay"></div>
-          <button onclick="window.location.href='/users/<%= user.userId %>/createEvent'">Create Event</button>
-            <button id="backButton">Back</button>
-            <button id="nextButton">Next</button>
+        </div>
+        <div class="button-container">
+          <button id="backButton">Back</button>
+          <button onclick="window.location.href='/users/<%= user.userId %>/createEvent'" style="color: #d36c6c;">Create Event</button>
+          <button id="nextButton">Next</button>
         </div>
   
         <div id="weekdays">
@@ -50,11 +52,9 @@
         const day = date.getDate();
         const month = date.getMonth();
         const year = date.getFullYear();
-        console.log(day);
-        console.log(month);
-        console.log(year);
         const firstDayOfMonth = new Date(year, month, 1);
         const daysInMonth = new Date(year, month + 1, 0).getDate();
+        let eventOccurs = false;
 
         const dateString = firstDayOfMonth.toLocaleDateString('en-us', {
           weekday: 'long',
@@ -74,20 +74,98 @@
         for (let i = 1; i <= paddingDays + daysInMonth; i++) {
           const daySquare = document.createElement('div');
           daySquare.classList.add('day');
+          eventOccurs = false
 
           if (i > paddingDays) {
             daySquare.innerText = i - paddingDays;
-
+            daySquare.addEventListener('click', () => {
+              window.location.href ='/users/<%= user.userId%>/' + year + '/' + month + '/' + (i - paddingDays);
+            });
             if (i - paddingDays === day && nav === 0) {
               daySquare.id = 'currentDay';
             }
-            /* check for event
-            if(event){
-              const eventDiv = document.createElement('div');
-              eventDiv.innerText = event title;
-              daySquare.appendChild(eventDiv);
+            let something = 0;
+            if(<%=user.ownedEvents.length%> > 0){
+              <% for( const event of user.ownedEvents) { %>
+                startEventYear = Number(<%=event.startDate.getFullYear()%>);
+                startEventMonth= Number(<%=event.startDate.getMonth()%>);
+                startEventDay = Number(<%=event.startDate.getDate()%>);
+                stopEventYear = Number(<%=event.stopDate.getFullYear()%>);
+                stopEventMonth= Number(<%=event.stopDate.getMonth()%>);
+                stopEventDay = Number(<%=event.stopDate.getDate()%>);
+                
+                if(startEventYear === year && startEventMonth === month && startEventDay === i - paddingDays)//if day =
+                {
+                  if(eventOccurs){
+                    daySquare.classList.add('event-day');
+                  }
+                  eventOccurs = true;
+                  const eventDiv = document.createElement('div');
+                  eventDiv.innerText = String('<%=event.eventName%>');
+                  daySquare.appendChild(eventDiv);
+                }
+                else if(stopEventYear === year && stopEventMonth === month && stopEventDay === i - paddingDays)// if day =
+                {
+                  if(eventOccurs){
+                    daySquare.classList.add('event-day');
+                  }
+                  eventOccurs = true;
+                  const eventDiv = document.createElement('div');
+                  eventDiv.innerText = String('<%=event.eventName%>');
+                  daySquare.appendChild(eventDiv);
+                }
+                else if(startEventYear === year && startEventMonth === month && startEventDay < i - paddingDays && i - paddingDays < stopEventDay)// if day in range
+                {
+                  if(eventOccurs){
+                    daySquare.classList.add('event-day');
+                  }
+                  eventOccurs = true;
+                  const eventDiv = document.createElement('div');
+                  eventDiv.innerText = String('<%=event.eventName%>');
+                  daySquare.appendChild(eventDiv);
+                }
+                else if(startEventYear === year && startEventMonth < month && month < stopEventMonth) // if month in range
+                {
+                  if(eventOccurs){
+                    daySquare.classList.add('event-day');
+                  }
+                  eventOccurs = true;
+                  const eventDiv = document.createElement('div');
+                  eventDiv.innerText = String('<%=event.eventName%>');
+                  daySquare.appendChild(eventDiv);
+                }
+                else if(startEventYear < year && year < stopEventYear) // year in range
+                {
+                  if(eventOccurs){
+                    daySquare.classList.add('event-day');
+                  }
+                  eventOccurs = true;
+                  const eventDiv = document.createElement('div');
+                  eventDiv.innerText = String('<%=event.eventName%>');
+                  daySquare.appendChild(eventDiv);
+                }
+                else if(startEventYear === year && month === startEventMonth && month < stopEventMonth && startEventDay <= i - paddingDays)
+                {
+                  if(eventOccurs){
+                    daySquare.classList.add('event-day');
+                  }
+                  eventOccurs = true;
+                  const eventDiv = document.createElement('div');
+                  eventDiv.innerText = String('<%=event.eventName%>');
+                  daySquare.appendChild(eventDiv);
+                }
+                else if(startEventYear === year && month > startEventMonth && month === stopEventMonth && stopEventDay >= i - paddingDays)
+                {
+                  if(eventOccurs){
+                    daySquare.classList.add('event-day');
+                  }
+                  eventOccurs = true;
+                  const eventDiv = document.createElement('div');
+                  eventDiv.innerText = String('<%=event.eventName%>');
+                  daySquare.appendChild(eventDiv);
+                }
+              <% } %>
             }
-            */
           } else {
             daySquare.classList.add('padding');
           }
