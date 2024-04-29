@@ -1,3 +1,4 @@
+ 
 import './config'; // Load environment variables
 import 'express-async-errors'; // Enable default error handling for async errors
 
@@ -5,15 +6,9 @@ import express, { Express } from 'express';
 
 import session from 'express-session';
 import connectSqlite3 from 'connect-sqlite3';
-<<<<<<< HEAD
-import { banUser, inviteToEvent, joinEvent, leaveEvent, registerEvent, renderBannedPage, renderEvent, renderInvitePage, renderInvitedPage, renderJoinedPage, unbanUser, uninviteFromEvent } from './controllers/EventController';
-import { registerUser, logIn, getUserProfileData, logoRedirect, deleteAccount, renderCalendar, renderCreateEvent, renderSettings, signOut, renderEditPage, editProfile } from './controllers/UserController';
-=======
 import { banUser, cancelEvent, editEvent, inviteToEvent, joinEvent, leaveEvent, registerEvent, renderBannedPage, renderCreateEvent, renderEditEventPage, renderEvent, renderInvitePage, renderInvitedPage, renderJoinedPage, unbanUser, uninviteFromEvent } from './controllers/EventController';
-import { registerUser, logIn, getUserProfileData, logoRedirect, deleteAccount, renderCalendar, renderSearch, renderSettings, signOut, renderEditPage, editProfile, renderDay } from './controllers/UserController';
->>>>>>> e21de81c18e118c0d71f95031090f5d0cf128968
+import { registerUser, logIn, getUserProfileData, logoRedirect, deleteAccount, renderCalendar, renderSettings, signOut, renderEditPage, editProfile, renderDay } from './controllers/UserController';
 import { followUser, removeFollower, renderFollowersPage, renderFollowingPage, unfollowUser } from './controllers/FollowController';
-import { renderSearch, search, searchResults } from './controllers/SearchController';
 import { sendVerification, verifyEmail } from './controllers/VerifyCodeController';
 import { blockUser, friendRequestUser, renderBlockedPage, renderFriendsPage, respondFriendRequest, unblockUser, unfriendUser } from './controllers/FriendListController';
 import { renderNotifications } from './controllers/NotifcationsController';
@@ -21,6 +16,7 @@ import { renderReports, respondReport, sendReport } from './controllers/ReportCo
 import { renderAllMessageThreads, renderSingleMessageThread } from './controllers/MessageThreadController';
 import { renderCreateMessageThread, sendMessage } from './controllers/MessageController';
 import { postNewComment, renderComment } from './controllers/CommentController';
+import { search, searchResults } from './controllers/SearchController';
 
 const app: Express = express();
 const { PORT, COOKIE_SECRET } = process.env;
@@ -56,7 +52,6 @@ app.get('/settings', renderSettings);
 app.get('/edit', renderEditPage);
 app.post('/api/edit', editProfile);
 app.get('/users/:targetUserId/calendar', renderCalendar);
-app.get('/search', renderSearch);
 app.get('/notifications', renderNotifications);
 app.get('/reports', renderReports);
 
