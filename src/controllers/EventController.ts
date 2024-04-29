@@ -79,24 +79,6 @@ async function registerEvent(req: Request, res: Response): Promise<void> {
     visibilityLevel,
   } = req.body as EventRequest;
 
-  if (
-    stopYear < startYear ||
-    (stopYear === startYear && stopMonth < startMonth) ||
-    (stopYear === startYear && stopMonth === startMonth && stopDay < startDay) ||
-    (stopYear === startYear &&
-      stopMonth === startMonth &&
-      stopDay === startDay &&
-      stopHour < startHour) ||
-    (stopYear === startYear &&
-      stopMonth === startMonth &&
-      stopDay === startDay &&
-      stopHour === startHour &&
-      stopMinute < startMinute)
-  ) {
-    res.redirect(`/users/${authenticatedUser.userId}/createEvent`);
-    return;
-  }
-
   if (visibilityLevel !== "Friends Only" && visibilityLevel !== "Public" && visibilityLevel !== "Invite Only") {
     res.redirect(`/users/${authenticatedUser.userId}/createEvent`);
     return;
@@ -104,6 +86,11 @@ async function registerEvent(req: Request, res: Response): Promise<void> {
 
   const startDate = new Date(startYear, startMonth - 1, startDay, startHour, startMinute);
   const stopDate = new Date(stopYear, stopMonth - 1, stopDay, stopHour, stopMinute);
+
+  if (startDate.getTime() > stopDate.getTime()) {
+    res.redirect(`/users/${authenticatedUser.userId}/createEvent`);
+    return;
+  }
 
   try {
     const newEvent = await addNewEvent(
@@ -580,6 +567,11 @@ async function editEvent(req: Request, res: Response): Promise<void> {
 
   const startDate = new Date(startYear, startMonth - 1, startDay, startHour, startMinute);
   const stopDate = new Date(stopYear, stopMonth - 1, stopDay, stopHour, stopMinute);
+
+  if (startDate.getTime() > stopDate.getTime()) {
+    res.redirect(`/events/${eventID}/edit`);
+    return;
+  }
 
   await updateEvent(eventID, eventName, startDate, stopDate, description, location, visibilityLevel)
   for (const joinedUser of event.joinedUsers) {

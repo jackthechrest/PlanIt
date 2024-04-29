@@ -31,14 +31,13 @@
     <div class="resultsContainer">
     <% if (searchOption === "Users") { %>
       <% if (UserResults && UserResults.length > 0) { %>
-        
-
             <% for (const result of UserResults) { %>
                 <div class="resultElement">
-                    <a href="/users/<%= result.userId %>"><%= result.displayName %></a>
-                    <p>@<%= result.username %></p>
+                    <a href="/users/<%= result.userId %>"><%= result.displayName %> <span class="username">@<%= result.username %></span></a>
                 </div>
            <% } %>
+        <% } else { %>
+          <p>No Results</p>
         <% } %>
     <% } %>
         <% if (searchOption === "Events") { %>
@@ -47,12 +46,14 @@
               
                   <% for (const result of EventResults) { %>
                       <div class="resultElement">
-                          <a href="/events/<%= result.eventId %>"><%= result.eventName %></a>
-                          <p><%= result.startDate %> - <%= result.stopDate %></p>
+                          <a href="/events/<%= result.eventID %>"><%= result.eventName %></a>
+                          <p><%= result.startDate.toLocaleString('en-us', {month:'short', day:'numeric', year:'numeric', hour12:true, hour:'numeric', minute:'2-digit', timeZone: 'America/Chicago'}) %> - <%= result.stopDate.toLocaleString('en-us', {month:'short', day:'numeric', year:'numeric', hour12:true, hour:'numeric', minute:'2-digit', timeZone: 'America/Chicago'}) %></p>
                           <p>Location: <%=result.location%></p>
                           
                       </div>
                  <% } %>
+            <% } else { %>
+              <p>No Results</p>
             <% } %>
       <% } %>      
     </div>

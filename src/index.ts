@@ -16,7 +16,7 @@ import { renderReports, respondReport, sendReport } from './controllers/ReportCo
 import { renderAllMessageThreads, renderSingleMessageThread } from './controllers/MessageThreadController';
 import { renderCreateMessageThread, sendMessage } from './controllers/MessageController';
 import { postNewComment, renderComment } from './controllers/CommentController';
-import { search, searchResults } from './controllers/SearchController';
+import { renderSearch, search, searchResults } from './controllers/SearchController';
 
 const app: Express = express();
 const { PORT, COOKIE_SECRET } = process.env;
@@ -101,6 +101,7 @@ app.post('/api/comment', postNewComment);
 app.get('/events/:eventID/comments/:commentId', renderComment);
 
 // Search
+app.get('/search', renderSearch);
 app.post('/api/search', search);
 app.get('/results/:searchOption/:linkSearchQuery', searchResults);
 
