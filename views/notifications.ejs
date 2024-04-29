@@ -128,7 +128,7 @@
                                     <div class="profile-body red"></div>
                                 </div>
                                 <div>
-                                    <p>Your event features offensive content and has been modified.  Don't do it again.</p>
+                                    <p>Your event featured offensive content and has been deleted.  Don't do it again.</p>
                                 </div>
                                 <div>
                                     <p class="date"><%=notification.dateString%></p>
@@ -192,7 +192,7 @@
                                 </div>
                             </div>
                         </li>
-                    <% } else if (notification.type === "EVENT DELETED") { %>
+                    <% } else if (notification.type === "EVENT CANCELLED") { %>
                         <li>
                             <% if (!notification.beenRead) { %>
                                 <span class="notification"></span>

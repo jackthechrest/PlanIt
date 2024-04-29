@@ -147,5 +147,43 @@ async function uninviteUserFromEvent(eventID: string, userID: string): Promise<v
   }
 }
 
+async function updateEvent(
+  eventID: string,
+  eventName: string,
+  startDate: Date,
+  stopDate: Date,
+  description: string,
+  location: string,
+  visibilityLevel: EventVisibility): Promise<void> {
+    const event = await getEventById(eventID);
+
+    if (eventName.length !== 0) {
+      event.eventName = eventName;
+    }
+
+    event.startDate = startDate;
+    event.stopDate = stopDate;
+
+    if (description.length !== 0) {
+      event.description = description;
+    }
+
+    if (location.length !== 0) {
+      event.location = location;
+    }
+
+    event.visibilityLevel = visibilityLevel;
+
+    await eventRepository.save(event);
+}
+
+async function deleteEventById(eventID: string): Promise<void> {
+  await eventRepository
+    .createQueryBuilder('event')
+    .delete()
+    .where('eventID = :eventID', { eventID })
+    .execute();
+}
+
 export { addNewEvent, getEventById, getEventStatusForUser, addUserToEvent, removeUserFromEvent, 
-          banUserFromEvent, unbanUserFromEvent, inviteUserToEvent, uninviteUserFromEvent };
+          banUserFromEvent, unbanUserFromEvent, inviteUserToEvent, uninviteUserFromEvent, updateEvent, deleteEventById };

@@ -52,7 +52,7 @@
       <% if (viewingUser.userId === owningUser.userId) { %>
         <button class="btn-small" id="green"><a href="/events/<%=event.eventID%>/invite">Invite</a></button>
         <button class="btn-small"><a href="/events/<%=event.eventID%>/edit">Edit</a></button>
-        <button class="btn-small" id="red">Cancel</button>
+        <button class="btn-small" id="red"><a href="/events/<%=event.eventID%>/cancel">Cancel</a></button>
       <% } else { %>
           <% if (!joined) { %>
             <button class="btn-small" id="green"><a href="/events/<%=event.eventID%>/join">Join</a></button>
