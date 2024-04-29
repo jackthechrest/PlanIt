@@ -13,6 +13,9 @@ async function addNewEvent(
   eventName: string,
   startDate: Date,
   stopDate: Date,
+  description: string,
+  location: string,
+  visibilityLevel: EventVisibility,
   currentUserID: string
 ): Promise<Event | null> {
   // Create the new event object
@@ -22,10 +25,7 @@ async function addNewEvent(
   newEvent.eventName = eventName.substring(0, 100);
   newEvent.startDate = startDate;
   newEvent.stopDate = stopDate;
-  const description = 'Hello';
-  const location = 'College';
-  const visibilityLevel = 'Public';
-  newEvent.description = description;
+  newEvent.description = description.substring(0, 100);
   newEvent.location = location;
   newEvent.visibilityLevel = visibilityLevel;
   newEvent.owner = currentUser;

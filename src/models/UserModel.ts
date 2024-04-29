@@ -2,6 +2,7 @@ import { AppDataSource } from '../dataSource';
 import { FriendList } from '../entities/FriendList';
 import { User } from '../entities/User';
 import { VerifyCode } from '../entities/VerifyCode';
+import { removeUserFromEvent, unbanUserFromEvent, uninviteUserFromEvent } from './EventModel';
 import { removeFriendListData } from './FriendListModel';
 import { removeMessageThreadData } from './MessageThreadModel';
 
@@ -19,6 +20,9 @@ async function getUserById(userId: string): Promise<User | null> {
     'blockedFriendLists',
     'code',
     'ownedEvents',
+    'joinedEvents',
+    'bannedEvents',
+    'invitedEvents'
     ],
   });
 
@@ -80,9 +84,23 @@ async function addNewUser(username: string, displayName: string, email: string, 
 }
 
 async function deleteUserById(userId: string): Promise<void> {
+  const user = await getUserById(userId);
+
+  for (const joinedEvent of user.joinedEvents) {
+    await removeUserFromEvent(joinedEvent.eventID, userId);
+  }
+
+  for (const invitedEvent of user.invitedEvents) {
+    await uninviteUserFromEvent(invitedEvent.eventID, userId);
+  }
+
+  for (const bannedEvent of user.bannedEvents) {
+    await unbanUserFromEvent(bannedEvent.eventID, userId);
+  }
+
   await removeMessageThreadData(userId);
   await removeFriendListData(userId);
-
+  
   await userRepository
     .createQueryBuilder('user')
     .delete()

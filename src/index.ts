@@ -5,8 +5,8 @@ import express, { Express } from 'express';
 
 import session from 'express-session';
 import connectSqlite3 from 'connect-sqlite3';
-import { banUser, inviteToEvent, joinEvent, leaveEvent, registerEvent, renderBannedPage, renderEvent, renderInvitePage, renderInvitedPage, renderJoinedPage, unbanUser, uninviteFromEvent } from './controllers/EventController';
-import { registerUser, logIn, getUserProfileData, logoRedirect, deleteAccount, renderCalendar, renderCreateEvent, renderSearch, renderSettings, signOut, renderEditPage, editProfile } from './controllers/UserController';
+import { banUser, inviteToEvent, joinEvent, leaveEvent, registerEvent, renderBannedPage, renderCreateEvent, renderEvent, renderInvitePage, renderInvitedPage, renderJoinedPage, unbanUser, uninviteFromEvent } from './controllers/EventController';
+import { registerUser, logIn, getUserProfileData, logoRedirect, deleteAccount, renderCalendar, renderSearch, renderSettings, signOut, renderEditPage, editProfile, renderDay } from './controllers/UserController';
 import { followUser, removeFollower, renderFollowersPage, renderFollowingPage, unfollowUser } from './controllers/FollowController';
 import { sendVerification, verifyEmail } from './controllers/VerifyCodeController';
 import { blockUser, friendRequestUser, renderBlockedPage, renderFriendsPage, respondFriendRequest, unblockUser, unfriendUser } from './controllers/FriendListController';
@@ -82,6 +82,7 @@ app.get('/report/respond/:contentId/:action', respondReport)
 app.post('/api/event', registerEvent);
 app.get('/users/:targetUserId/createEvent', renderCreateEvent);
 app.get('/events/:eventID', renderEvent);
+app.get('/users/:targetUserId/:targetYear/:targetMonth/:targetDay', renderDay);
 //app.post('/api/editEvent', editEvent);
 //app.get('/events/:eventID/edit', renderEventEditPage);
 app.get('/events/:eventID/join', joinEvent);

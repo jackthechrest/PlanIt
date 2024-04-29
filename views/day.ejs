@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar | PlanIt </title>
+    <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+    <div id="container">
+        <div class="navbar">
+          <a href="/logo" class="logo"><img src="/imgs/logo.png" alt="PlanIt Logo"></a>
+          <a href="/messages" class="menu-inbox"><img src="/imgs/inbox_icon.png" alt="Inbox (No Notifications)"></a>
+          <a href="/search" class="menu-search"><img src="/imgs/search_icon.png" alt="Search"></a>
+          <a href="/users/<%=user.userId%>/calendar" class="menu-calendar"><img src="/imgs/calendar_icon.png" alt="Calendar"></a>
+        </div>
+      <div class="owned-events-wrapper">
+        <div class="owned-events-box">
+          <div class="center">Events on <%= date.toDateString() %></div>
+          <%let eventOccurs = false;%>
+          <% if (!user.ownedEvents || user.ownedEvents.length === 0) { %>
+            <p>No owned events</p>
+          <% } else { %>
+            <ul>
+              <h5>All Day Events</h5>
+              <% user.ownedEvents.forEach((event) => { %>
+                <%if (event.startDate.getFullYear() <= date.getFullYear() &&
+                event.stopDate.getFullYear() >= date.getFullYear())
+                {
+                  if(event.startDate.getMonth() === date.getMonth() && event.stopDate.getMonth() === date.getMonth())//same month
+                  {
+                    if(event.startDate.getDate() < date.getDate() && event.stopDate.getDate() > date.getDate())
+                    {%>
+                      <a href="/events/<%= event.eventID %>">- <%= event.eventName %></a>
+                      <%if(eventOccurs){%>
+                        <style>
+                          body{
+                            background-image: url('/imgs/background_conflict.jpg');
+                          }
+                        </style>
+                      <%}%>
+                      <%eventOccurs = true;
+                    }
+                  }
+                  else if(event.startDate.getMonth() === date.getMonth() && event.stopDate.getMonth() > date.getMonth())
+                  {
+                    if(event.startDate.getMonth() === date.getMonth())
+                    {
+                      if(event.startDate.getDate() < date.getDate())
+                      {%>
+                        <a href="/events/<%= event.eventID %>">- <%= event.eventName %></a>
+                        <%if(eventOccurs){%>
+                          <style>
+                            body{
+                              background-image: url('/imgs/background_conflict.jpg');
+                            }
+                          </style>
+                        <%}%>
+                        <%eventOccurs = true;
+                      }
+                    }
+                    else if(event.startDate.getMonth() < date.getMonth() && event.stopDate.getMonth() > date.getMonth() )
+                    {%>
+                      <a href="/events/<%= event.eventID %>">- <%= event.eventName %></a>
+                      <%if(eventOccurs){%>
+                        <style>
+                          body{
+                            background-image: url('/imgs/background_conflict.jpg');
+                          }
+                        </style>
+                      <%}%>
+                      <%eventOccurs = true;
+                    }
+                    else if(event.startDate.getMonth() < date.getMonth() && event.stopDate.getMonth() === date.getMonth())
+                    {
+                      if(event.stopDate.getDate() > date.getDate())
+                      {%>
+                        <a href="/events/<%= event.eventID %>">- <%= event.eventName %></a>
+                        <%if(eventOccurs){%>
+                          <style>
+                            body{
+                              background-image: url('/imgs/background_conflict.jpg');
+                            }
+                          </style>
+                        <%}%>
+                        <%eventOccurs = true;
+                      }
+                    }
+
+                  }
+                }
+              });%>
+
+
+
+
+
+              <% for (let i = 0; i <= 24; i++) { %>
+                <div class="owned-events-box"><%= i %></div>
+                <% user.ownedEvents.forEach((event) => { %>
+                  <% if (event.startDate.getFullYear() === date.getFullYear()
+                    && event.startDate.getMonth() === date.getMonth() 
+                    && event.startDate.getDate() === date.getDate()
+                    && event.startDate.getHours() === i) { %>
+                    <div class="center">
+                      <a href="/events/<%= event.eventID %>">
+                      <%=event.startDate.toLocaleString('en-US', { hour: 'numeric', minute: '2-digit' })%> - <%= event.eventName %> Starts
+                      </a>
+                    </div>
+                    <%if(eventOccurs){%>
+                      <style>
+                        body{
+                          background-image: url('/imgs/background_conflict.jpg');
+                        }
+                      </style>
+                    <%}%>
+                    <% if (!(event.startDate.getFullYear() === event.stopDate.getFullYear()
+                      && event.startDate.getMonth() === event.stopDate.getMonth() 
+                      && event.startDate.getDate() === event.stopDate.getDate())) { 
+                      eventOccurs = true;
+                    } 
+                    user.ownedEvents.forEach((check) => {
+                      if(event.startDate.getTime() >= check.startDate.getTime() && event.startDate.getTime() <= check.startDate.getTime())
+                      {
+                        eventOccurs = true;
+                      }
+                    });
+                  }%>
+                  <%if(event.stopDate.getFullYear() !== event.startDate.getFullYear()
+                    || event.stopDate.getMonth() !== event.startDate.getMonth() 
+                    || event.stopDate.getDate() !== event.startDate.getDate()
+                    || event.stopDate.getHours() !== event.startDate.getHours()) { %>
+                    <%if (event.stopDate.getFullYear() === date.getFullYear()
+                      && event.stopDate.getMonth() === date.getMonth() 
+                      && event.stopDate.getDate() === date.getDate()
+                      && event.stopDate.getHours() === i) { %>
+                      <div class="center">
+                        <a href="/events/<%= event.eventID %>">
+                        <%=event.startDate.toLocaleString('en-US', { hour: 'numeric', minute: '2-digit' })%> - <%= event.eventName %> Stops
+                        </a>
+                      </div><% } %>
+                      
+                  <%}%>
+                <% }); %>
+
+                <%if(i < 24){%>
+                  <p>  -----</p>
+                <%}%>
+              <%}%>
+            </ul>
+          <% } %>
+          
+        </div>
+      </div>
+    </div> 
+    <style>
+      .center{
+        font-size: 14px;
+      }
+      p{
+        color:white;
+        text-align: left;
+        font-size: 20px;
+      }
+      .owned-events-wrapper {
+        max-height: 600px;
+        left:50%;
+        color:white;
+        background-image: linear-gradient(to right, #8c52ff 0%, #00bf63  60%);
+      }  
+      .owned-events-box{
+        text-align: left;
+        font-size: 20px;
+      }
+    </style>
+</body>
+</html>

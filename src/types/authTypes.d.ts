@@ -30,6 +30,9 @@ type EventRequest = {
   stopDay: number;
   stopHour: number;
   stopMinute: number;
+  description: string;
+  location: string;
+  visibilityLevel: EventVisibility;
 };
 
 type ReportRequest = {

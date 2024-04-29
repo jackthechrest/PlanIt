@@ -20,10 +20,9 @@ button {
 #header {
   padding: 10px;
   color: #d36c6c;
-  font-size: 26px;
+  font-size: 30px;
   font-family: sans-serif;
-  display: flex;
-  justify-content: space-between;
+  text-align: center;
 }
 #header button {
   background-color:#92a1d1;
@@ -106,24 +105,12 @@ button {
 #eventTitleInput.error {
   border: 2px solid red;
 }
-#cancelButton, #deleteButton {
-  background-color: #d36c6c;
-}
-#saveButton, #closeButton {
-  background-color: #92a1d1;
-}
 #eventText {
   font-size: 14px;
 }
-#modalBackDrop {
-  display: none;
-  top: 0px;
-  left: 0px;
-  z-index: 10;
-  width: 100vw;
-  height: 100vh;
-  position: absolute;
-  background-color: rgba(0,0,0,0.8);
+
+.event-day {
+  background-color: red;
 }
 
 /* Style the navbar */
@@ -152,4 +139,38 @@ button {
 #navbarEnd {
   position: relative;
   margin-top: 3%;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#createButton{
+  color: black;
+}
+
+#backButton {
+  text-align: center;
+  color: #d36c6c;
+}
+
+#nextButton {
+  text-align: center;
+  color: #d36c6c;
+}
+
+.time-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 800px; /* Set the height of the container */
+  width: 50px; /* Adjust width as needed */
+  border-left: 1px solid #ccc; /* Add a border to separate numbers from content */
+  padding-right: 10px; /* Add padding for better visual appearance */
+}
+.time {
+  color: white;
+  text-align: left; /* Align numbers to the right */
 }
