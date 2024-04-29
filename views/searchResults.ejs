@@ -28,5 +28,33 @@
           </div>
         </div>
     </form>
+    <div class="resultsContainer">
+    <% if (searchOption === "Users") { %>
+      <% if (UserResults && UserResults.length > 0) { %>
+        
+
+            <% for (const result of UserResults) { %>
+                <div class="resultElement">
+                    <a href="/users/<%= result.userId %>"><%= result.displayName %></a>
+                    <p>@<%= result.username %></p>
+                </div>
+           <% } %>
+        <% } %>
+    <% } %>
+        <% if (searchOption === "Events") { %>
+            
+            <% if (EventResults && EventResults.length > 0) { %>
+              
+                  <% for (const result of EventResults) { %>
+                      <div class="resultElement">
+                          <a href="/events/<%= result.eventId %>"><%= result.eventName %></a>
+                          <p><%= result.startDate %> - <%= result.stopDate %></p>
+                          <p>Location: <%=result.location%></p>
+                          
+                      </div>
+                 <% } %>
+            <% } %>
+      <% } %>      
+    </div>
 </body>
 </html>

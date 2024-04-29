@@ -8,7 +8,7 @@ import connectSqlite3 from 'connect-sqlite3';
 import { banUser, inviteToEvent, joinEvent, leaveEvent, registerEvent, renderBannedPage, renderEvent, renderInvitePage, renderInvitedPage, renderJoinedPage, unbanUser, uninviteFromEvent } from './controllers/EventController';
 import { registerUser, logIn, getUserProfileData, logoRedirect, deleteAccount, renderCalendar, renderCreateEvent, renderSettings, signOut, renderEditPage, editProfile } from './controllers/UserController';
 import { followUser, removeFollower, renderFollowersPage, renderFollowingPage, unfollowUser } from './controllers/FollowController';
-import { renderSearch } from './controllers/SearchController';
+import { renderSearch, search, searchResults } from './controllers/SearchController';
 import { sendVerification, verifyEmail } from './controllers/VerifyCodeController';
 import { blockUser, friendRequestUser, renderBlockedPage, renderFriendsPage, respondFriendRequest, unblockUser, unfriendUser } from './controllers/FriendListController';
 import { renderNotifications } from './controllers/NotifcationsController';
@@ -100,6 +100,8 @@ app.post('/api/comment', postNewComment);
 app.get('/events/:eventID/comments/:commentId', renderComment);
 
 // Search
+app.post('/api/search', search);
+app.get('/results/:searchOption/:linkSearchQuery', searchResults);
 
 app.listen(PORT, () => {
   console.log(`Listening at http://localhost:${PORT}`);
